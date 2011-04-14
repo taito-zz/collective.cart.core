@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<import-steps>
+  <import-step id="collective.cart.core.various"
+               version="20110324-01"
+               handler="collective.cart.core.setuphandlers.setupVarious"
+               title="collective.cart.core: miscellaneous import steps">
+    <dependency step="propertiestool" />
+    <dependency step="portlets" />
+    Various import steps that are not handled by GS import/export
+    handlers.
+  </import-step>
+</import-steps>

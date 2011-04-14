@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<portlets
+    xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+    i18n:domain="collective.cart.core">
+
+  <portlet
+    addview="portlet.Cart"
+    title="Cart"
+    description="A portlet which shows cart content."
+    />
+
+  <assignment
+    manager="plone.leftcolumn"
+    category="context"
+    key="/"
+    type="portlet.Cart"
+    name="Cart"
+    />
+
+</portlets>

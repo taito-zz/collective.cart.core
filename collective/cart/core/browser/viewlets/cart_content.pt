@@ -1,0 +1,139 @@
+<div i18n:domain="collective.cart" tal:condition="view/products">
+    <table class="listing">
+      <thead>
+        <tr>
+<!--          <th>-->
+<!--            ID-->
+<!--          </th>-->
+<!--          <th i18n:translate="">-->
+<!--            Image-->
+<!--          </th>-->
+          <th i18n:translate="">
+            Product Name
+          </th>
+          <th i18n:translate="">
+            Price
+          </th>
+          <th i18n:translate="">
+            Quantity
+          </th>
+          <th i18n:translate="">
+            Subtotal
+          </th>
+          <th i18n:translate="">
+            Delete
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tal:block tal:repeat="item view/products">
+        <form method="post"
+              tal:attributes="action view/current_url">
+          <tr class="even" tal:define="oddrow repeat/item/odd"
+              tal:attributes="class python:oddrow and 'even' or 'odd'">
+<!--            <td>-->
+<!--              <a tal:attributes="href item/url"-->
+<!--                 tal:content="item/sku" />-->
+<!--            </td>-->
+<!--            <td>-->
+<!--              <a tal:attributes="href item/url;-->
+<!--                                 title item/title">-->
+<!--                <img tal:attributes="src item/obj/image_small/absolute_url | nothing;-->
+<!--                                     alt item/title;" />-->
+<!--              </a>-->
+<!--            </td>-->
+            <td>
+              <a tal:attributes="href item/url"
+                 tal:content="item/title" />
+            </td>
+            <td>
+              <span tal:replace="item/price_with_currency" />
+<!--              <tal:block tal:condition="item/price_with_selected_currency_code">-->
+<!--                <br />-->
+<!--                <span class="red"-->
+<!--                      tal:content="item/price_with_selected_currency_code" />-->
+<!--              </tal:block>-->
+            </td>
+            <td>
+              <input type="hidden" name="uid"
+                           tal:attributes="value item/uid" />
+              <div tal:replace="structure item/select_quantity" />
+<!--              <select id="quantity" name="quantity">-->
+<!--                <tal:block tal:repeat="stock_number item/stock_list">-->
+<!--                  <option tal:condition="python: item.quantity == stock_number"-->
+<!--                          tal:content="stock_number"-->
+<!--                          tal:attributes="value stock_number"-->
+<!--                          selected="selected" />-->
+<!--                  <option tal:condition="python: item.quantity != stock_number"-->
+<!--                          tal:content="stock_number"-->
+<!--                          tal:attributes="value stock_number" />-->
+<!--                </tal:block>-->
+<!--              </select>-->
+              <input type="submit"
+                     class="standalone"
+                     value="Update"
+                     i18n:attributes="value"
+                     name="form.button.UpdateCartContent" />
+            </td>
+            <td>
+              <span tal:replace="item/subtotal_with_currency" />
+<!--              <tal:block tal:condition="item/subtotal_price_with_selected_currency_code">-->
+<!--                <br />-->
+<!--                <span class="red"-->
+<!--                      tal:content="item/subtotal_price_with_selected_currency_code" />-->
+<!--              </tal:block>-->
+            </td>
+            <td>
+              <input type="submit"
+                     class="standalone"
+                     value="Delete"
+                     i18n:attributes="value"
+                     name="form.button.DeleteCartContent" />
+            </td>
+          </tr>
+        </form>
+        </tal:block>
+        <tal:block tal:define="item view/totals_with_currency">
+        <tr>
+          <th i18n:translate="" colspan="1">Products Subtotal</th>
+          <td class="right" colspan="4">
+            <span tal:replace="item/products_subtotal_with_currency" />
+<!--            <tal:block tal:condition="shop/total_products_price_with_selected_currency_code">-->
+<!--                <br />-->
+<!--                <span class="red"-->
+<!--                      tal:content="shop/total_products_price_with_selected_currency_code" />-->
+<!--              </tal:block>-->
+          </td>
+        </tr>
+        <tr tal:condition="item/shipping_cost_with_currency">
+          <th i18n:translate="" colspan="1">Shipping Cost</th>
+          <td class="right" colspan="4">
+            <span tal:replace="item/shipping_cost_with_currency" />
+<!--            <tal:block tal:condition="shop/shipping_cost_with_selected_currency_code">-->
+<!--                <br />-->
+<!--                <span class="red"-->
+<!--                      tal:content="shop/shipping_cost_with_selected_currency_code" />-->
+<!--              </tal:block>-->
+          </td>
+        </tr>
+        <tr tal:condition="item/payment_cost_with_currency">
+          <th i18n:translate="" colspan="1">Payment Cost</th>
+          <td class="right" colspan="4">
+            <span tal:replace="item/payment_cost_with_currency" />
+          </td>
+        </tr>
+        <tr>
+          <th i18n:translate="" colspan="1">Total Cost</th>
+          <td class="right" colspan="4">
+            <span tal:replace="item/total_cost_with_currency" />
+<!--            <tal:block tal:condition="shop/total_cost_with_selected_currency_code">-->
+<!--                <br />-->
+<!--                <span class="red"-->
+<!--                      tal:content="shop/total_cost_with_selected_currency_code" />-->
+<!--              </tal:block>-->
+          </td>
+        </tr>
+      </tal:block>
+    </tbody>
+  </table>
+</div>

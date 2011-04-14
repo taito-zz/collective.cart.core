@@ -1,0 +1,7 @@
+<configure xmlns="http://namespaces.zope.org/zope">
+
+  <!-- Handler -->
+  <subscriber handler=".content_type.addable_to_cart" />
+  <subscriber handler=".content_type.delete_newly_created_cart_folder" />
+
+</configure>

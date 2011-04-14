@@ -1,0 +1,41 @@
+<div id="product-values" i18n:domain="collective.cart">
+<!--  <h1 i18n:translate="">Product Values</h1>-->
+  <table tal:define="item view/items" class="listing">
+    <thead>
+      <tr>
+        <th i18n:translate="">
+          Price
+        </th>
+        <th i18n:translate="">
+          Quantity
+        </th>
+        <th i18n:translate="">
+          Add To Cart
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <form method="post"
+        tal:attributes="action view/current_url">
+      <tr>
+        <td>
+          <span tal:replace="item/price_with_currency" />
+        </td>
+        <td>
+          <div tal:replace="structure item/select_quantity" />
+        </td>
+        <td>
+          <input type="hidden"
+                 name="uid"
+                 tal:attributes="value item/uid" />
+          <input type="submit"
+                 class="standalone"
+                 value="Add To Cart"
+                 i18n:attributes="value"
+                 name="form.button.AddToCart" />
+        </td>
+      </tr>
+      </form>
+    </tbody>
+  </table>
+</div>

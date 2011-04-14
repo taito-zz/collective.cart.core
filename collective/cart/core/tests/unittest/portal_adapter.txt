@@ -1,0 +1,308 @@
+IPortalCartProperties
+====
+    >>> from zope.interface import implements
+    >>> from Products.CMFPlone.interfaces.properties import IPropertiesTool
+    >>> class Tool(object):
+    ...     implements(IPropertiesTool)
+    ...     def __init__(self, **kwargs):
+    ...         for k, v in kwargs.items(): setattr(self, k, v)
+    ...     def getProperty(self, name):
+    ...         return getattr(self, name)
+    ...     def _updateProperty(self, name, value):
+    ...         setattr(self, name, value)
+    >>> ccp = Tool(
+    ...     currency='EUR',
+    ...     currency_symbol='',
+    ...     symbol_location='Behind',
+    ...     cancel_page='',
+    ...     content_types=[],
+    ...     decimal_type='.',
+    ...     cart_folder_path='/carts',
+    ...     cart_id_method='Incremental',
+    ...     random_cart_id_digits=5,
+    ...     quantity_method='Select',
+    ... )
+    >>> properties = Tool(collective_cart_properties=ccp)
+    >>> from zope.component import getMultiAdapter, provideAdapter, provideUtility
+    >>> from collective.cart.core.interfaces import IPortalCartProperties
+    >>> from collective.cart.core.adapter.portal import PortalCartProperties
+    >>> provideAdapter(PortalCartProperties)
+    >>> pcp = IPortalCartProperties(properties)
+    >>> pcp.context
+    <Tool object at ...>
+    >>> IPropertiesTool.providedBy(pcp.context)
+    True
+    >>> pcp.properties
+    <Tool object at ...>
+    >>> IPropertiesTool.providedBy(pcp.properties)
+    True
+    >>> pcp.context is not pcp.properties
+    True
+    >>> pcp.currency
+    'EUR'
+    >>> pcp.currency_symbol
+    'EUR'
+    >>> pcp.symbol_location
+    'Behind'
+    >>> pcp.cancel_page
+    ''
+    >>> pcp.content_types
+    []
+    >>> pcp. decimal_type
+    '.'
+    >>> pcp.cart_folder_path
+    '/carts'
+    >>> pcp.cart_id_method
+    'Incremental'
+    >>> pcp.random_cart_id_digits
+    5
+    >>> pcp.quantity_method
+    'Select'
+    >>> pcp.currency = 'USD'
+    >>> ccp.currency
+    'USD'
+    >>> pcp.currency
+    'USD'
+    >>> pcp.currency_symbol
+    'USD'
+    >>> pcp.currency_symbol = '円'
+    >>> pcp.currency_symbol
+    '\xe5\x86\x86'
+    >>> pcp.content_types = ['Document']
+    >>> ccp.content_types
+    ['Document']
+    >>> pcp.content_types
+    ['Document']
+    >>> pcp.random_cart_id_digits = 10
+    >>> ccp.random_cart_id_digits
+    10
+    >>> pcp.random_cart_id_digits
+    10
+    >>> pcp.select_field('symbol_location', ['Front', 'Behind'])
+    '<select id="symbol_location" name="symbol_location"><option value="Front">Front</option><option value="Behind" selected="selected">Behind</option></select>'
+    >>> from collective.cart.core.interfaces import IPriceWithCurrency
+    >>> from collective.cart.core.utility.price import PriceWithCurrency
+    >>> provideUtility(PriceWithCurrency(), provides=IPriceWithCurrency)
+    >>> from collective.cart.core.interfaces import IDecimalPlaces
+    >>> from collective.cart.core.utility.price import DecimalPlaces
+    >>> provideUtility(DecimalPlaces(), provides=IDecimalPlaces)
+    >>> from collective.cart.core.interfaces import IPrice
+    >>> from collective.cart.core.utility.price import Price
+    >>> provideUtility(Price('float'), provides=IPrice, name="float")
+    >>> provideUtility(Price('decimal'), provides=IPrice, name="decimal")
+    >>> provideUtility(Price('string'), provides=IPrice, name="string")
+    >>> pcp.price_with_currency(5.0)
+    '5.00 \xe5\x86\x86'
+
+IPortalCart
+====
+    >>> from collective.cart.core.interfaces import IPortalCart
+    >>> from collective.cart.core.adapter.portal import PortalCart
+    >>> provideAdapter(PortalCart)
+    >>> from zope.publisher.interfaces.browser import IBrowserRequest
+    >>> from zope.publisher.browser import TestRequest
+    >>> request = TestRequest()
+    >>> data = dict(
+    ...     uid = 'someuid',
+    ...     quantity = '3',
+    ... )
+    >>> request.form.update(data)
+    >>> IBrowserRequest.providedBy(request)
+    True
+    >>> from Products.CMFPlone.interfaces.siteroot import IPloneSiteRoot
+    >>> class Portal(object):
+    ...     implements(IPloneSiteRoot)
+    ...     def __init__(self, **kwargs):
+    ...         for k, v in kwargs.items(): setattr(self, k, v)
+    >>> portal = Portal()
+    >>> IPloneSiteRoot.providedBy(portal)
+    True
+    >>> pcart = getMultiAdapter((portal, request), IPortalCart)
+
+IPortalCatalog
+====
+    >>> from collective.cart.core.interfaces import IPortalCatalog
+    >>> from collective.cart.core.adapter.portal import PortalCatalog
+    >>> provideAdapter(PortalCatalog)
+    >>> from Products.CMFPlone.interfaces.siteroot import IPloneSiteRoot
+    >>> class Portal(object):
+    ...     implements(IPloneSiteRoot)
+    ...     def __init__(self, **kwargs):
+    ...         for k, v in kwargs.items(): setattr(self, k, v)
+    >>> portal = Portal()
+    >>> from collective.cart.core.content import CartFolder
+    >>> from Products.Archetypes.Schema.factory import instanceSchemaFactory
+    >>> provideAdapter(instanceSchemaFactory)
+    >>> cfolder = CartFolder('cfolder')
+    >>> class Brain(object):
+    ...     def __init__(self, **kwargs):
+    ...         for k, v in kwargs.items(): setattr(self, k, v)
+    ...     def getObject(self):
+    ...         return cfolder
+    >>> brain01 = Brain(id='1')
+    >>> brain02 = Brain(id='2')
+    >>> brain03 = Brain(id='3')
+    >>> brain06 = Brain(id='6')
+    
+    >>> from Products.ZCatalog.interfaces import IZCatalog
+    >>> class Catalog(object):
+    ...     implements(IZCatalog)
+    ...     def __init__(self, **kwargs):
+    ...         for k, v in kwargs.items(): setattr(self, k, v)
+    ...     def unrestrictedSearchResults(self, query):
+    ...         return [brain01, brain02, brain03, brain06]
+    >>> catalog = Catalog()
+    >>> pcatalog = getMultiAdapter((portal, catalog), IPortalCatalog)
+    >>> pcatalog
+    <collective.cart.core.adapter.portal.PortalCatalog object at ...>
+    >>> pcatalog.cart_folder
+    <CartFolder at cfolder>
+    >>> pcatalog.used_cart_ids
+    ['1', '2', '3', '6']
+    >>> pcatalog.incremental_cart_id
+    '4'
+    >>> pcatalog.incremental_cart_id
+    '5'
+    >>> pcatalog.incremental_cart_id
+    '7'
+    >>> from collective.cart.core.interfaces import IRandomDigits
+    >>> from collective.cart.core.utility.miscellaneous import RandomDigits
+    >>> provideUtility(RandomDigits(), provides=IRandomDigits)
+    >>> pcatalog.random_cart_id(1) not in pcatalog.used_cart_ids
+    True
+    >>> len(pcatalog.random_cart_id(2))
+    2
+
+
+IPortalSession
+====
+    >>> from collective.cart.core.interfaces import IPortalSession
+    >>> from collective.cart.core.adapter.portal import PortalSession
+    >>> provideAdapter(PortalSession)
+    >>> session = {'collective.cart.core.id': 5}
+    >>> try:
+    ...     from Products.Sessions.interfaces import ISessionDataManager
+    ... except ImportError:
+    ...     pass
+    >>> class SDM(object):
+    ...     try:
+    ...         implements(ISessionDataManager)
+    ...     except:
+    ...         pass
+    ...     def __init__(self, **kwargs):
+    ...         for k, v in kwargs.items(): setattr(self, k, v)
+    ...     def getSessionData(self, create=True):
+    ...         return session
+    >>> sdm = SDM()
+    >>> sdm.getSessionData()
+    {'collective.cart.core.id': 5}
+    >>> psession = getMultiAdapter((portal, sdm), IPortalSession)
+    >>> psession.cart_id
+    5
+    >>> psession.delete_cart_id_from_session()
+    >>> session
+    {}
+
+IPortalSessionCatalog
+====
+    >>> from collective.cart.core.interfaces import IPortalSessionCatalog
+    >>> from collective.cart.core.adapter.portal import PortalSessionCatalog
+    >>> provideAdapter(PortalSessionCatalog)
+    >>> from Products.ZCatalog.interfaces import IZCatalog
+    >>> from collective.cart.core.content import Cart
+    >>> cart = Cart('cart')
+    >>> class Brain(object):
+    ...     def __init__(self, **kwargs):
+    ...         for k, v in kwargs.items(): setattr(self, k, v)
+    ...     def getObject(self):
+    ...         return cart
+    >>> brain = Brain()
+    >>> class Catalog(object):
+    ...     implements(IZCatalog)
+    ...     def __init__(self, **kwargs):
+    ...         for k, v in kwargs.items(): setattr(self, k, v)
+    ...     def unrestrictedSearchResults(self, query):
+    ...         return [brain]
+    >>> catalog = Catalog()
+    >>> IPloneSiteRoot.providedBy(portal)
+    True
+    >>> ISessionDataManager.providedBy(sdm)
+    True
+    >>> IZCatalog.providedBy(catalog)
+    True
+    >>> psc = getMultiAdapter((portal, sdm, catalog), IPortalSessionCatalog)
+    >>> psc.cart_id
+    >>> session = {'collective.cart.core.id': 3}
+    >>> sdm = SDM()
+    >>> psc = getMultiAdapter((portal, sdm, catalog), IPortalSessionCatalog)
+    >>> psc.cart_id
+    3
+    >>> psc.cart
+    <Cart at cart>
+
+IPortalAdapter
+====
+    >>> from collective.cart.core.content import CartFolder
+    >>> from Products.Archetypes.Schema.factory import instanceSchemaFactory
+    >>> provideAdapter(instanceSchemaFactory)
+    >>> folder = CartFolder('folder')
+    >>> from collective.cart.core.interfaces import ICartFolder
+    >>> identifier = ICartFolder.__identifier__
+    >>> class Brain(object):
+    ...     def __init__(self, **kwargs):
+    ...         for k, v in kwargs.items(): setattr(self, k, v)
+    ...     def getObject(self):
+    ...         return folder
+    >>> brain = Brain()
+    >>> brain.getObject()
+    <CartFolder at folder>
+    >>> class Catalog(object):
+    ...     implements(IZCatalog)
+    ...     def __init__(self, **kwargs):
+    ...         for k, v in kwargs.items(): setattr(self, k, v)
+    ...     def unrestrictedSearchResults(self, query):
+    ...         if query.get('object_provides') == identifier:
+    ...             if ICartFolder.providedBy(folder):
+    ...                 return [brain]
+    ...         return []
+    >>> catalog = Catalog()
+    >>> query = dict(object_provides='')
+    >>> catalog.unrestrictedSearchResults(query)
+    []
+    >>> query = dict(object_provides=identifier)
+    >>> catalog.unrestrictedSearchResults(query)
+    [<Brain object at ...>]
+    >>> portal = Portal(portal_properties=properties, portal_catalog=catalog)
+    >>> from collective.cart.core.interfaces import IPortalAdapter
+    >>> from collective.cart.core.adapter.portal import PortalAdapter
+    >>> provideAdapter(PortalAdapter)
+    >>> padapter = IPortalAdapter(portal)
+    >>> padapter.cart_properties
+    <collective.cart.core.adapter.portal.PortalCartProperties object at ...>
+    >>> IPloneSiteRoot.providedBy(portal)
+    True
+    >>> IZCatalog.providedBy(portal.portal_catalog)
+    True
+    >>> padapter.next_cart_id('Incremental')
+    '1'
+    >>> padapter.next_cart_id('Incremental')
+    '2'
+    >>> padapter.next_cart_id('Random') in [str(n) for n in range(0,10)]
+    True
+
+
+
+    >>> products = [{'subtotal':5.0}, {'subtotal':10.0}]
+    >>> padapter.subtotal_price(products)
+    15.0
+    >>> padapter.subtotal_price_with_currency(products)
+    '15.00 \xe5\x86\x86'
+    >>> catalog = Tool()
+    >>> from collective.cart.core.interfaces import IPortalAdapter
+    >>> from collective.cart.core.adapter.portal import PortalAdapter
+    >>> provideAdapter(PortalAdapter)
+    >>> padapter = IPortalAdapter(portal)
+    >>> padapter.cart_properties
+    <collective.cart.core.adapter.portal.PortalCartProperties object at ...>
+    >>> padapter.cart_properties.random_cart_id_digits
+    10

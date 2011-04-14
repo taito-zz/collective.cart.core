@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<object name="CartFolder"
+   meta_type="Factory-based Type Information with dynamic views"
+   i18n:domain="collective.cart.core" xmlns:i18n="http://xml.zope.org/namespaces/i18n">
+ <property name="title" i18n:translate="CartFolder">CartFolder</property>
+ <property name="description"
+     i18n:translate="">CartFolder</property>
+ <property name="content_icon"></property>
+ <property name="content_meta_type">CartFolder</property>
+ <property name="product">collective.cart.core</property>
+ <property name="factory">addCartFolder</property>
+ <property name="immediate_view">view</property>
+ <property name="global_allow">True</property>
+ <property name="filter_content_types">True</property>
+ <property name="allowed_content_types">
+  <element value="Cart"/>
+ </property>
+ <property name="allow_discussion">False</property>
+ <property name="default_view">view</property>
+ <property name="view_methods">
+  <element value="view"/>
+<!--  <element value="folder_summary_view"/>-->
+<!--  <element value="folder_full_view"/>-->
+  <element value="folder_tabular_view"/>
+<!--  <element value="atct_album_view"/>-->
+  <element value="folder_listing"/>
+ </property>
+ <alias from="(Default)" to="(dynamic view)"/>
+ <alias from="edit" to="atct_edit"/>
+ <alias from="sharing" to="@@sharing"/>
+ <alias from="view" to="(selected layout)"/>
+ <action title="View" action_id="view" category="object" condition_expr=""
+    url_expr="string:${folder_url}/" visible="True">
+  <permission value="View"/>
+ </action>
+ <action title="Edit" action_id="edit" category="object" condition_expr=""
+    url_expr="string:${object_url}/edit" visible="True" i18n:attributes="title" i18n:domain="plone">
+  <permission value="Modify portal content"/>
+ </action>
+</object>

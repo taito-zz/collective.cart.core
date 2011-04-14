@@ -1,0 +1,23 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope">
+
+  <utility factory=".price.DecimalPlaces" />
+  <utility factory=".price.PriceInString" />
+  <utility factory=".price.PriceWithCurrency" />
+
+  <utility 
+    component=".price.float_price"
+    name="float" />
+
+  <utility 
+    component=".price.decimal_price"
+    name="decimal" />
+
+  <utility 
+    component=".price.string_price"
+    name="string" />
+
+  <utility factory=".miscellaneous.SelectRange" />
+  <utility factory=".miscellaneous.RandomDigits" />
+  <utility factory=".miscellaneous.RegularExpression" />
+</configure>

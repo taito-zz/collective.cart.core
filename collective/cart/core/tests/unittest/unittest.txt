@@ -1,0 +1,25 @@
+    >>> from zope.publisher.browser import TestRequest
+    >>> from zope.interface import implements
+    >>> from Products.Archetypes.interfaces.base import IBaseObject
+
+#    >>> class Mock(object):
+#    ...     implements(IBaseObject)
+#    ...     def __init__(self, **kwargs):
+#    ...         for k, v in kwargs.items(): setattr(self, k, v)
+
+    >>> class Mock(object):
+    ...     def __init__(self, **kwargs):
+    ...         for k, v in kwargs.items(): setattr(self, k, v)
+
+    >>> portal = Mock()
+    >>> context = Mock(portal_url=Mock(getPortalObject=lambda: portal))
+
+    >>> from zope.interface import alsoProvides
+    >>> from collective.cart.core.interfaces import IPotentiallyAddableToCart
+    >>> alsoProvides(context, IPotentiallyAddableToCart)
+    >>> IPotentiallyAddableToCart.providedBy(context)
+    True
+    >>> from collective.cart.core.interfaces import IAddableToCart
+    >>> alsoProvides(context, IAddableToCart)
+    >>> IAddableToCart.providedBy(context)
+    True

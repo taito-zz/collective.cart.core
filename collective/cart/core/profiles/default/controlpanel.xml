@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<object xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+        i18n:domain="collective.cart.core"
+        name="portal_controlpanel">
+ <configlet title="Cart Config" action_id="collective_cart_config" appId="collective.cart.core"
+    category="Products" condition_expr=""
+    icon_expr="string:$portal_url/maintenance_icon.png"
+    url_expr="string:${portal_url}/@@cart-config" visible="True"
+    i18n:attributes="title">
+  <permission>Manage portal</permission>
+ </configlet>
+</object>

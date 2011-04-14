@@ -1,0 +1,292 @@
+===========
+Utilities
+===========
+    >>> from zope.component import getUtility, provideUtility
+    >>> from decimal import Decimal
+
+IDecimalPlaces
+----
+    >>> from collective.cart.core.interfaces import IDecimalPlaces
+    >>> from collective.cart.core.utility.price import DecimalPlaces
+    >>> provideUtility(DecimalPlaces(), provides=IDecimalPlaces)
+    >>> places = getUtility(IDecimalPlaces)
+    >>> places('EUR')
+    2
+    >>> places('JPY')
+    0
+
+IPrice
+----
+    >>> from collective.cart.core.interfaces import IPrice
+    >>> from collective.cart.core.utility.price import Price
+    >>> provideUtility(Price('float'), provides=IPrice, name="float")
+    >>> provideUtility(Price('decimal'), provides=IPrice, name="decimal")
+    >>> provideUtility(Price('string'), provides=IPrice, name="string")
+    >>> float_price = getUtility(IPrice, name="float")
+    >>> decimal_price = getUtility(IPrice, name="decimal")
+    >>> string_price = getUtility(IPrice, name="string")
+    >>> float_price(0)
+    0.0
+    >>> decimal_price(0) == Decimal('0.00')
+    True
+    >>> string_price(0)
+    '0.00'
+    >>> float_price(1)
+    1.0
+    >>> decimal_price(1) == Decimal('1.00')
+    True
+    >>> string_price(1)
+    '1.00'
+    >>> float_price(100)
+    100.0
+    >>> decimal_price(100) == Decimal('100.00')
+    True
+    >>> string_price(100)
+    '100.00'
+    >>> float_price(10.0)
+    10.0
+    >>> decimal_price(10.0) == Decimal('10.00')
+    True
+    >>> string_price(10.0)
+    '10.00'
+    >>> float_price(10.014)
+    10.01
+    >>> decimal_price(10.014) == Decimal('10.01')
+    True
+    >>> string_price(10.014)
+    '10.01'
+    >>> float_price(10.015)
+    10.02
+    >>> decimal_price(10.015) == Decimal('10.02')
+    True
+    >>> string_price(10.015)
+    '10.02'
+    >>> float_price(10.0045)
+    10.01
+    >>> decimal_price(10.0045) == Decimal('10.01')
+    True
+    >>> string_price(10.0045)
+    '10.01'
+    >>> float_price(5.25)
+    5.25
+    >>> decimal_price(5.25) == Decimal('5.25')
+    True
+    >>> string_price(5.25)
+    '5.25'
+
+IPriceInString
+--------------
+    >>> from collective.cart.core.interfaces import IPriceInString
+    >>> from collective.cart.core.utility.price import PriceInString
+    >>> provideUtility(PriceInString(), provides=IPriceInString)
+    >>> pis = getUtility(IPriceInString)
+    >>> pis('100')
+    '100.00'
+    >>> pis(100)
+    '100.00'
+    >>> pis(100.0)
+    '100.00'
+    >>> pis(100, 'EUR')
+    '100.00'
+    >>> pis(100, 'JPY')
+    '100'
+    >>> pis(100, 'USD', ',')
+    '100,00'
+    >>> pis(100, 'JPY', ',')
+    '100'
+
+
+IPriceWithCurrency
+----
+    >>> from collective.cart.core.interfaces import IPriceWithCurrency
+    >>> from collective.cart.core.utility.price import PriceWithCurrency
+    >>> provideUtility(PriceWithCurrency(), provides=IPriceWithCurrency)
+    >>> pwc = getUtility(IPriceWithCurrency)
+    >>> pwc('100', 'EUR', 'behind', '.')
+    '100.00 EUR'
+    >>> pwc('100', 'EUR', 'front', ',')
+    'EUR 100,00'
+    >>> pwc('100', 'JPY', 'behind', '.')
+    '100 JPY'
+    >>> pwc('0.6', 'JPY', 'behind', '.')
+    '1 JPY'
+    >>> pwc('100', 'KWD', 'behind', '.')
+    '100.000 KWD'
+    >>> pwc('100', 'JPY', 'behind', '.', 'Yen')
+    '100 Yen'
+    >>> pwc('100', 'JPY', 'behind', '.', '円')
+    '100 \xe5\x86\x86'
+
+IDecimalPrice
+----
+    >>> from collective.cart.core.interfaces import IPrice
+    >>> from collective.cart.core.utility.price import Price
+    >>> provideUtility(Price('float'), provides=IPrice, name="float")
+    >>> provideUtility(Price('decimal'), provides=IPrice, name="decimal")
+    >>> provideUtility(Price('string'), provides=IPrice, name="string")
+    >>> float_price = getUtility(IPrice, name="float")
+    >>> decimal_price = getUtility(IPrice, name="decimal")
+    >>> string_price = getUtility(IPrice, name="string")
+    >>> float_price(0)
+    0.0
+    >>> decimal_price(0) == Decimal('0.00')
+    True
+    >>> string_price(0)
+    '0.00'
+    >>> float_price(1)
+    1.0
+    >>> decimal_price(1) == Decimal('1.00')
+    True
+    >>> string_price(1)
+    '1.00'
+    >>> float_price(100)
+    100.0
+    >>> decimal_price(100) == Decimal('100.00')
+    True
+    >>> string_price(100)
+    '100.00'
+    >>> float_price(10.0)
+    10.0
+    >>> decimal_price(10.0) == Decimal('10.00')
+    True
+    >>> string_price(10.0)
+    '10.00'
+    >>> float_price(10.014)
+    10.01
+    >>> decimal_price(10.014) == Decimal('10.01')
+    True
+    >>> string_price(10.014)
+    '10.01'
+    >>> float_price(10.015)
+    10.02
+    >>> decimal_price(10.015) == Decimal('10.02')
+    True
+    >>> string_price(10.015)
+    '10.02'
+    >>> float_price(10.0045)
+    10.01
+    >>> decimal_price(10.0045) == Decimal('10.01')
+    True
+    >>> string_price(10.0045)
+    '10.01'
+    >>> float_price(5.25)
+    5.25
+    >>> decimal_price(5.25) == Decimal('5.25')
+    True
+    >>> string_price(5.25)
+    '5.25'
+
+ISelectRange
+----
+    >>> from collective.cart.core.interfaces import ISelectRange
+    >>> from collective.cart.core.utility.miscellaneous import SelectRange
+    >>> provideUtility(SelectRange(), provides=ISelectRange)
+    >>> sr = getUtility(ISelectRange)
+    >>> sr(None)
+    >>> sr(-1)
+    >>> sr(1)
+    [1]
+    >>> sr(2)
+    [1, 2]
+    >>> sr(10)
+    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+IRandomDigits
+----
+    >>> from collective.cart.core.interfaces import IRandomDigits
+    >>> from collective.cart.core.utility.miscellaneous import RandomDigits
+    >>> provideUtility(RandomDigits(), provides=IRandomDigits)
+    >>> rd = getUtility(IRandomDigits)
+    >>> ids = ['6', '5', '4', '3', '2', '1', '0']
+    >>> len(rd(4, None))
+    4
+    >>> rd(-1, ids)
+    ''
+    >>> rd(1, ids) in ['9', '8', '7']
+    True
+    >>> len(rd(2, ids))
+    2
+    >>> len(rd(10, ids))
+    10
+    >>> len(rd(2, []))
+    2
+    >>> ids = range(1,10)
+    >>> ids = [str(id) for id in ids]
+    >>> rd(1, ids)
+    '0'
+    >>> ids = range(1,11)
+    >>> ids = [str(id) for id in ids]
+    >>> len(ids)
+    10
+    >>> rd(1, ids)
+    Traceback (most recent call last):
+    ...
+    InfiniteLoopError: All the numbers with digits 1 are used.
+
+IRegularExpression
+----
+    >>> from collective.cart.core.interfaces import IRegularExpression
+    >>> from collective.cart.core.utility.miscellaneous import RegularExpression
+    >>> provideUtility(RegularExpression(), provides=IRegularExpression)
+    >>> re = getUtility(IRegularExpression)
+    >>> re.email('aaa')
+    False
+    >>> re.email('333')
+    False
+    >>> re.email('ggg@')
+    False
+    >>> re.email('a@a.com')
+    True
+    >>> re.integer('aaa')
+    False
+    >>> re.integer('5.5')
+    False
+    >>> re.integer('5')
+    True
+    >>> re.integer('50')
+    True
+    >>> re.float('aaa')
+    False
+    >>> re.float('5')
+    True
+    >>> re.float('5a5')
+    False
+    >>> re.float('50.55')
+    True
+
+#ICountryVAT
+#    >>> from collective.cart.core.interfaces import ICountryVAT
+#    >>> from collective.cart.core.utility.country import CountryVAT
+#    >>> provideUtility(CountryVAT(), provides=ICountryVAT)
+#    >>> cv = getUtility(ICountryVAT)
+#    >>> vats = ('FI|22.00', 'FI|12.00', 'FI|8.00', 'JP|5.00')
+#    >>> cv('FI', vats)
+#    [[u'22.00', u'22.00 %'], [u'12.00', u'12.00 %'], [u'8.00', u'8.00 %']]
+
+#ICountries
+#----
+#    >>> from collective.cart.core.interfaces import ICountries
+#    >>> from collective.cart.core.utility.country import Countries
+#    >>> provideUtility(Countries(), provides=ICountries)
+#    >>> countries = getUtility(ICountries)()
+#    >>> countries.get('FI')
+#    'Finland'
+#    >>> countries.get('US')
+#    'United States'
+#    >>> countries.get('JP')
+#    'Japan'
+#    >>> otl = getUtility(ICountries).ordered_tuple_list()
+#    >>> len(otl)
+#    246
+#    >>> otl[0]
+#    ('AF', 'Afghanistan')
+
+#ICustomerInfo
+#----
+#    >>> from collective.cart.core.interfaces import ICustomerInfo
+#    >>> from collective.cart.core.utility.customer_info import CustomerInfo
+#    >>> provideUtility(CustomerInfo(), provides=ICustomerInfo)
+#    >>> info = getUtility(ICustomerInfo)
+#    >>> data = {'phone_number': '0123456789', 'city': 'Shipping City', 'post_code': '00100', 'country': 'JP', 'detailed_address': 'Room 2', 'street': 'Shipping Street', 'country_code': 'JP', 'country_name': 'Japan', 'organization': 'Shipping Organization', 'fullname': 'Shipping Fullname', 'email': 'shipping@abita.fi'}
+#    >>> info(data) == {'phone_number': '0123456789', 'post_code': '00100', 'organization': 'Shipping Organization', 'address': 'Room 2, Shipping Street, Shipping City', 'country': 'Japan', 'fullname': 'Shipping Fullname', 'email': 'shipping@abita.fi'}
+#    True

@@ -1,0 +1,21 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    i18n_domain="collective.cart.core">
+<!--  <adapter factory=".portal.PortalAdapter"-->
+<!--           for="*" />-->
+  <adapter factory=".portal.PortalCartProperties" />
+  <adapter factory=".portal.PortalAdapter" />
+
+<!--  <adapter factory=".cart.CartFolder" />-->
+  <adapter factory=".cart.CartProductAdapter" />
+  <adapter factory=".cart.CartProductOriginal" />
+<!--  <adapter factory=".cart.CartProductProperties" />-->
+  <adapter factory=".cart.CartAdapter" />
+  <adapter factory=".product.Product" />
+<!--  <adapter factory=".product.ProductProperties" />-->
+  <adapter factory=".portal.PortalCart" />
+  <adapter factory=".portal.PortalCatalog" />
+  <adapter factory=".portal.PortalSession" />
+  <adapter factory=".portal.PortalSessionCatalog" />
+
+</configure>

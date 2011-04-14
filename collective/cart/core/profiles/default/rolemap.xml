@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<rolemap>
+  <permissions>
+    <permission name="collective.cart.core: Add CartFolder" acquire="False">
+        <role name="Manager" />
+        <role name="Contributor" />
+    </permission>
+    <permission name="collective.cart.core: Add Cart" acquire="False">
+        <role name="Manager" />
+        <role name="Contributor" />
+        <role name="Member" />
+        <role name="Anonymous" />
+    </permission>
+    <permission name="collective.cart.core: Add CartProduct" acquire="False">
+        <role name="Manager" />
+        <role name="Contributor" />
+        <role name="Member" />
+        <role name="Anonymous" />
+    </permission>
+  </permissions>
+</rolemap>

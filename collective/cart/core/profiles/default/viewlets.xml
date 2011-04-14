@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<object>
+  <order manager="collective.cart.core.config.manager">
+    <viewlet name="collective.cart.core.config.properties" />
+    <viewlet name="collective.cart.core.config.types" />
+  </order>
+  <order manager="plone.belowcontenttitle">
+    <viewlet name="collective.cart.core.product.values" />
+  </order>
+  <order manager="collective.cart.core.cart.manager">
+    <viewlet name="collective.cart.core.cart.contents" />
+    <viewlet name="collective.cart.core.next.step" />
+  </order>
+</object>

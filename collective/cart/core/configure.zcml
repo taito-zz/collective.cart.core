@@ -1,0 +1,25 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:five="http://namespaces.zope.org/five"
+    xmlns:i18n="http://namespaces.zope.org/i18n"
+    xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
+    i18n_domain="collective.cart.core">
+
+  <five:registerPackage package="." initialize=".initialize" />
+
+  <include package=".adapter" />
+  <include package=".browser" />
+  <include package=".content" />
+  <include package=".portlets" />
+  <include package=".subscriber" />
+  <include package=".utility" />
+
+  <genericsetup:registerProfile
+      name="default"
+      title="collective.cart.core"
+      directory="profiles/default"
+      description="Installs the collective.cart.core package"
+      provides="Products.GenericSetup.interfaces.EXTENSION"
+      />
+
+</configure>

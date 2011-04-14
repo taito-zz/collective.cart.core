@@ -1,0 +1,27 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:five="http://namespaces.zope.org/five"
+    i18n_domain="collective.cart.core">
+
+  <class class=".cart.Cart">
+    <require
+        permission="zope2.AccessContentsInformation"
+        interface="..interfaces.ICart"
+        />
+  </class>
+
+  <class class=".cart.CartFolder">
+    <require
+        permission="cmf.ModifyPortalContent"
+        interface="..interfaces.ICartFolder"
+        />
+  </class>
+
+  <class class=".cart.CartProduct">
+    <require
+        permission="zope2.AccessContentsInformation"
+        interface="..interfaces.ICartProduct"
+        />
+  </class>
+
+</configure>

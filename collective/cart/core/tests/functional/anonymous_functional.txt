@@ -1,0 +1,172 @@
+Initial imports and defines.
+----
+    >>> portal_url =  portal.absolute_url()
+    >>> cfolder = portal.cfolder
+    >>> cfolder_url = cfolder.absolute_url()
+    >>> document01 = portal.document01
+    >>> document01_url = document01.absolute_url()
+    >>> document02 = portal.document02
+    >>> document02_url = document02.absolute_url()
+    >>> cart_url = '%s/@@cart' % portal_url
+
+Setting up.
+----
+    >>> try:
+    ...     from Testing.testbrowser import Browser
+    ... except ImportError:
+    ...     from Products.Five.testbrowser import Browser
+    >>> browser = Browser()
+
+For debugging.
+----
+    >>> browser.handleErrors = True
+    >>> portal.error_log._ignored_exceptions = ()
+
+Turn off portlets.
+----
+    >>> from zope.component import getUtility, getMultiAdapter
+    >>> from plone.portlets.interfaces import IPortletManager
+    >>> from plone.portlets.interfaces import IPortletAssignmentMapping
+
+    >>> left_column = getUtility(IPortletManager, name=u"plone.leftcolumn")
+    >>> left_assignable = getMultiAdapter((portal, left_column), IPortletAssignmentMapping)
+    >>> for name in left_assignable.keys():
+    ...     del left_assignable[name]
+
+    >>> right_column = getUtility(IPortletManager, name=u"plone.rightcolumn")
+    >>> right_assignable = getMultiAdapter((portal, right_column), IPortletAssignmentMapping)
+    >>> for name in right_assignable.keys():
+    ...     del right_assignable[name]
+
+Log in as the portal owner.
+----
+    >>> browser.open(portal_url)
+    >>> from Products.PloneTestCase.setup import portal_owner, default_password
+    >>> browser.open(portal_url + '/login_form?came_from=' + portal_url)
+    >>> browser.getControl(name='__ac_name').value = portal_owner
+    >>> browser.getControl(name='__ac_password').value = default_password
+    >>> browser.getControl(name='submit').click()
+
+    >>> browser.open(portal_url)
+    >>> browser.getLink('Site Setup').click()
+    >>> browser.getLink('Cart Config').click()
+
+    >>> cfolder.next_incremental_cart_id
+    1
+
+#    >>> browser.getControl(name="cart_id_method").value = ['Incremental']
+#    >>> browser.getControl(name="form.button.UpdateCartProperties").click()
+
+#    >>> 'value="Incremental"' in browser.contents
+#    True
+
+    >>> browser.open(cart_url)
+    >>> 'Cart is Empty.' in browser.contents
+    True
+    >>> browser.open(document01_url)
+    >>> browser.getControl(name="form.button.AddToCart").click()
+    >>> browser.open(cart_url)
+    >>> 'Cart is Empty.' in browser.contents
+    False
+
+    >>> cfolder.next_incremental_cart_id
+    2
+
+    >>> browser.open(document01_url)
+    >>> browser.getControl(name="form.button.AddToCart").click()
+    >>> browser.open(cart_url)
+    >>> 'Cart is Empty.' in browser.contents
+    False
+
+    >>> cfolder.next_incremental_cart_id
+    2
+
+    >>> browser.open(document02_url)
+    >>> browser.getControl(name="form.button.AddToCart").click()
+    >>> browser.open(cart_url)
+    >>> 'Cart is Empty.' in browser.contents
+    False
+
+    >>> cfolder.next_incremental_cart_id
+    2
+
+Log out
+----
+    >>> browser.getLink('Log out').click()
+
+Go to Product01
+----
+    >>> cfolder.next_incremental_cart_id
+    2
+    >>> browser.open(document01_url)
+    >>> 'value="18"' in browser.contents
+    True
+    >>> 'value="19"' in browser.contents
+    False
+    >>> browser.getControl(name="quantity", index=0).value = ['2']
+    >>> browser.getControl(name="form.button.AddToCart").click()
+    >>> cfolder['1']
+    <Cart at /plone/cfolder/1>
+    >>> cfolder.next_incremental_cart_id
+    3
+
+Go to cfolder
+----
+    >>> cart = cfolder['2']
+    >>> cart2_url = cart.absolute_url()
+    >>> browser.open(cart2_url)
+    >>> product1 = cart['1']
+    >>> product1_url = product1.absolute_url()
+    >>> browser.open(product1_url)
+    >>> browser.url
+    'http://nohost/plone/cfolder/2/1'
+
+Go to cart
+----
+    >>> browser.open(cart_url)
+    >>> 'value="18"' in browser.contents
+    True
+    >>> 'value="19"' in browser.contents
+    False
+    >>> '10.00 EUR' in browser.contents
+    True
+    >>> 'value="2" selected="selected"' in browser.contents
+    True
+    >>> '20.00 EUR' in browser.contents
+    True
+
+Go to Document02 and add to cart.
+----
+    >>> browser.open(document02_url)
+    >>> 'value="100"' in browser.contents
+    True
+    >>> 'value="101"' in browser.contents
+    False
+    >>> browser.getControl(name="quantity", index=0).value = ['3']
+    >>> browser.getControl(name="form.button.AddToCart").click()
+
+Go to cart
+----
+    >>> browser.open(cart_url)
+    >>> '10.00 EUR' in browser.contents
+    True
+    >>> 'value="2" selected="selected"' in browser.contents
+    True
+    >>> '20.00 EUR' in browser.contents
+    True
+    >>> '5.00 EUR' in browser.contents
+    True
+    >>> 'value="3" selected="selected"' in browser.contents
+    True
+    >>> 'value="100"' in browser.contents
+    True
+    >>> 'value="101"' in browser.contents
+    False
+    >>> '15.00 EUR' in browser.contents
+    True
+    >>> '35.00 EUR' in browser.contents
+    True
+
+Go To Next Step
+----
+    >>> browser.getControl(name="form.button.NextStep").click()

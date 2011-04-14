@@ -1,0 +1,10 @@
+<div i18n:domain="collective.cart" id="cart-next">
+  <form method="post"
+        tal:attributes="action view/current_url">
+    <input type="submit"
+           class="standalone"
+           value="Next Step"
+           i18n:attributes="value"
+           name="form.button.NextStep" />
+  </form>
+</div>

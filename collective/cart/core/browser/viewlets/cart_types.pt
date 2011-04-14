@@ -1,0 +1,17 @@
+<div id="cart-types" i18n:domain="collective.cart">
+  <form method="post"
+        tal:attributes="action view/current_url">
+      <h2 i18n:translate="">Addable Content Types to Cart</h2>
+      <div tal:replace="structure view/select_types" />
+<!--      <h2 i18n:translate="">Fields to be added</h2>-->
+<!--      <div tal:replace="structure view/use_price_field" />-->
+<!--      <label for="price_field" i18n:translate="">-->
+<!--        Price Field-->
+<!--      </label>-->
+      <input type="submit"
+             class="standalone"
+             value="Update"
+             i18n:attributes="value"
+             name="form.button.UpdateContentTypes" />
+  </form>
+</div>

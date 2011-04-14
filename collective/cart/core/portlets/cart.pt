@@ -1,0 +1,58 @@
+<dl class="portlet portletCart"
+    i18n:domain="collective.cart.core">
+
+  <dt class="portletHeader">
+    <span class="portletTopLeft"></span>
+    <a href="#"
+       tal:attributes="href view/link_to_cart"
+       i18n:translate="">Cart</a>
+    <span class="portletTopRight"></span>
+  </dt>
+
+  <dd class="portletItem">
+  <table class="listing">
+    <thead>
+      <tr>
+        <th i18n:translate="">
+          Product Name
+        </th>
+        <th i18n:translate="">
+          Quantity
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tal:block tal:repeat="item view/products">
+      <tr 
+          tal:define="oddrow repeat/item/odd;"
+          tal:attributes="class python:oddrow and 'portletItem even' or 'portletItem odd'">
+        <td id="product-title">
+          <a tal:attributes="href item/url;
+                             id item/title"
+             tal:content="item/title" />
+        </td>
+        <td class="product-quantity">
+          <span tal:replace="item/quantity" />
+        </td>
+      </tr>
+      </tal:block>
+    </tbody>
+  </table>
+  </dd>
+
+  <dd class="portletFooter">
+    <span class="portletBottomLeft"></span>
+    <ul>
+      <li>
+        <a href="#"
+           tal:attributes="href view/link_to_cart"
+           i18n:translate="">
+          Check Cart
+        </a>
+      </li>
+    </ul>
+    <span class="portletBottomRight"></span>
+  </dd>
+</dl>
+
+

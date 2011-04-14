@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<object name="portal_properties" meta_type="Plone Properties Tool">
+ <object name="collective_cart_properties" meta_type="Plone Property Sheet">
+  <property name="title">Cart Properties</property>
+  <property name="currency" type="string">EUR</property>
+  <property name="currency_symbol" type="string"></property>
+  <property name="symbol_location" type="string">Behind</property>
+<!--  <property name="cancel_page" type="string"></property>-->
+  <property name="content_types" type="lines" />
+<!--  <property name="use_price_field" type="boolean">True</property>-->
+<!--  <property name="decimal_point" type="int">2</property>-->
+  <property name="decimal_type" type="string">.</property>
+<!--  <property name="cart_folder_path" type="string">/carts</property>-->
+<!--  <property name="cart_id_method" type="string">Incremental</property>-->
+<!--  <property name="random_cart_id_digits" type="int">5</property>-->
+<!--  <property name="quantity_method" type="string">Select</property>-->
+ </object>
+</object>

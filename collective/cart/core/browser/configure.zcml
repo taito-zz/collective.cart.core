@@ -1,0 +1,255 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    i18n_domain="collective.cart.core">
+
+  <include package="plone.app.contentmenu" />
+
+  <browser:menuItem
+    for="..interfaces.ICartFolder"
+    menu="plone_displayviews"
+    title="Cart Folder View"
+    action="@@view"
+    description="Default representation of Cart Folder"
+    />
+
+  <browser:page
+    for="collective.cart.core.interfaces.ICartFolder"
+    name="view"
+    class=".template.CartFolderView"
+    permission="zope2.View"
+    />
+
+  <browser:menuItem
+    for="..interfaces.ICart"
+    menu="plone_displayviews"
+    title="Cart Folder View"
+    action="@@view"
+    description="Default representation of Cart"
+    />
+
+  <browser:page
+    for="collective.cart.core.interfaces.ICart"
+    name="view"
+    class=".template.CartTypeView"
+    permission="zope2.View"
+    />
+
+  <browser:page
+    for="Products.CMFCore.interfaces.ISiteRoot"
+    name="cart-config"
+    class=".template.CartConfigView"
+    permission="cmf.ModifyPortalContent"
+    />
+
+  <browser:page
+    for="collective.cart.core.interfaces.IAddableToCart"
+    name="edit-product"
+    class=".template.EditProductView"
+    permission="cmf.ModifyPortalContent"
+    />
+
+  <browser:page
+    name="cart"
+    for="*"
+    class=".template.CartView"
+    permission="zope2.View"
+    />
+
+<!--  <browser:page-->
+<!--    name="verkkomaksut"-->
+<!--    class=".template.PFGVerkkomaksutView"-->
+<!--    for="collective.cart.core.interfaces.ICartAware"-->
+<!--    permission="zope2.View"-->
+<!--    />-->
+
+    <browser:page
+        name="potentially-addable-but-not-addable-to-cart"
+        for="*"
+        class=".miscellaneous.Miscellaneous"
+        permission="cmf.ModifyPortalContent"
+        attribute="potentially_addable_but_not_addable_to_cart"
+        />
+
+    <browser:page
+        name="addable-to-cart"
+        for="*"
+        class=".miscellaneous.Miscellaneous"
+        permission="cmf.ModifyPortalContent"
+        attribute="addable_to_cart"
+        />
+
+    <browser:page
+        name="make-addable-to-cart"
+        for="*"
+        class=".miscellaneous.Miscellaneous"
+        permission="cmf.ModifyPortalContent"
+        attribute="make_addable_to_cart"
+        />
+
+    <browser:page
+        name="make-not-addable-to-cart"
+        for="*"
+        class=".miscellaneous.Miscellaneous"
+        permission="cmf.ModifyPortalContent"
+        attribute="make_not_addable_to_cart"
+        />
+
+    <browser:page
+        name="has-cart-contents"
+        for="*"
+        class=".miscellaneous.Miscellaneous"
+        permission="zope2.View"
+        attribute="has_cart_contents"
+        />
+
+    <browser:page
+        name="cart-id"
+        for="*"
+        class=".miscellaneous.Miscellaneous"
+        permission="zope2.View"
+        attribute="cart_id"
+        />
+
+    <browser:page
+        name="total-price"
+        for="*"
+        class=".miscellaneous.Miscellaneous"
+        permission="zope2.View"
+        attribute="total_price"
+        />
+
+    <browser:page
+        name="next-step"
+        for="*"
+        class=".miscellaneous.Miscellaneous"
+        permission="zope2.View"
+        attribute="next_step"
+        />
+
+    <browser:page
+        name="test-step"
+        for="*"
+        class=".miscellaneous.Miscellaneous"
+        permission="zope2.View"
+        attribute="test_step"
+        />
+
+    <browser:page
+        name="verkkomaksut-on-success"
+        for="collective.cart.core.interfaces.ICartAware"
+        class=".miscellaneous.Miscellaneous"
+        permission="zope2.View"
+        attribute="verkkomaksut_on_success"
+        />
+
+<!--    <browser:page-->
+<!--        name="make-cart-aware"-->
+<!--        for="Products.PloneFormGen.interfaces.IPloneFormGenActionAdapter"-->
+<!--        class=".miscellaneous.Miscellaneous"-->
+<!--        permission="cmf.ModifyPortalContent"-->
+<!--        attribute="make_cart_aware"-->
+<!--        />-->
+
+    <browser:page
+        name="make-cart-aware"
+        for="*"
+        class=".miscellaneous.Miscellaneous"
+        permission="cmf.ModifyPortalContent"
+        attribute="make_cart_aware"
+        />
+
+<!--    <browser:page-->
+<!--        name="make-not-cart-aware"-->
+<!--        for="Products.PloneFormGen.interfaces.IPloneFormGenActionAdapter"-->
+<!--        class=".miscellaneous.Miscellaneous"-->
+<!--        permission="cmf.ModifyPortalContent"-->
+<!--        attribute="make_not_cart_aware"-->
+<!--        />-->
+
+    <browser:page
+        name="make-not-cart-aware"
+        for="*"
+        class=".miscellaneous.Miscellaneous"
+        permission="cmf.ModifyPortalContent"
+        attribute="make_not_cart_aware"
+        />
+
+<!--    <browser:page-->
+<!--        name="is-cart-aware"-->
+<!--        for="Products.PloneFormGen.interfaces.IPloneFormGenActionAdapter"-->
+<!--        class=".miscellaneous.Miscellaneous"-->
+<!--        permission="cmf.ModifyPortalContent"-->
+<!--        attribute="is_cart_aware"-->
+<!--        />-->
+
+    <browser:page
+        name="is-cart-aware"
+        for="*"
+        class=".miscellaneous.Miscellaneous"
+        permission="cmf.ModifyPortalContent"
+        attribute="is_cart_aware"
+        />
+
+  <!-- Viewlet Managers -->
+  <browser:viewletManager
+    name="collective.cart.core.config.manager"
+    provides="collective.cart.core.interfaces.ICartConfigViewletManager"
+    permission="cmf.ModifyPortalContent"
+    class="plone.app.viewletmanager.manager.OrderedViewletManager"
+    />
+
+  <!-- Viewlets -->
+  <browser:viewlet
+    name="collective.cart.core.config.properties"
+    manager="collective.cart.core.interfaces.ICartConfigViewletManager"
+    class=".viewlet.CartConfigPropertiesViewlet"
+    permission="cmf.ModifyPortalContent"
+    />
+
+  <browser:viewlet
+    name="collective.cart.core.config.types"
+    manager="collective.cart.core.interfaces.ICartConfigViewletManager"
+    class=".viewlet.CartConfigTypesViewlet"
+    permission="cmf.ModifyPortalContent"
+    />
+
+  <browser:viewletManager
+    name="collective.cart.core.cart.manager"
+    provides="collective.cart.core.interfaces.ICartViewletManager"
+    permission="zope2.View"
+    class="plone.app.viewletmanager.manager.OrderedViewletManager"
+    />
+
+  <browser:viewlet
+    name="collective.cart.core.cart.contents"
+    manager="collective.cart.core.interfaces.ICartViewletManager"
+    class=".viewlet.CartContentsViewlet"
+    permission="zope2.View"
+    />
+
+  <browser:viewlet
+    name="collective.cart.core.next.step"
+    manager="collective.cart.core.interfaces.ICartViewletManager"
+    class=".viewlet.NextStepViewlet"
+    permission="zope2.View"
+    />
+
+  <browser:viewlet
+    name="collective.cart.core.product.values"
+    manager="plone.app.layout.viewlets.interfaces.IBelowContentTitle"
+    class=".viewlet.CartProductValuesViewlet"
+    permission="zope2.View"
+    for="collective.cart.core.interfaces.IAddableToCart"
+    view="plone.app.layout.globals.interfaces.IViewView"
+    />
+
+<!--  <browser:viewlet-->
+<!--    name="verkkomaksut.fixed.cart.content"-->
+<!--    manager="Products.PFGVerkkomaksut.interfaces.IVerkkomaksutBelowFieldValuesViewletManager"-->
+<!--    class=".viewlet.FixedCartContentViewlet"-->
+<!--    permission="zope2.View"-->
+<!--    for="collective.cart.core.interfaces.ICartAware"-->
+<!--    />-->
+
+</configure>

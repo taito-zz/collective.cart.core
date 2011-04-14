@@ -1,0 +1,35 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      lang="en"
+      metal:use-macro="here/main_template/macros/master"
+      i18n:domain="collective.cart.core">
+  <body>
+    <div metal:fill-slot="main" id="edit-product">
+      <h1 i18n:translate="">Edit Product</h1>
+      <form method="post" tal:attributes="action view/current_url">
+        <tal:block tal:repeat="item view/fields">
+         <div class="field">
+           <lable tal:content="item/label" />
+           <div class="formHelp" id="description_help" 
+                tal:condition="item/description" tal:content="item/description" />
+           <div tal:replace="structure item/field" />
+         </div>
+        </tal:block>
+        <input type="submit"
+               class="standalone"
+               value="Save"
+               i18n:attributes="value"
+               name="form.button.save" />
+      </form>
+<!--      <p tal:condition="not: view/has_contents"-->
+<!--         i18n:translate=""-->
+<!--         id="cart-is-empty">-->
+<!--        Cart is Empty.-->
+<!--      </p>-->
+<!--      <div tal:condition="view/has_contents"-->
+<!--           tal:replace="structure provider:collective.cart.core.cart.manager" />-->
+    </div>
+  </body>
+</html>

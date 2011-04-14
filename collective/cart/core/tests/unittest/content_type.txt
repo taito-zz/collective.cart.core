@@ -1,0 +1,361 @@
+    >>> from Products.Archetypes.Schema.factory import instanceSchemaFactory
+    >>> from zope.component import provideAdapter
+    >>> provideAdapter(instanceSchemaFactory)
+
+Creating CartFolder
+====
+    >>> from collective.cart.core.content import CartFolder
+    >>> cfolder = CartFolder('cfolder')
+    >>> cfolder
+     <CartFolder at cfolder>
+    >>> cfolder.portal_type
+    'CartFolder'
+    >>> from collective.cart.core.interfaces import ICartFolder
+    >>> ICartFolder.providedBy(cfolder)
+    True
+    >>> cfolder.schema
+    <Products.Archetypes.Schema.Schema object at ...>
+    >>> names = [field.getName() for field in cfolder.schema.getSchemataFields('default')]
+    >>> names
+    ['id', 'title', 'description', 'constrainTypesMode', 'locallyAllowedTypes', 'immediatelyAddableTypes', 'cart_id_numbering_method', 'next_incremental_cart_id', 'random_digits_cart_id', 'quantity_method', 'next_form']
+
+Field: cart_id_numbering_method
+----
+    >>> cfolder.schema['cart_id_numbering_method']
+    <Field cart_id_numbering_method(string:rw)>
+    >>> cfolder.schema['cart_id_numbering_method'].required == True
+    True
+    >>> cfolder.schema['cart_id_numbering_method'].searchable == False
+    True
+    >>> cfolder.schema['cart_id_numbering_method'].languageIndependent
+    True
+    >>> cfolder.schema['cart_id_numbering_method'].storage
+    <Storage AnnotationStorage>
+    >>> cfolder.schema['cart_id_numbering_method'].widget
+    <Products.Archetypes.Widget.SelectionWidget object at ...>
+    >>> cfolder.schema['cart_id_numbering_method'].widget.label
+    u'Cart ID Numbering Method'
+    >>> cfolder.schema['cart_id_numbering_method'].widget.description
+    u'Select Incremental or Random for Cart ID Numbering.'
+    >>> cfolder.schema['cart_id_numbering_method'].default
+    'Incremental'
+    >>> cfolder.schema['cart_id_numbering_method'].vocabulary
+    ('Incremental', 'Random')
+    >>> cfolder.schema['cart_id_numbering_method'].enforceVocabulary
+    True
+    >>> cfolder.cart_id_numbering_method = 'Random'
+    >>> cfolder.getCart_id_numbering_method()
+    'Random'
+
+Field: next_incremental_cart_id
+----
+    >>> cfolder.schema['next_incremental_cart_id']
+    <Field next_incremental_cart_id(integer:rw)>
+    >>> cfolder.schema['next_incremental_cart_id'].required == False
+    True
+    >>> cfolder.schema['next_incremental_cart_id'].searchable == False
+    True
+    >>> cfolder.schema['next_incremental_cart_id'].languageIndependent
+    True
+    >>> cfolder.schema['next_incremental_cart_id'].storage
+    <Storage AnnotationStorage>
+    >>> cfolder.schema['next_incremental_cart_id'].widget
+    <Products.Archetypes.Widget.IntegerWidget object at ...>
+    >>> cfolder.schema['next_incremental_cart_id'].widget.label
+    u'Next Incremental Cart ID'
+    >>> cfolder.schema['next_incremental_cart_id'].widget.description
+    u'If Incrementanl Cart ID is seleceted, give interger number here.'
+    >>> cfolder.schema['next_incremental_cart_id'].default
+    1
+    >>> cfolder.next_incremental_cart_id = 3
+    >>> cfolder.getNext_incremental_cart_id()
+    3
+
+Field: random_digits_cart_id
+----
+    >>> cfolder.schema['random_digits_cart_id']
+    <Field random_digits_cart_id(integer:rw)>
+    >>> cfolder.schema['random_digits_cart_id'].required == False
+    True
+    >>> cfolder.schema['random_digits_cart_id'].searchable == False
+    True
+    >>> cfolder.schema['random_digits_cart_id'].languageIndependent
+    True
+    >>> cfolder.schema['random_digits_cart_id'].storage
+    <Storage AnnotationStorage>
+    >>> cfolder.schema['random_digits_cart_id'].widget
+    <Products.Archetypes.Widget.IntegerWidget object at ...>
+    >>> cfolder.schema['random_digits_cart_id'].widget.label
+    u'Random Digits Cart ID'
+    >>> cfolder.schema['random_digits_cart_id'].widget.description
+    u'If Random Cart ID is selected, give integer digits here.'
+    >>> cfolder.schema['random_digits_cart_id'].default
+    5
+    >>> cfolder.random_digits_cart_id = 3
+    >>> cfolder.getRandom_digits_cart_id()
+    3
+
+Field: quantity_method
+----
+    >>> cfolder.schema['quantity_method']
+    <Field quantity_method(string:rw)>
+    >>> cfolder.schema['quantity_method'].required == True
+    True
+    >>> cfolder.schema['quantity_method'].searchable == False
+    True
+    >>> cfolder.schema['quantity_method'].languageIndependent
+    True
+    >>> cfolder.schema['quantity_method'].storage
+    <Storage AnnotationStorage>
+    >>> cfolder.schema['quantity_method'].widget
+    <Products.Archetypes.Widget.SelectionWidget object at ...>
+    >>> cfolder.schema['quantity_method'].widget.label
+    u'Quantity Method'
+    >>> cfolder.schema['quantity_method'].widget.description
+    u'Select one method, Select or Input to determine how to put products into cart.'
+    >>> cfolder.schema['quantity_method'].default
+    'Select'
+    >>> cfolder.schema['quantity_method'].vocabulary
+    ('Select', 'Input')
+    >>> cfolder.schema['quantity_method'].enforceVocabulary
+    True
+    >>> cfolder.quantity_method = 'Input'
+    >>> cfolder.getQuantity_method()
+    'Input'
+
+Field: next_form
+----
+    >>> cfolder.schema['next_form']
+    <Field next_form(reference:rw)>
+    >>> cfolder.schema['next_form'].required == False
+    True
+    >>> cfolder.schema['next_form'].searchable == False
+    True
+    >>> cfolder.schema['next_form'].languageIndependent
+    True
+    >>> cfolder.schema['next_form'].storage
+    <Storage AnnotationStorage>
+    >>> cfolder.schema['next_form'].widget
+    <....ReferenceBrowserWidget object at ...>
+    >>> cfolder.schema['next_form'].widget.label
+    u'Next Form'
+    >>> cfolder.schema['next_form'].widget.description
+    u'Select next form for check out. Only FormFolder from PloneFormGen is available.'
+    >>> cfolder.schema['next_form'].allowed_types
+    ('FormFolder',)
+    >>> cfolder.schema['next_form'].relationship
+    'next_form_relationship'
+
+Creating Cart
+----
+    >>> from collective.cart.core.content import Cart
+    >>> cart = Cart('cart')
+    >>> cart
+     <Cart at cart>
+    >>> cart.portal_type
+    'Cart'
+    >>> from collective.cart.core.interfaces import ICart
+    >>> ICart.providedBy(cart)
+    True
+    >>> cart.schema
+    <Products.Archetypes.Schema.Schema object at ...>
+    >>> names = [field.getName() for field in cart.schema.getSchemataFields('default')]
+    >>> names
+    ['id', 'title', 'description', 'constrainTypesMode', 'locallyAllowedTypes', 'immediatelyAddableTypes']
+
+Field: id
+----
+    >>> cart.schema['id']
+    <Field id(string:rw)>
+    >>> cart.schema['id'].required == False
+    True
+    >>> cart.schema['id'].searchable == True
+    True
+    >>> cart.schema['id'].storage
+    <Storage AttributeStorage>
+    >>> cart.schema['id'].widget
+    <Products.Archetypes.Widget.IdWidget object at ...>
+    >>> cart.schema['id'].widget.label
+    u'label_short_name'
+    >>> cart.schema['id'].widget.description
+    u'help_shortname'
+
+    >>> cart.id = '1'
+    >>> cart.getId()
+    '1'
+
+Field: title
+----
+    >>> cart.schema['title']
+    <Field title(string:rw)>
+    >>> cart.schema['title'].required == True
+    True
+    >>> cart.schema['title'].searchable == True
+    True
+    >>> cart.schema['title'].storage
+    <Storage AttributeStorage>
+    >>> cart.schema['title'].widget
+    <Products.Archetypes.Widget.StringWidget object at ...>
+    >>> cart.schema['title'].widget.label
+    'Title'
+    >>> cart.schema['title'].widget.description
+    ''
+    >>> cart.title = 'Cart01'
+    >>> cart.Title()
+    'Cart01'
+
+Field: description
+----
+    >>> cart.schema['description']
+    <Field description(text:rw)>
+    >>> cart.schema['description'].required == False
+    True
+    >>> cart.schema['description'].searchable == True
+    True
+    >>> cart.schema['description'].storage
+    <Storage MetadataStorage>
+    >>> cart.schema['description'].widget
+    <Products.Archetypes.Widget.TextAreaWidget object at ...>
+    >>> cart.schema['description'].widget.label
+    u'label_description'
+    >>> cart.schema['description'].widget.description
+    u'help_description'
+
+Creating CartProduct
+----
+    >>> from collective.cart.core.content import CartProduct
+    >>> product = CartProduct('product')
+    >>> product
+     <CartProduct at product>
+    >>> product.portal_type
+    'CartProduct'
+    >>> from collective.cart.core.interfaces import ICartProduct
+    >>> ICartProduct.providedBy(product)
+    True
+    >>> names = [field.getName() for field in product.Schema().getSchemataFields('default')]
+    >>> names
+    ['id', 'title', 'description', 'uid', 'price', 'quantity']
+
+Field: id
+----
+    >>> product.schema['id']
+    <Field id(string:rw)>
+    >>> product.schema['id'].required == False
+    True
+    >>> product.schema['id'].searchable == True
+    True
+    >>> product.schema['id'].storage
+    <Storage AttributeStorage>
+    >>> product.schema['id'].widget
+    <Products.Archetypes.Widget.IdWidget object at ...>
+    >>> product.schema['id'].widget.label
+    u'label_short_name'
+    >>> product.schema['id'].widget.description
+    u'help_shortname'
+
+    >>> product.id = '1'
+    >>> product.getId()
+    '1'
+
+Field: title
+----
+    >>> product.schema['title']
+    <Field title(string:rw)>
+    >>> product.schema['title'].required == True
+    True
+    >>> product.schema['title'].searchable == True
+    True
+    >>> product.schema['title'].storage
+    <Storage AttributeStorage>
+    >>> product.schema['title'].widget
+    <Products.Archetypes.Widget.StringWidget object at ...>
+    >>> product.schema['title'].widget.label
+    'Title'
+    >>> product.schema['title'].widget.description
+    ''
+    >>> product.title = 'Product01'
+    >>> product.Title()
+    'Product01'
+
+Field: description
+----
+    >>> product.schema['description']
+    <Field description(text:rw)>
+    >>> product.schema['description'].required == False
+    True
+    >>> product.schema['description'].searchable == True
+    True
+    >>> product.schema['description'].storage
+    <Storage MetadataStorage>
+    >>> product.schema['description'].widget
+    <Products.Archetypes.Widget.TextAreaWidget object at ...>
+    >>> product.schema['description'].widget.label
+    u'label_description'
+    >>> product.schema['description'].widget.description
+    u'help_description'
+
+Field: uid
+----
+    >>> product.schema['uid']
+    <Field uid(string:rw)>
+    >>> product.schema['uid'].required == True
+    True
+    >>> product.schema['uid'].searchable == False
+    True
+    >>> product.schema['uid'].languageIndependent
+    True
+    >>> product.schema['uid'].storage
+    <Storage AnnotationStorage>
+    >>> product.schema['uid'].widget
+    <Products.Archetypes.Widget.StringWidget object at ...>
+    >>> product.schema['uid'].widget.label
+    u'Original Product UID'
+    >>> product.schema['uid'].widget.description
+    ''
+    >>> product.uid = 'uid'
+    >>> product.getUid()
+    'uid'
+
+Field: price
+----
+    >>> product.schema['price']
+    <Field price(float:rw)>
+    >>> product.schema['price'].required == True
+    True
+    >>> product.schema['price'].searchable == False
+    True
+    >>> product.schema['price'].languageIndependent
+    True
+    >>> product.schema['price'].storage
+    <Storage AnnotationStorage>
+    >>> product.schema['price'].widget
+    <Products.Archetypes.Widget.DecimalWidget object at ...>
+    >>> product.schema['price'].widget.label
+    u'Price'
+    >>> product.schema['price'].widget.description
+    u''
+    >>> product.price = 5.0
+    >>> product.getPrice()
+    5.0
+
+Field: quantity
+----
+    >>> product.schema['quantity']
+    <Field quantity(integer:rw)>
+    >>> product.schema['quantity'].required == True
+    True
+    >>> product.schema['quantity'].searchable == False
+    True
+    >>> product.schema['quantity'].languageIndependent
+    True
+    >>> product.schema['quantity'].storage
+    <Storage AnnotationStorage>
+    >>> product.schema['quantity'].widget
+    <Products.Archetypes.Widget.IntegerWidget object at ...>
+    >>> product.schema['quantity'].widget.label
+    u'Quantity'
+    >>> product.schema['quantity'].widget.description
+    u''
+    >>> product.quantity = 3
+    >>> product.getQuantity()
+    3

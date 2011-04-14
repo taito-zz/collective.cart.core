@@ -1,0 +1,24 @@
+    >>> doc01 = portal.folder01.folder03.folder04.doc01
+    >>> from collective.cart.core.interfaces import IProduct
+    >>> IProduct(doc01).cart_folder
+    <CartFolder at /plone/folder01/folder03/folder04/cfolder04>
+
+    >>> from Products.CMFCore.utils import getToolByName
+    >>> putils = getToolByName(portal, 'plone_utils')
+    >>> path = '/'.join(portal.folder01.folder03.folder04.cfolder04.getPhysicalPath())
+    >>> paths = [path]
+    >>> putils.deleteObjectsByPaths(paths=paths)
+    (['cfolder04 (/plone/folder01/folder03/folder04/cfolder04)'], {})
+    >>> IProduct(doc01).cart_folder
+    <CartFolder at /plone/folder01/folder03/cfolder03>
+    >>> path = '/'.join(portal.folder01.folder03.cfolder03.getPhysicalPath())
+    >>> paths = [path]
+    >>> putils.deleteObjectsByPaths(paths=paths)
+    (['cfolder03 (/plone/folder01/folder03/cfolder03)'], {})
+    >>> IProduct(doc01).cart_folder
+    <CartFolder at /plone/folder01/cfolder01>
+    >>> path = '/'.join(portal.folder01.cfolder01.getPhysicalPath())
+    >>> paths = [path]
+    >>> putils.deleteObjectsByPaths(paths=paths)
+    (['cfolder01 (/plone/folder01/cfolder01)'], {})
+    >>> IProduct(doc01).cart_folder

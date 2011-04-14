@@ -1,0 +1,30 @@
+<div id="cart-properties" i18n:domain="collective.cart">
+  <form method="post"
+        tal:attributes="action view/current_url">
+      <h2 i18n:translate="">Cart Properties</h2>
+      <div tal:replace="structure view/selects" />
+      <input type="text"
+             name="currency_symbol"
+             id="currency_symbol"
+             size="3"
+             maxlength="20"
+             tal:attributes="value view/currency_symbol" />
+<!--       <input type="text"-->
+<!--             name="next_cart_id"-->
+<!--             id="next_cart_id"-->
+<!--             size="10"-->
+<!--             maxlength="20"-->
+<!--             tal:attributes="value view/next_cart_id" />-->
+<!--       <input type="text"-->
+<!--             name="random_cart_id_digits"-->
+<!--             id="random_cart_id_digits"-->
+<!--             size="2"-->
+<!--             maxlength="3"-->
+<!--             tal:attributes="value view/random_cart_id_digits" />-->
+      <input type="submit"
+             class="standalone"
+             value="Update"
+             i18n:attributes="value"
+             name="form.button.UpdateCartProperties" />
+  </form>
+</div>

@@ -1,0 +1,102 @@
+    >>> from zope.component import getMultiAdapter, provideAdapter
+    >>> from zope.interface import implements, Interface, directlyProvides, alsoProvides, noLongerProvides
+    >>> from zope.publisher.browser import TestRequest
+    >>> from Products.Archetypes.interfaces.base import IBaseObject
+    >>> from zope.annotation.attribute import AttributeAnnotations
+    >>> provideAdapter(AttributeAnnotations)
+    >>> from zope.annotation.interfaces import IAnnotations, IAttributeAnnotatable, IAttributeAnnotatable
+
+    >>> class Folder(object):
+    ...     def __init__(self, **kwargs):
+    ...         for k, v in kwargs.items(): setattr(self, k, v)
+    ...     def absolute_url(self):
+    ...         return 'folder_url'
+    ...     def reindexObject(self):
+    ...         pass
+
+Miscellaneous
+----
+    >>> from collective.cart.core.browser.miscellaneous import Miscellaneous
+
+#    >>> class Mock(object):
+#    ...     implements(IBaseObject)
+#    ...     def __init__(self, **kwargs):
+#    ...         for k, v in kwargs.items(): setattr(self, k, v)
+#    ...     def absolute_url(self):
+#    ...         return 'mock_url'
+
+    >>> class Mock(object):
+    ...     def __init__(self, **kwargs):
+    ...         for k, v in kwargs.items(): setattr(self, k, v)
+    ...     def absolute_url(self):
+    ...         return 'mock_url'
+
+    >>> from collective.cart.core.interfaces import IAddableToCart, IPotentiallyAddableToCart
+
+
+
+    >>> context = Mock()
+    >>> alsoProvides(context, IAttributeAnnotatable)
+    >>> IAddableToCart.providedBy(context)
+    False
+    >>> IAttributeAnnotatable.providedBy(context)
+    True
+    >>> IPotentiallyAddableToCart.providedBy(context)
+    False
+    >>> request = TestRequest()
+    >>> mbv = Miscellaneous(context, request)
+    >>> mbv.potentially_addable_but_not_addable_to_cart()
+    False
+    >>> mbv.addable_to_cart()
+    False
+
+    >>> mbv.make_addable_to_cart()
+    >>> IPotentiallyAddableToCart.providedBy(context)
+    False
+    >>> IAddableToCart.providedBy(context)
+    False
+    >>> mbv.potentially_addable_but_not_addable_to_cart()
+    False
+    >>> mbv.addable_to_cart()
+    False
+
+    >>> alsoProvides(context, IPotentiallyAddableToCart)
+    >>> mbv.potentially_addable_but_not_addable_to_cart()
+    True
+    >>> mbv.addable_to_cart()
+    False
+
+    >>> mbv.make_addable_to_cart()
+    'mock_url/@@edit-product'
+    >>> IPotentiallyAddableToCart.providedBy(context)
+    True
+    >>> IAddableToCart.providedBy(context)
+    True
+    >>> mbv.potentially_addable_but_not_addable_to_cart()
+    False
+    >>> mbv.addable_to_cart()
+    True
+    >>> an = IAnnotations(context)['collective.cart.core']
+    >>> an.price
+    0.0
+    >>> an.stock
+    0
+    >>> an.max_addable_quantity
+    100
+    >>> an.unlimited_stock
+    False
+
+    >>> mbv.make_not_addable_to_cart()
+    'mock_url'
+    >>> IPotentiallyAddableToCart.providedBy(context)
+    True
+    >>> IAddableToCart.providedBy(context)
+    False
+    >>> IAttributeAnnotatable.providedBy(context)
+    True
+    >>> mbv.potentially_addable_but_not_addable_to_cart()
+    True
+    >>> mbv.addable_to_cart()
+    False
+    >>> IAnnotations(context).get('collective.cart.core') is None
+    True
