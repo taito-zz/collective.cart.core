@@ -80,7 +80,7 @@ class Product(object):
     def cart_folder(self):
         context = aq_inner(self.context)
         chain = [obj for obj in aq_chain(context) if hasattr(obj, 'Type')]
-        chain = chain[1:]
+#        chain = chain[1:]
         for cha in chain:
             objs = cha.objectValues()
             for obj in objs:

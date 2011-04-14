@@ -29,6 +29,7 @@ from collective.cart.core.interfaces import (
 )
 from Products.CMFPlone.interfaces.properties import IPropertiesTool
 
+
 class PortalCartProperties(object):
     adapts(IPropertiesTool)
     implements(IPortalCartProperties)
@@ -95,38 +96,6 @@ class PortalAdapter(object):
         else:
             return pcatalog.random_cart_id(digits)
 
-#    @property
-#    def current_cart_products(self):
-#        cart = self.current_cart_brain
-#        if cart is not None:
-#            path = cart.getPath()
-#            query = dict(
-#            path = path,
-##            object_provides = ICartProduct.__identifier__,
-#            portal_type = 'CartProduct',
-#            )
-#            brains = self.catalog.unrestrictedSearchResults(query)
-#            if len(brains) != 0:
-#                res = []
-#                for brain in brains:
-#                    obj = brain.getObject()
-#                    cpa = ICartProductAdapter(obj)
-#                    cpo = getMultiAdapter((obj, self.catalog), ICartProductOriginal)
-#                    cpp = getMultiAdapter((obj, self.properties), ICartProductProperties)
-#                    item = dict(
-#                        uid = cpa.uid,
-#                        url = cpo.url,
-#                        title = cpa.title,
-#                        quantity = cpa.quantity,
-#                        price_with_currency = cpp.price_with_currency,
-#                        subtotal_price_with_currency = cpp.subtotal_price_with_currency,
-#                        select_quantity = cpo.select_quantity,
-#                        price = cpa.price,
-#                        subtotal = cpa.price * cpa.quantity,
-#                    )
-#                    res.append(item)
-#                return res
-
     def subtotal_price(self, products):
         prices = [product.get('subtotal') for product in products]
         return sum(prices)
@@ -170,46 +139,6 @@ class PortalAdapter(object):
                 quantity += brain.product_quantity
         return quantity
 
-#    def update_cart(self, uid, quantity):
-#        brain = self.product_brain_in_current_cart(uid)
-#        if brain.quantity == quantity:
-#            return
-#        brains = self.catalog(UID=uid)
-#        product = brains[0].getObject()
-#        obj = brain.getObject()
-#        product = IProduct(product)
-#        addable_quantity = product.stock + ICartProductAdapter(obj).quantity
-#        if quantity <= addable_quantity:
-#            obj.quantity = quantity
-#            obj.reindexObject(idxs=['quantity'])
-#            new_stock = addable_quantity - quantity
-#            product.stock = new_stock
-#        else:
-#            obj.quantity = updatable_quantity
-#            obj.reindexObject(idxs=['quantity'])
-#            new_stock = addable_quantity
-#            product.getField('cc_stock').set(product, new_stock)
-
-#    def update_cart_from_request(self, request):
-#        if IPortalSessionCatalog(self.context, self.sdm, self.catalog).cart is not None:
-#            form = request.form
-#            uid = form.get('uid')
-#            quantity = int(form.get('quantity'))
-#            self.update_cart(uid, quantity)
-
-#    def delete_product_from_cart(self, uid, quantity):
-#        path = self.product_brain_in_current_cart(uid).getPath()
-#        brains = self.catalog(UID=uid)
-#        if len(brains) != 0:
-#            orig_product = brains[0].getObject()
-#            product = IProduct(orig_product)
-#            if not product.unlimited_stock:
-#                new_stock = product.stock + quantity
-#                product.stock = new_stock
-#        self.product_brain_in_current_cart(uid).getObject().unindexObject()
-#        paths = [path]
-#        putils = getToolByName(self.context, 'plone_utils')
-#        putils.deleteObjectsByPaths(paths=paths)
 
 class PortalCart(object):
     implements(IPortalCart)
@@ -352,6 +281,8 @@ class PortalSessionCatalog(object):
         cadapter = getMultiAdapter((cart, self.catalog), ICartAdapter)
         if cadapter.product(uid) is None:
             cadapter.add_new_product_to_cart(uid, quantity)
+            method = IAvailableShippingMethods(self.portal)()
+            cadapter.update_shipping_method(method)
         else:
             cadapter.add_existing_product_to_cart(uid, quantity)
 
