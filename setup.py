@@ -34,7 +34,7 @@ setup(name='collective.cart.core',
       zip_safe=False,
       install_requires=[
           'setuptools',
-          'pycountry',
+#          'pycountry',
       ],
       entry_points="""
       # -*- Entry points: -*-
