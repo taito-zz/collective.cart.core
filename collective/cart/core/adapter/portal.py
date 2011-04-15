@@ -8,6 +8,7 @@ except ImportError:
     pass
 from zope.component import getUtility, adapts, getMultiAdapter
 from zope.interface import implements
+from OFS.interfaces import IItem
 from Products.ZCatalog.interfaces import IZCatalog
 from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.interfaces.siteroot import IPloneSiteRoot
@@ -26,6 +27,7 @@ from collective.cart.core.interfaces import (
     IPriceWithCurrency,
     IProduct,
     IRandomDigits,
+    IUpdateShippingMethod,
 )
 from Products.CMFPlone.interfaces.properties import IPropertiesTool
 
@@ -282,7 +284,8 @@ class PortalSessionCatalog(object):
         if cadapter.product(uid) is None:
             cadapter.add_new_product_to_cart(uid, quantity)
             method = IAvailableShippingMethods(self.portal)()
-            cadapter.update_shipping_method(method)
+            IUpdateShippingMethod(self.portal)(method)
+#            cadapter.update_shipping_method(method)
         else:
             cadapter.add_existing_product_to_cart(uid, quantity)
 
@@ -297,3 +300,15 @@ class AvailableShippingMethods(object):
 
     def __call__(self):
         return None
+
+
+class UpdateShippingMethod(object):
+
+    adapts(IItem)
+    implements(IUpdateShippingMethod)
+
+    def __init__(self, context):
+        self.context = context
+
+    def __call__(self, method=None):
+        pass

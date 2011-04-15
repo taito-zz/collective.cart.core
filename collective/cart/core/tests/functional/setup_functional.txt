@@ -264,7 +264,15 @@ Once again make Document01 addable to cart.
     True
     >>> browser.getLink('View').click()
     >>> browser.getLink('Publish').click()
-    >>> browser.getControl(name="form.button.AddToCart").click()
+
+    >>> try:
+    ...     browser.getControl(name="form.button.AddToCart").click()
+    ... except:
+    ...     print portal.error_log.getLogEntries()[0]['tb_text']
+    ...     import pdb; pdb.set_trace()
+
+#    >>> browser.getControl(name="form.button.AddToCart").click()
+
     >>> 'There was an error while rendering the portlet.' not in browser.contents
     True
 

@@ -13,7 +13,7 @@ from collective.cart.core.interfaces import (
     IProduct,
     ISelectRange,
 )
-from collective.cart.shipping.content import ShippingMethodAnnotations
+#from collective.cart.shipping.content import ShippingMethodAnnotations
 
 class CartProductAdapter(object):
 
@@ -138,11 +138,11 @@ class CartAdapter(object):
         total = self.subtotal + self.shipping_cost + self.payment_cost
         return total
 
-    def update_shipping_method(self, method):
-        if method is not None:
-            if type(method).__name__ == 'LazyMap':
-                method = method[0]
-            self.context.shipping_method = ShippingMethodAnnotations(method)
+#    def update_shipping_method(self, method):
+#        if method is not None:
+#            if type(method).__name__ == 'LazyMap':
+#                method = method[0]
+#            self.context.shipping_method = ShippingMethodAnnotations(method)
 
     def add_new_product_to_cart(self, uid, quantity):
         pid = '1'

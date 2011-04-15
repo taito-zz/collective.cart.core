@@ -1,9 +1,11 @@
 Imports and Defines
 ====
+    >>> from mock import Mock
     >>> from zope.annotation.interfaces import IAnnotations
     >>> from zope.component import getMultiAdapter, getUtility, provideAdapter, provideUtility
     >>> from zope.interface import alsoProvides, implements
     >>> from zope.annotation.attribute import AttributeAnnotations
+    >>> from OFS.interfaces import IItem
     >>> from Products.ZCatalog.interfaces import IZCatalog
     >>> from Products.CMFPlone.interfaces.siteroot import IPloneSiteRoot
     >>> provideAdapter(AttributeAnnotations)
@@ -523,3 +525,12 @@ IAvailableShippingMethods
     >>> from collective.cart.core.adapter.portal import AvailableShippingMethods
     >>> provideAdapter(AvailableShippingMethods)
     >>> IAvailableShippingMethods(portal)()
+
+IUpdateShippingMethod
+=====================
+    >>> from collective.cart.core.interfaces import IUpdateShippingMethod
+    >>> from collective.cart.core.adapter.portal import UpdateShippingMethod
+    >>> provideAdapter(UpdateShippingMethod)
+    >>> context = Mock()
+    >>> alsoProvides(context, IItem)
+    >>> IUpdateShippingMethod(context)()

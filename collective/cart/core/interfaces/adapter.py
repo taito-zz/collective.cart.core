@@ -178,3 +178,8 @@ class IAvailableShippingMethods(Interface):
 
     def __call__():
         """Returns available shipping methods."""
+
+class IUpdateShippingMethod(Interface):
+
+    def __call__(method):
+        """Update shipping method."""
