@@ -164,16 +164,13 @@ class CartConfigTypesViewlet(CartViewletBase):
 class CartProductValuesViewlet(CartViewletBase):
     """Product Values Viewlet for Content Types."""
 
-#    index = ViewPageTemplateFile("viewlets/product_values.pt")
     index = render = ViewPageTemplateFile("viewlets/product_values.pt")
 
     def update(self):
         form = self.request.form
         if form.get('form.button.AddToCart', None) is not None:
             context = aq_inner(self.context)
-#            portal = getToolByName(context, 'portal_url').getPortalObject()
             IProduct(context).add_to_cart(form)
-#            getMultiAdapter((portal, self.request), IPortalCart).add_to_cart()
             return self.request.response.redirect(self.current_url) 
 
     def items(self):

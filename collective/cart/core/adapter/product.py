@@ -3,6 +3,7 @@ from zope.annotation.interfaces import IAnnotations
 from zope.component import adapts, getMultiAdapter, getUtility
 from zope.interface import implements
 from Products.CMFCore.utils import getToolByName
+from collective.cart.core.content.product import ProductAnnotations
 from collective.cart.core.interfaces import (
     IAddableToCart,
     IPortalAdapter,
@@ -25,6 +26,8 @@ class Product(object):
             return self.context
         else:
             annotations = IAnnotations(self.context)
+            if annotations.get('collective.cart.core', None) is None:
+                annotations['collective.cart.core'] = ProductAnnotations()
             return getattr(annotations['collective.cart.core'], attr)
 
     def __setattr__(self, attr, value):

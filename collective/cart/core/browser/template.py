@@ -159,10 +159,3 @@ class CartView(BrowserView):
     def has_contents(self):
         context = aq_inner(self.context)
         return context.restrictedTraverse('has-cart-contents')()
-#        portal = getToolByName(context, 'portal_url').getPortalObject()
-#        return IPortalAdapter(portal).current_cart_products
-
-#class PFGVerkkomaksutView(PFGVerkkomaksutView):
-#    def __call__(self):
-
-#        return self.template()
