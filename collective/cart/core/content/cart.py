@@ -176,6 +176,61 @@ CartProductSchema = ATContentTypeSchema.copy() + Schema((
         ),
     ),
 
+    FloatField(
+        name='weight',
+        required=False,
+        searchable=False,
+        languageIndependent=True,
+        storage=AnnotationStorage(),
+        widget=DecimalWidget(
+            label=_(u'Weight'),
+        ),
+    ),
+
+    StringField(
+        name='weight_unit',
+        required=False,
+        searchable=False,
+        languageIndependent=True,
+        storage=AnnotationStorage(),
+        widget=StringWidget(
+            label=_(u'Weight Unit'),
+        ),
+    ),
+
+    FloatField(
+        name='height',
+        required=False,
+        searchable=False,
+        languageIndependent=True,
+        storage=AnnotationStorage(),
+        widget=DecimalWidget(
+            label=_(u'Height'),
+        ),
+    ),
+
+    FloatField(
+        name='width',
+        required=False,
+        searchable=False,
+        languageIndependent=True,
+        storage=AnnotationStorage(),
+        widget=DecimalWidget(
+            label=_(u'Width'),
+        ),
+    ),
+
+    FloatField(
+        name='depth',
+        required=False,
+        searchable=False,
+        languageIndependent=True,
+        storage=AnnotationStorage(),
+        widget=DecimalWidget(
+            label=_(u'Depth'),
+        ),
+    ),
+
 ),
 )
 
@@ -190,5 +245,10 @@ class CartProduct(ATCTContent, HistoryAwareMixin):
     uid = ATFieldProperty('uid')
     price = ATFieldProperty('price')
     quantity = ATFieldProperty('quantity')
+    weight = ATFieldProperty('weight')
+    weight_unit = ATFieldProperty('weight_unit')
+    height = ATFieldProperty('height')
+    width = ATFieldProperty('width')
+    depth = ATFieldProperty('depth')
 
 registerATCT(CartProduct, PROJECTNAME)

@@ -71,3 +71,28 @@ class ICartProduct(Interface):
         title=_(u'Product Quantity'),
         required=True,
     )
+
+    weight = schema.Float(
+        title=_(u'Weight'),
+        required=False,
+    )
+
+    weight_unit=schema.TextLine(
+        title=_('Weight Unit'),
+        required=False,
+    )
+
+    height=schema.Float(
+        title=_(u"Height"),
+        required=False,
+    )
+
+    width=schema.Float(
+        title=_(u"Width"),
+        required=False,
+    )
+
+    depth=schema.Float(
+        title=_("Depth"),
+        required=False,
+    )

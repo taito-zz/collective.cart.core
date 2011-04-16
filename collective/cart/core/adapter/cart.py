@@ -163,6 +163,11 @@ class CartAdapter(object):
         product = IProduct(original.obj)
         cproduct.price=product.price
         cproduct.title=product.title
+        cproduct.weight = product.weight
+        cproduct.weight_unit = product.weight_unit
+        cproduct.height = product.height
+        cproduct.width = product.width
+        cproduct.depth = product.depth
         cproduct.reindexObject()
         new_stock = product.stock - quantity
         product.stock = new_stock
