@@ -42,9 +42,7 @@ IProduct
     >>> product.title
     'Document01'
     >>> product.price
-    Traceback (most recent call last):
-    ...
-    KeyError: 'collective.cart.core'
+    0.0
     >>> from collective.cart.core.content.product import ProductAnnotations
     >>> IAnnotations(doc)['collective.cart.core'] = ProductAnnotations()
     >>> cannotasions = IAnnotations(doc)['collective.cart.core']
