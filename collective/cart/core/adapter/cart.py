@@ -12,6 +12,7 @@ from collective.cart.core.interfaces import (
     ICartProductOriginal,
     IProduct,
     ISelectRange,
+    IShippingCost,
 )
 #from collective.cart.shipping.content import ShippingMethodAnnotations
 
@@ -127,7 +128,7 @@ class CartAdapter(object):
 
     @property
     def shipping_cost(self):
-        return 0
+        return IShippingCost(self.context)()
 
     @property
     def payment_cost(self):
@@ -202,3 +203,15 @@ class CartAdapter(object):
         paths = [path]
         putils = getToolByName(self.context, 'plone_utils')
         putils.deleteObjectsByPaths(paths=paths)
+
+
+class ShippingCost(object):
+
+    adapts(ICart)
+    implements(IShippingCost)
+
+    def __init__(self, context):
+        self.context = context
+
+    def __call__(self):
+        return 0

@@ -174,6 +174,12 @@ class IPortalCart(Interface):
         """Delete product from cart."""
 
 
+class IShippingCost(Interface):
+
+    def __call__():
+        """Returns shipping cost."""
+
+
 class IAvailableShippingMethods(Interface):
 
     def __call__():

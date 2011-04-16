@@ -524,6 +524,8 @@ IAvailableShippingMethods
     >>> from collective.cart.core.interfaces import IAvailableShippingMethods
     >>> from collective.cart.core.adapter.portal import AvailableShippingMethods
     >>> provideAdapter(AvailableShippingMethods)
+    >>> from OFS.interfaces import IItem
+    >>> alsoProvides(portal, IItem)
     >>> IAvailableShippingMethods(portal)()
 
 IUpdateShippingMethod

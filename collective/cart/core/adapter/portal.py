@@ -1,4 +1,4 @@
-from Acquisition import aq_inner
+#from Acquisition import aq_inner
 from zope.publisher.interfaces.browser import IBrowserRequest
 try:
     ## Plone4
@@ -10,14 +10,14 @@ from zope.component import getUtility, adapts, getMultiAdapter
 from zope.interface import implements
 from OFS.interfaces import IItem
 from Products.ZCatalog.interfaces import IZCatalog
-from Products.CMFCore.utils import getToolByName
+#from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.interfaces.siteroot import IPloneSiteRoot
 from collective.cart.core.interfaces import (
     IAvailableShippingMethods,
     ICart,
     ICartAdapter,
     ICartFolder,
-    ICartProductAdapter,
+#    ICartProductAdapter,
     IPortalAdapter,
     IPortalCart,
     IPortalCartProperties,
@@ -25,7 +25,7 @@ from collective.cart.core.interfaces import (
     IPortalSession,
     IPortalSessionCatalog,
     IPriceWithCurrency,
-    IProduct,
+#    IProduct,
     IRandomDigits,
     IUpdateShippingMethod,
 )
@@ -285,14 +285,14 @@ class PortalSessionCatalog(object):
             cadapter.add_new_product_to_cart(uid, quantity)
             method = IAvailableShippingMethods(self.portal)()
             IUpdateShippingMethod(self.portal)(method)
-#            cadapter.update_shipping_method(method)
         else:
             cadapter.add_existing_product_to_cart(uid, quantity)
 
 
 class AvailableShippingMethods(object):
 
-    adapts(IPloneSiteRoot)
+#    adapts(IPloneSiteRoot)
+    adapts(IItem)
     implements(IAvailableShippingMethods)
 
     def __init__(self, context):
