@@ -189,3 +189,22 @@ class IUpdateShippingMethod(Interface):
 
     def __call__(method):
         """Update shipping method."""
+
+class IProductAnnotationsAdapter(Interface):
+    """"""
+
+class ICartItself(Interface):
+
+    def products():
+        """Returns all the products under the cart."""
+
+    def product(uid):
+        """Returns product with uid."""
+
+    def subtotal():
+        """Returns products subtotal."""
+
+    def weight():
+        """Returns products total weight."""
+
+    def shipping_cost():

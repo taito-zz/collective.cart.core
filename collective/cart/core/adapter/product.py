@@ -6,6 +6,7 @@ from Products.CMFCore.utils import getToolByName
 from collective.cart.core.interfaces import (
     IAddableToCart,
     IPortalAdapter,
+    IPortalCatalog,
     IPortalCartProperties,
     IPortalSessionCatalog,
     IProduct,
@@ -80,7 +81,6 @@ class Product(object):
     def cart_folder(self):
         context = aq_inner(self.context)
         chain = [obj for obj in aq_chain(context) if hasattr(obj, 'Type')]
-#        chain = chain[1:]
         for cha in chain:
             objs = cha.objectValues()
             for obj in objs:
@@ -99,7 +99,6 @@ class Product(object):
     def add_to_cart(self, form):
         context = aq_inner(self.context)
         portal = getToolByName(context, 'portal_url').getPortalObject()
-#        form = self.request.form
         uid = form.get('uid')
         quantity = int(form.get('quantity'))
         psc = getMultiAdapter((portal, portal.session_data_manager, portal.portal_catalog),IPortalSessionCatalog)
@@ -113,3 +112,4 @@ class Product(object):
             digits = self.cart_folder.random_digits_cart_id
             cart_id = IPortalAdapter(portal).next_cart_id(method, digits)
         getMultiAdapter((portal, portal.session_data_manager, portal.portal_catalog), IPortalSessionCatalog).add_to_cart(uid, quantity, cart_id)
+

@@ -6,6 +6,7 @@ from Products.CMFCore.utils import getToolByName
 from collective.cart.core.content import CartProduct
 from collective.cart.core.interfaces import (
     ICart,
+    ICartItself,
     ICartAdapter,
     ICartProduct,
     ICartProductAdapter,
@@ -205,6 +206,18 @@ class CartAdapter(object):
         putils.deleteObjectsByPaths(paths=paths)
 
 
+class ICartItself(object):
+
+    adapts(ICart)
+    implements(ICartItself)
+
+    def __init__(self, context):
+        self.context = context
+
+    def __call__(self):
+        return 0
+
+
 class ShippingCost(object):
 
     adapts(ICart)
@@ -215,3 +228,39 @@ class ShippingCost(object):
 
     def __call__(self):
         return 0
+
+
+class CartItself(object):
+    implements(ICartItself)
+    adapts(ICart)
+
+    def __init__(self, context):
+        self.context = context
+
+    @property
+    def products(self):
+        import pdb; pdb.set_trace()
+        pass
+
+
+    def product(self, uid):
+        import pdb; pdb.set_trace()
+        pass
+
+    @property
+    def subtotal(self):
+        prices = [ICartProductAdapter(product).subtotal for product in self.products]
+        return sum(prices)
+
+    @property
+    def shipping_cost(self):
+        return 0
+
+    @property
+    def payment_cost(self):
+        return 0
+
+    @property
+    def total_cost(self):
+        total = self.subtotal + self.shipping_cost + self.payment_cost
+        return total

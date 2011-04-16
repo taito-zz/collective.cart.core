@@ -164,22 +164,18 @@ class CartConfigTypesViewlet(CartViewletBase):
 class CartProductValuesViewlet(CartViewletBase):
     """Product Values Viewlet for Content Types."""
 
-#    index = ViewPageTemplateFile("viewlets/product_values.pt")
     index = render = ViewPageTemplateFile("viewlets/product_values.pt")
 
     def update(self):
         form = self.request.form
         if form.get('form.button.AddToCart', None) is not None:
             context = aq_inner(self.context)
-#            portal = getToolByName(context, 'portal_url').getPortalObject()
             IProduct(context).add_to_cart(form)
-#            getMultiAdapter((portal, self.request), IPortalCart).add_to_cart()
             return self.request.response.redirect(self.current_url) 
 
     def items(self):
         context = aq_inner(self.context)
         properties = getToolByName(context, 'portal_properties')
-#        portal = getToolByName(context, 'portal_url').getPortalObject()
         pcp = IPortalCartProperties(properties)
         product = IProduct(context)
         res = dict(
@@ -192,7 +188,6 @@ class CartProductValuesViewlet(CartViewletBase):
 
 class CartContentsViewlet(CartViewletBase):
 
-#    index = ViewPageTemplateFile("viewlets/cart_content.pt")
     index = render = ViewPageTemplateFile("viewlets/cart_content.pt")
 
     def update(self):
@@ -249,7 +244,6 @@ class CartContentsViewlet(CartViewletBase):
             payment_cost_with_currency = pcp.price_with_currency(ca.payment_cost)
             if ca.payment_cost == 0:
                 payment_cost_with_currency = None
-#            total_cost_with_currency = pcp.price_with_currency(ca.total_cost)
             data = dict(
                 products_subtotal_with_currency = pcp.price_with_currency(ca.subtotal),
                 shipping_cost_with_currency = shipping_cost_with_currency,
