@@ -65,6 +65,13 @@ Log in as the portal owner.
     True
     >>> browser.open(document01_url)
     >>> browser.getControl(name="form.button.AddToCart").click()
+
+    >>> try:
+    ...     browser.open(cart_url)
+    ... except:
+    ...     print portal.error_log.getLogEntries()[0]['tb_text']
+    ...     import pdb; pdb.set_trace()
+
     >>> browser.open(cart_url)
     >>> 'Cart is Empty.' in browser.contents
     False

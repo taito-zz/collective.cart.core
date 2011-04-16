@@ -8,13 +8,14 @@ from plone.app.layout.viewlets.common import ViewletBase
 from collective.cart.core.interfaces import (
     IAddableToCart,
     ICartAdapter,
+    ICartItself,
     ICartProductAdapter,
     ICartProductOriginal,
     IPortalAdapter,
     IPortalCart,
     IPortalCartProperties,
     IPortalCatalog,
-    IPortalSession,
+#    IPortalSession,
     IPortalSessionCatalog,
     IPotentiallyAddableToCart,
     IProduct,
@@ -41,8 +42,8 @@ class CartConfigPropertiesViewlet(CartViewletBase):
         form = self.request.form
         if form.get('form.button.UpdateCartProperties', None) is not None:
             context = aq_inner(self.context)
-            portal = getToolByName(context, 'portal_url').getPortalObject()
-            catalog = getToolByName(context, 'portal_catalog')
+#            portal = getToolByName(context, 'portal_url').getPortalObject()
+#            catalog = getToolByName(context, 'portal_catalog')
             keys = form.keys()
             keys.remove('form.button.UpdateCartProperties')
             ## Ther order matters here.
@@ -238,8 +239,10 @@ class CartContentsViewlet(CartViewletBase):
             pcp = IPortalCartProperties(properties)
             cart = getMultiAdapter((portal, sdm, catalog), IPortalSessionCatalog).cart
             ca = getMultiAdapter((cart, catalog), ICartAdapter)
-            shipping_cost_with_currency = pcp.price_with_currency(ca.shipping_cost)
-            if ca.shipping_cost == 0:
+            ci = ICartItself(cart)
+#            shipping_cost_with_currency = pcp.price_with_currency(ca.shipping_cost)
+            shipping_cost_with_currency = pcp.price_with_currency(ci.shipping_cost)
+            if ci.shipping_cost == 0:
                 shipping_cost_with_currency = None
             payment_cost_with_currency = pcp.price_with_currency(ca.payment_cost)
             if ca.payment_cost == 0:

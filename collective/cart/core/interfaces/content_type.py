@@ -42,12 +42,6 @@ class ICartFolder(Interface):
         default="Select",
     )
 
-#    next_form = schema.TextLine(
-#        title = _(u"next_form"),
-#        description = _(u"Select next form for check out. Only FormFolder from PloneFormGen is available."),
-#        required=False,
-#    )
-
 
 class ICart(Interface):
     """Interface for Cart content type.

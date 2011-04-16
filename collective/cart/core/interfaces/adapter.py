@@ -208,3 +208,4 @@ class ICartItself(Interface):
         """Returns products total weight."""
 
     def shipping_cost():
+        """"""

@@ -127,9 +127,9 @@ class CartAdapter(object):
         prices = [ICartProductAdapter(product).subtotal for product in self.products]
         return sum(prices)
 
-    @property
-    def shipping_cost(self):
-        return IShippingCost(self.context)()
+#    @property
+#    def shipping_cost(self):
+#        return IShippingCost(self.context)()
 
     @property
     def payment_cost(self):
@@ -137,7 +137,8 @@ class CartAdapter(object):
 
     @property
     def total_cost(self):
-        total = self.subtotal + self.shipping_cost + self.payment_cost
+#        total = self.subtotal + self.shipping_cost + self.payment_cost
+        total = self.subtotal + ICartItself(self.context).shipping_cost + self.payment_cost
         return total
 
 #    def update_shipping_method(self, method):
@@ -204,18 +205,6 @@ class CartAdapter(object):
         paths = [path]
         putils = getToolByName(self.context, 'plone_utils')
         putils.deleteObjectsByPaths(paths=paths)
-
-
-class ICartItself(object):
-
-    adapts(ICart)
-    implements(ICartItself)
-
-    def __init__(self, context):
-        self.context = context
-
-    def __call__(self):
-        return 0
 
 
 class ShippingCost(object):
