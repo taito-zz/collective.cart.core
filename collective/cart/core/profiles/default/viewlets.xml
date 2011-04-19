@@ -11,4 +11,10 @@
     <viewlet name="collective.cart.core.cart.contents" />
     <viewlet name="collective.cart.core.next.step" />
   </order>
+  <order manager="plone.abovecontentbody">
+    <viewlet name="collective.cart.core.fixed.info" />
+  </order>
+  <order manager="collective.cart.core.fixed.info.manager">
+    <viewlet name="collective.cart.core.fixed.cart.content" />
+  </order>
 </object>

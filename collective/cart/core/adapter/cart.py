@@ -15,7 +15,7 @@ from collective.cart.core.interfaces import (
     ISelectRange,
     IShippingCost,
 )
-#from collective.cart.shipping.content import ShippingMethodAnnotations
+
 
 class CartProductAdapter(object):
 
@@ -127,25 +127,14 @@ class CartAdapter(object):
         prices = [ICartProductAdapter(product).subtotal for product in self.products]
         return sum(prices)
 
-#    @property
-#    def shipping_cost(self):
-#        return IShippingCost(self.context)()
-
     @property
     def payment_cost(self):
         return 0
 
     @property
     def total_cost(self):
-#        total = self.subtotal + self.shipping_cost + self.payment_cost
         total = self.subtotal + ICartItself(self.context).shipping_cost + self.payment_cost
         return total
-
-#    def update_shipping_method(self, method):
-#        if method is not None:
-#            if type(method).__name__ == 'LazyMap':
-#                method = method[0]
-#            self.context.shipping_method = ShippingMethodAnnotations(method)
 
     def add_new_product_to_cart(self, uid, quantity):
         pid = '1'
@@ -187,15 +176,22 @@ class CartAdapter(object):
         original = getMultiAdapter((cproduct, self.catalog), ICartProductOriginal)
         product = IProduct(original.obj)
         addable_quantity = product.stock + ICartProductAdapter(cproduct).quantity
-        if quantity <= addable_quantity:
+        if product.unlimited_stock:
+            addable_quantity = product.max_addable_quantity
+            if quantity > addable_quantity:
+                quantity = addable_quantity
             cproduct.quantity = quantity
             cproduct.reindexObject(idxs=['quantity'])
-            new_stock = addable_quantity - quantity
-            product.stock = new_stock
         else:
-            cproduct.quantity = updatable_quantity
-            cproduct.reindexObject(idxs=['quantity'])
-            new_stock = 0
+            if quantity <= addable_quantity:
+                cproduct.quantity = quantity
+                cproduct.reindexObject(idxs=['quantity'])
+                new_stock = addable_quantity - quantity
+#                product.stock = new_stock
+            else:
+                cproduct.quantity = updatable_quantity
+                cproduct.reindexObject(idxs=['quantity'])
+                new_stock = 0
             product.stock = new_stock
 
     def delete_product_from_cart(self, uid):
@@ -206,10 +202,13 @@ class CartAdapter(object):
         new_stock = product.stock + quantity
         product.stock = new_stock
         cproduct.unindexObject()
-        path = '/'.join(cproduct.getPhysicalPath())
-        paths = [path]
-        putils = getToolByName(self.context, 'plone_utils')
-        putils.deleteObjectsByPaths(paths=paths)
+#        path = '/'.join(cproduct.getPhysicalPath())
+#        paths = [path]
+#        putils = getToolByName(self.context, 'plone_utils')
+#        putils.deleteObjectsByPaths(paths=paths)
+#        import pdb; pdb.set_trace()
+#        pass
+        del self.context[cproduct.id]
 
 
 class ShippingCost(object):

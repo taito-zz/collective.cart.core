@@ -1,0 +1,4 @@
+<div id="fixed-info"
+     tal:condition="view/has_cart_contents">
+  <div tal:replace="structure provider:collective.cart.core.fixed.info.manager" />
+</div>

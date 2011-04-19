@@ -104,6 +104,22 @@
         />
 
     <browser:page
+        name="products"
+        for="*"
+        class=".miscellaneous.Miscellaneous"
+        permission="zope2.View"
+        attribute="products"
+        />
+
+   <browser:page
+        name="totals-with-currency"
+        for="*"
+        class=".miscellaneous.Miscellaneous"
+        permission="zope2.View"
+        attribute="totals_with_currency"
+        />
+
+    <browser:page
         name="cart-id"
         for="*"
         class=".miscellaneous.Miscellaneous"
@@ -135,13 +151,13 @@
         attribute="test_step"
         />
 
-    <browser:page
-        name="verkkomaksut-on-success"
-        for="collective.cart.core.interfaces.ICartAware"
-        class=".miscellaneous.Miscellaneous"
-        permission="zope2.View"
-        attribute="verkkomaksut_on_success"
-        />
+<!--    <browser:page-->
+<!--        name="verkkomaksut-on-success"-->
+<!--        for="collective.cart.core.interfaces.ICartAware"-->
+<!--        class=".miscellaneous.Miscellaneous"-->
+<!--        permission="zope2.View"-->
+<!--        attribute="verkkomaksut_on_success"-->
+<!--        />-->
 
 <!--    <browser:page-->
 <!--        name="make-cart-aware"-->
@@ -242,6 +258,38 @@
     permission="zope2.View"
     for="collective.cart.core.interfaces.IAddableToCart"
     view="plone.app.layout.globals.interfaces.IViewView"
+    />
+
+
+  <!-- Fixed Infos -->
+  <browser:viewlet
+    name="collective.cart.core.fixed.info"
+    manager="plone.app.layout.viewlets.interfaces.IAboveContentBody"
+    class=".viewlet.FixedInfoViewlet"
+    permission="zope2.View"
+    for="collective.cart.core.interfaces.ICartAware"
+    />
+
+
+  <browser:viewletManager
+    name="collective.cart.core.fixed.info.manager"
+    provides="collective.cart.core.interfaces.IFixedInfoViewletManager"
+    permission="zope2.View"
+    class="plone.app.viewletmanager.manager.OrderedViewletManager"
+    />
+
+<!--  <browser:viewletManager-->
+<!--    name="collective.cart.core.fixed.info.manager"-->
+<!--    provides="collective.cart.core.interfaces.IFixedInfoViewletManager"-->
+<!--    permission="zope2.View"-->
+<!--    class="plone.app.viewletmanager.manager.OrderedViewletManager"-->
+<!--    />-->
+
+  <browser:viewlet
+    name="collective.cart.core.fixed.cart.content"
+    manager="collective.cart.core.interfaces.IFixedInfoViewletManager"
+    class=".viewlet.FixedCartContentViewlet"
+    permission="zope2.View"
     />
 
 <!--  <browser:viewlet-->

@@ -15,11 +15,9 @@ from collective.cart.core.interfaces import (
     IPortalCart,
     IPortalCartProperties,
     IPortalCatalog,
-#    IPortalSession,
     IPortalSessionCatalog,
     IPotentiallyAddableToCart,
     IProduct,
-#    IProductProperties,
 )
 
 
@@ -35,31 +33,20 @@ class CartViewletBase(ViewletBase):
 class CartConfigPropertiesViewlet(CartViewletBase):
     """Properties Viewlet for Cart Config."""
 
-#    index = ViewPageTemplateFile("viewlets/cart_properties.pt")
     index = render = ViewPageTemplateFile("viewlets/cart_properties.pt")
 
     def update(self):
         form = self.request.form
         if form.get('form.button.UpdateCartProperties', None) is not None:
             context = aq_inner(self.context)
-#            portal = getToolByName(context, 'portal_url').getPortalObject()
-#            catalog = getToolByName(context, 'portal_catalog')
             keys = form.keys()
             keys.remove('form.button.UpdateCartProperties')
             ## Ther order matters here.
             keys.sort()
             for key in keys:
                 setattr(IPortalAdapter(context).cart_properties, key, form.get(key))
-#                if key != 'next_cart_id':
-#                    setattr(IPortalAdapter(context).cart_properties, key, form.get(key))
-#                elif getMultiAdapter((portal, catalog), IPortalCatalog).cart_folder is not None:
-#                if getMultiAdapter((portal, catalog), IPortalCatalog).cart_folder is not None:
-#                    folder = getMultiAdapter((portal, catalog), IPortalCatalog).cart_folder
-#                    folder.next_cart_id = int(form.get(key))
-#                    folder.next_incremental_cart_id = int(form.get(key))
 
     def selects(self):
-#        names = ['currency', 'symbol_location', 'decimal_type', 'cart_id_method', 'quantity_method']
         names = ['currency', 'symbol_location', 'decimal_type']
         html = ''
         for name in names:
@@ -116,7 +103,6 @@ class CartConfigPropertiesViewlet(CartViewletBase):
 class CartConfigTypesViewlet(CartViewletBase):
     """Content Type Selection Viewlet for Cart Config."""
 
-#    index = ViewPageTemplateFile("viewlets/cart_types.pt")
     index = render = ViewPageTemplateFile("viewlets/cart_types.pt")
 
     def update(self):
@@ -204,16 +190,98 @@ class CartContentsViewlet(CartViewletBase):
 
     @property
     def products(self):
-        portal_state = getMultiAdapter((self.context, self.request), name=u'plone_portal_state')
-        portal = portal_state.portal()
-        catalog = getToolByName(portal, 'portal_catalog')
-        sdm = getToolByName(portal, 'session_data_manager')
-        properties = getToolByName(portal, 'portal_properties')
-        pcp = IPortalCartProperties(properties)
-        cart = getMultiAdapter((portal, sdm, catalog), IPortalSessionCatalog).cart
-        products = getMultiAdapter((cart, catalog), ICartAdapter).products
+        return self.context.restrictedTraverse('products')()
+#        portal_state = getMultiAdapter((self.context, self.request), name=u'plone_portal_state')
+#        portal = portal_state.portal()
+#        catalog = getToolByName(portal, 'portal_catalog')
+#        sdm = getToolByName(portal, 'session_data_manager')
+#        properties = getToolByName(portal, 'portal_properties')
+#        pcp = IPortalCartProperties(properties)
+#        cart = getMultiAdapter((portal, sdm, catalog), IPortalSessionCatalog).cart
+#        products = getMultiAdapter((cart, catalog), ICartAdapter).products
+#        if products is not None:
+#            res = []
+#            for product in products:
+#                cpo = getMultiAdapter((product, catalog), ICartProductOriginal)
+#                cpa = ICartProductAdapter(product)
+#                item = dict(
+#                    title = cpa.title,
+#                    quantity = cpa.quantity,
+#                    uid = cpa.uid,
+#                    url = cpo.url,
+#                    select_quantity = cpo.select_quantity,
+#                    price_with_currency = pcp.price_with_currency(cpa.price),
+#                    subtotal_with_currency = pcp.price_with_currency(cpa.subtotal),
+#                )
+#                res.append(item)
+#            return res
+
+    def totals_with_currency(self):
+        return self.context.restrictedTraverse('totals-with-currency')()
+#        if self.products is not None:
+#            portal_state = getMultiAdapter((self.context, self.request), name=u'plone_portal_state')
+#            portal = portal_state.portal()
+#            catalog = getToolByName(portal, 'portal_catalog')
+#            sdm = getToolByName(portal, 'session_data_manager')
+#            properties = getToolByName(portal, 'portal_properties')
+#            pcp = IPortalCartProperties(properties)
+#            cart = getMultiAdapter((portal, sdm, catalog), IPortalSessionCatalog).cart
+#            ca = getMultiAdapter((cart, catalog), ICartAdapter)
+#            ci = ICartItself(cart)
+#            shipping_cost_with_currency = pcp.price_with_currency(ci.shipping_cost)
+#            if ci.shipping_cost == 0:
+#                shipping_cost_with_currency = None
+#            payment_cost_with_currency = pcp.price_with_currency(ca.payment_cost)
+#            if ca.payment_cost == 0:
+#                payment_cost_with_currency = None
+#            data = dict(
+#                products_subtotal_with_currency = pcp.price_with_currency(ca.subtotal),
+#                shipping_cost_with_currency = shipping_cost_with_currency,
+#                payment_cost_with_currency = payment_cost_with_currency,
+#                total_cost_with_currency = pcp.price_with_currency(ca.total_cost),
+#            )
+#            return data
+
+
+class NextStepViewlet(CartViewletBase):
+
+    index = render = ViewPageTemplateFile("viewlets/cart_next.pt")
+
+    def update(self):
+        form = self.request.form
+        context = aq_inner(self.context)
+        if form.get('form.button.NextStep', None) is not None:
+            return context.restrictedTraverse('next-step')()
+
+class FixedInfoViewlet(CartViewletBase):
+
+    index = render = ViewPageTemplateFile("viewlets/fixed_info.pt")
+
+    def has_cart_contents(self):
+        return self.context.restrictedTraverse('has-cart-contents')()
+
+class FixedCartContentViewlet(CartContentsViewlet):
+
+    index = render = ViewPageTemplateFile("viewlets/fixed_cart_content.pt")
+
+    def update(self):
+        if self.products is None:
+            context = aq_inner(self.context)
+            portal = getToolByName(context, 'portal_url').getPortalObject()
+            portal_url = portal.absolute_url()
+            cart_url = '%s/@@cart' % portal_url
+            return self.request.response.redirect(cart_url)
+
+    @property
+    def products(self):
+        products = self.context.restrictedTraverse('has-cart-contents')()
         if products is not None:
             res = []
+            context = aq_inner(self.context)
+            catalog = getToolByName(context, 'portal_catalog')
+            portal = getToolByName(context, 'portal_url').getPortalObject()
+            properties = getToolByName(portal, 'portal_properties')
+            pcp = IPortalCartProperties(properties)
             for product in products:
                 cpo = getMultiAdapter((product, catalog), ICartProductOriginal)
                 cpa = ICartProductAdapter(product)
@@ -222,7 +290,6 @@ class CartContentsViewlet(CartViewletBase):
                     quantity = cpa.quantity,
                     uid = cpa.uid,
                     url = cpo.url,
-                    select_quantity = cpo.select_quantity,
                     price_with_currency = pcp.price_with_currency(cpa.price),
                     subtotal_with_currency = pcp.price_with_currency(cpa.subtotal),
                 )
@@ -231,53 +298,6 @@ class CartContentsViewlet(CartViewletBase):
 
     def totals_with_currency(self):
         if self.products is not None:
-            portal_state = getMultiAdapter((self.context, self.request), name=u'plone_portal_state')
-            portal = portal_state.portal()
-            catalog = getToolByName(portal, 'portal_catalog')
-            sdm = getToolByName(portal, 'session_data_manager')
-            properties = getToolByName(portal, 'portal_properties')
-            pcp = IPortalCartProperties(properties)
-            cart = getMultiAdapter((portal, sdm, catalog), IPortalSessionCatalog).cart
-            ca = getMultiAdapter((cart, catalog), ICartAdapter)
-            ci = ICartItself(cart)
-#            shipping_cost_with_currency = pcp.price_with_currency(ca.shipping_cost)
-            shipping_cost_with_currency = pcp.price_with_currency(ci.shipping_cost)
-            if ci.shipping_cost == 0:
-                shipping_cost_with_currency = None
-            payment_cost_with_currency = pcp.price_with_currency(ca.payment_cost)
-            if ca.payment_cost == 0:
-                payment_cost_with_currency = None
-            data = dict(
-                products_subtotal_with_currency = pcp.price_with_currency(ca.subtotal),
-                shipping_cost_with_currency = shipping_cost_with_currency,
-                payment_cost_with_currency = payment_cost_with_currency,
-                total_cost_with_currency = pcp.price_with_currency(ca.total_cost),
-            )
-            return data
+            return self.context.restrictedTraverse('totals-with-currency')()
 
-
-class FixedCartContentViewlet(CartContentsViewlet):
-
-#    index = ViewPageTemplateFile("viewlets/fixed_cart_content.pt")
-    index = render = ViewPageTemplateFile("viewlets/fixed_cart_content.pt")
-
-
-    def update(self):
-#        context = aq_inner(self.context)
-#        portal = getToolByName(context, 'portal_url').getPortalObject()
-#        sdm = getToolByName(context, 'session_data_manager')
-#        ps = getMultiAdapter((portal, sdm), IPortalSession)
-#        ps.delete_cart_id_from_session()
-        pass
-
-
-class NextStepViewlet(CartViewletBase):
-
-#    index = ViewPageTemplateFile("viewlets/cart_next.pt")
-    index = render = ViewPageTemplateFile("viewlets/cart_next.pt")
-
-    def update(self):
-        form = self.request.form
-        context = aq_inner(self.context)
-        if form.get('form.button.NextStep', None) is not None:
-            return context.restrictedTraverse('next-step')()
+#    index = render = ViewPageTemplateFile("viewlets/fc.pt")
