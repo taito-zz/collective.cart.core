@@ -5,11 +5,6 @@
 
   <include package="plone.app.portlets" />
 
-<!--  <plone:portletRenderer-->
-<!--    portlet="portlet.Cart"-->
-<!--    template="cart.pt"-->
-<!--    />-->
-
   <plone:portlet
         name="portlet.Cart"
         interface=".cart.ICartPortlet"

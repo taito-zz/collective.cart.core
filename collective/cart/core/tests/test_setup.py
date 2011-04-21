@@ -466,8 +466,8 @@ class TestSetup(TestCase):
     def test_portlet(self):
         left_column = getUtility(IPortletManager, name=u"plone.leftcolumn")
         left_assignable = getMultiAdapter((self.portal, left_column), IPortletAssignmentMapping)
-        self.failUnless('cart' in left_assignable.keys())
-#        self.failUnless(u'Cart' in left_assignable.keys())
+#        self.failUnless('cart' in left_assignable.keys())
+        self.failUnless(u'Cart' in left_assignable.keys())
 
     ## Uninstalling
     def test_uninstall(self):

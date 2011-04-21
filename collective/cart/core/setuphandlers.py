@@ -30,13 +30,13 @@ def setupCartProperties(portal):
             metaTypesNotToList=types_not_listed)
 
 
-def setupCartPortlet(portal):
-        left_column = getUtility(IPortletManager, name=u"plone.leftcolumn")
-        manager = getMultiAdapter((portal, left_column), IPortletAssignmentMapping)
-        if 'cart' not in manager.keys():
-            assignment = Assignment()
-            chooser = INameChooser(manager)
-            manager[chooser.chooseName(None, assignment)] = assignment
+#def setupCartPortlet(portal):
+#        left_column = getUtility(IPortletManager, name=u"plone.leftcolumn")
+#        manager = getMultiAdapter((portal, left_column), IPortletAssignmentMapping)
+#        if 'cart' not in manager.keys():
+#            assignment = Assignment()
+#            chooser = INameChooser(manager)
+#            manager[chooser.chooseName(None, assignment)] = assignment
 
 
 def setupVarious(context):
@@ -46,4 +46,4 @@ def setupVarious(context):
 
     portal = context.getSite()
     setupCartProperties(portal)
-    setupCartPortlet(portal)
+#    setupCartPortlet(portal)
