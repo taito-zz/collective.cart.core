@@ -14,4 +14,3 @@ recipe to manage your project, you can do this:
 * Re-run buildout, e.g. with::
 
     $ ./bin/buildout
-
