@@ -9,6 +9,7 @@ recipe to manage your project, you can do this:
     ...
     eggs =
         ...
+        pycountry
         collective.cart
 
 * Re-run buildout, e.g. with::
