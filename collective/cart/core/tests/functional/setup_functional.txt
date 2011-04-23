@@ -4,6 +4,7 @@ Initial imports and defines.
     >>> document01 = portal.document01
     >>> document01_url = document01.absolute_url()
     >>> cart_url = '%s/@@cart' % portal_url
+    >>> from collective.cart.core.interfaces import IProduct
 
 Setting up.
 ----
@@ -42,7 +43,13 @@ Check cart portlet
 ----
     >>> 'class="portlet portletCart"' in browser.contents
     False
-    >>> browser.open(cart_url)
+
+    >>> try:
+    ...     browser.open(cart_url)
+    ... except:
+    ...     print portal.error_log.getLogEntries()[0]['tb_text']
+    ...     import pdb; pdb.set_trace()
+
     >>> 'Cart is Empty.' in browser.contents
     True
 
@@ -55,7 +62,14 @@ Check Document01: There should not be 'Make Addable To Cart'
 Go to Site Setup and to Cart Config
 ----
     >>> browser.getLink('Site Setup').click()
-    >>> browser.getLink('Cart Config').click()
+
+    >>> try:
+    ...     browser.getLink('Cart Config').click()
+    ... except:
+    ...     print portal.error_log.getLogEntries()[0]['tb_text']
+    ...     import pdb; pdb.set_trace()
+
+#    >>> browser.getLink('Cart Config').click()
 
     >>> 'Warn' in browser.contents
     True
@@ -73,9 +87,6 @@ If you try to add the other CartFolder, there gonna be warning.
     >>> browser.getLink(id='cartfolder').click()
     >>> browser.getControl(name="title").value = 'Other Cart Folder'
     >>> browser.getControl("Save").click()
-    Traceback (innermost last):
-    ...
-    HTTPError: HTTP Error 404: Not Found
 
     >>> browser.open(portal_url)
     >>> browser.getLink('Site Setup').click()
@@ -149,17 +160,6 @@ Go to Potal and add Document
     True
     >>> 'name="max_addable_quantity"' in browser.contents
     True
-
-    >>> 'name="weight_unit"' in browser.contents
-    True
-    >>> 'name="weight"' in browser.contents
-    True
-    >>> 'name="height"' in browser.contents
-    True
-    >>> 'name="width"' in browser.contents
-    True
-    >>> 'name="depth"' in browser.contents
-    True
     >>> browser.open(document01_url)
     >>> 'make_addable_to_cart' in browser.contents
     False
@@ -184,35 +184,18 @@ Go to Potal and add Document
     True
     >>> 'value="100"' in browser.contents
     True
-    >>> 'value="g" selected="selected"' in browser.contents
-    True
     >>> browser.getControl(name="price").value = '5.00'
     >>> browser.getControl(name="unlimited_stock").value = True
     >>> browser.getControl(name="stock").value = '25'
     >>> browser.getControl(name="max_addable_quantity").value = '15'
-    >>> browser.getControl(name="weight_unit").value = ['kg']
-    >>> browser.getControl(name="weight").value = '250'
-    >>> browser.getControl(name="height").value = '10'
-    >>> browser.getControl(name="width").value = '25'
-    >>> browser.getControl(name="depth").value = '4'
     >>> browser.getControl(name="form.button.save").click()
-    >>> '5.0' in browser.contents
+    >>> 'value="5"' in browser.contents
     True
     >>> 'checked="checked"' in browser.contents
     True
-    >>> '25' in browser.contents
-    True
-    >>> '15' in browser.contents
-    True
-    >>> 'value="kg" selected="selected"' in browser.contents
-    True
-    >>> 'value="250"' in browser.contents
-    True
-    >>> 'value="10"' in browser.contents
-    True
     >>> 'value="25"' in browser.contents
     True
-    >>> 'value="4"' in browser.contents
+    >>> 'value="15"' in browser.contents
     True
     >>> browser.getControl(name="form.button.save").click()
     >>> browser.getLink('View').click()
@@ -229,6 +212,7 @@ Go to Potal and add Document
     False
     >>> 'Product Edit' in browser.contents
     False
+
 
 Creat Document and see if there are 'make_addable_to_cart'
 ----
@@ -254,16 +238,18 @@ Once again make Document01 addable to cart.
     >>> browser.getControl(name="stock").value = '25'
     >>> browser.getControl(name="max_addable_quantity").value = '15'
     >>> browser.getControl(name="form.button.save").click()
-    >>> '5.0' in browser.contents
+    >>> 'value="5"' in browser.contents
     True
     >>> 'checked="checked"' in browser.contents
     True
-    >>> '25' in browser.contents
+    >>> 'value="25"' in browser.contents
     True
-    >>> '15' in browser.contents
+    >>> 'value="15"' in browser.contents
     True
     >>> browser.getLink('View').click()
     >>> browser.getLink('Publish').click()
+    >>> IProduct(document01).stock
+    25
 
     >>> try:
     ...     browser.getControl(name="form.button.AddToCart").click()
@@ -275,14 +261,19 @@ Once again make Document01 addable to cart.
 
     >>> 'There was an error while rendering the portlet.' not in browser.contents
     True
-
     >>> 'class="portlet portletCart"' in browser.contents
     True
     >>> 'value="15"' in browser.contents
     True
     >>> 'value="16"' in browser.contents
     False
-    >>> browser.open(cart_url)
+
+    >>> try:
+    ...     browser.open(cart_url)
+    ... except:
+    ...     print portal.error_log.getLogEntries()[0]['tb_text']
+    ...     import pdb; pdb.set_trace()
+
     >>> 'value="1" selected="selected"' in browser.contents
     True
     >>> 'value="15"' in browser.contents
@@ -341,12 +332,7 @@ Go to Document02 and make it addable.
     >>> browser.getControl(name="max_addable_quantity").value = '20'
     >>> browser.getControl(name="form.button.save").click()
     >>> browser.getLink('View').click()
-    >>> from collective.cart.core.interfaces import IProduct
-    >>> IProduct(document01).stock
-    22
     >>> browser.getLink('Publish').click()
-    >>> IProduct(document01).stock
-    22
 
 Add Document02 to Cart.
 ----
@@ -402,7 +388,14 @@ Go To Cart
 
 Delete Cart Contents
 ----
-    >>> browser.getControl(name="form.button.DeleteCartContent", index=0).click()
+    >>> try:
+    ...     browser.getControl(name="form.button.DeleteCartContent", index=0).click()
+    ... except:
+    ...     print portal.error_log.getLogEntries()[0]['tb_text']
+    ...     import pdb; pdb.set_trace()
+
+#    >>> browser.getControl(name="form.button.DeleteCartContent", index=0).click()
+
     >>> 'value="4" selected="selected"' in browser.contents
     True
     >>> 'value="10"' in browser.contents
@@ -420,7 +413,15 @@ Delete Cart Contents
     True
     >>> 'value="11"' in browser.contents
     False
-    >>> browser.getControl(name="form.button.DeleteCartContent", index=0).click()
+
+    >>> try:
+    ...     browser.getControl(name="form.button.DeleteCartContent", index=0).click()
+    ... except:
+    ...     print portal.error_log.getLogEntries()[0]['tb_text']
+    ...     import pdb; pdb.set_trace()
+
+#    >>> browser.getControl(name="form.button.DeleteCartContent", index=0).click()
+
     >>> 'Cart is Empty.' in browser.contents
     True
 
@@ -460,6 +461,3 @@ Log out
     False
 
     >>> browser.open(cart_url)
-
-#    >>> browser.getControl(name="form.button.AddToCart").click()
-

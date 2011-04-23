@@ -5,17 +5,14 @@ from Acquisition import aq_inner
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.CMFCore.utils import getToolByName
 from plone.app.layout.viewlets.common import ViewletBase
+from collective.cart.core import CartMessageFactory as _
 from collective.cart.core.interfaces import (
     IAddableToCart,
-    ICartAdapter,
-    ICartItself,
-    ICartProductAdapter,
-    ICartProductOriginal,
-    IPortalAdapter,
+    IPortal,
+#    IPortalAdapter,
     IPortalCart,
     IPortalCartProperties,
     IPortalCatalog,
-    IPortalSessionCatalog,
     IPotentiallyAddableToCart,
     IProduct,
 )
@@ -44,7 +41,7 @@ class CartConfigPropertiesViewlet(CartViewletBase):
             ## Ther order matters here.
             keys.sort()
             for key in keys:
-                setattr(IPortalAdapter(context).cart_properties, key, form.get(key))
+                setattr(IPortal(context).cart_properties, key, form.get(key))
 
     def selects(self):
         names = ['currency', 'symbol_location', 'decimal_type']
@@ -56,27 +53,28 @@ class CartConfigPropertiesViewlet(CartViewletBase):
     @property
     def currency(self):
         context = aq_inner(self.context)
-        return IPortalAdapter(context).cart_properties.select_field('currency', ['EUR', 'USD', 'JPY'])
+        
+        return IPortal(context).cart_properties.select_field('currency', ['EUR', 'USD', 'JPY'])
 
     @property
     def currency_symbol(self):
         context = aq_inner(self.context)
-        return IPortalAdapter(context).cart_properties.currency_symbol
+        return IPortal(context).cart_properties.currency_symbol
 
     @property
     def symbol_location(self):
         context = aq_inner(self.context)
-        return IPortalAdapter(context).cart_properties.select_field('symbol_location', ['Front', 'Behind'])
+        return IPortal(context).cart_properties.select_field('symbol_location', ['Front', 'Behind'])
 
     @property
     def decimal_type(self):
         context = aq_inner(self.context)
-        return IPortalAdapter(context).cart_properties.select_field('decimal_type', ['.', ','])
+        return IPortal(context).cart_properties.select_field('decimal_type', ['.', ','])
 
     @property
     def cart_id_method(self):
         context = aq_inner(self.context)
-        return IPortalAdapter(context).cart_properties.select_field('cart_id_method', ['Incremental', 'Random'])
+        return IPortal(context).cart_properties.select_field('cart_id_method', ['Incremental', 'Random'])
 
     @property
     def next_cart_id(self):
@@ -92,12 +90,12 @@ class CartConfigPropertiesViewlet(CartViewletBase):
     @property
     def random_cart_id_digits(self):
         context = aq_inner(self.context)
-        return IPortalAdapter(context).cart_properties.random_cart_id_digits
+        return IPortal(context).cart_properties.random_cart_id_digits
 
     @property
     def quantity_method(self):
         context = aq_inner(self.context)
-        return IPortalAdapter(context).cart_properties.select_field('quantity_method', ['Select', 'Input'])
+        return IPortal(context).cart_properties.select_field('quantity_method', ['Select', 'Input'])
 
 
 class CartConfigTypesViewlet(CartViewletBase):
@@ -114,7 +112,7 @@ class CartConfigTypesViewlet(CartViewletBase):
                     types = [types]
                 context = aq_inner(self.context)
                 portal = getToolByName(context, 'portal_url').getPortalObject()
-                IPortalAdapter(portal).cart_properties.content_types = types
+                IPortal(portal).cart_properties.content_types = types
                 catalog = getToolByName(context, 'portal_catalog')
                 brains = catalog(
                     portal_type=types,
@@ -134,7 +132,7 @@ class CartConfigTypesViewlet(CartViewletBase):
 
     def select_types(self):
         context = aq_inner(self.context)
-        sct = IPortalAdapter(context).cart_properties.content_types
+        sct = IPortal(context).cart_properties.content_types
         name = 'plone.app.vocabularies.UserFriendlyTypes'
         util = getUtility(IVocabularyFactory, name)
         types = util(context).by_token.keys()
@@ -157,7 +155,7 @@ class CartProductValuesViewlet(CartViewletBase):
         form = self.request.form
         if form.get('form.button.AddToCart', None) is not None:
             context = aq_inner(self.context)
-            IProduct(context).add_to_cart(form)
+            IPortal(context).add_to_cart(form)
             return self.request.response.redirect(self.current_url) 
 
     def items(self):
@@ -180,68 +178,50 @@ class CartContentsViewlet(CartViewletBase):
     def update(self):
         form = self.request.form
         context = aq_inner(self.context)
-        portal = getToolByName(context, 'portal_url').getPortalObject()
         if form.get('form.button.UpdateCartContent', None) is not None:
-            getMultiAdapter((portal, self.request), IPortalCart).update_cart()
+            IPortal(context).update_cart(form)
             return self.request.response.redirect(self.current_url)
         if form.get('form.button.DeleteCartContent', None) is not None:
-            getMultiAdapter((portal, self.request), IPortalCart).delete_product_from_cart()
+            IPortal(context).delete_product(form)
             return self.request.response.redirect(self.current_url)
 
-    @property
     def products(self):
         return self.context.restrictedTraverse('products')()
-#        portal_state = getMultiAdapter((self.context, self.request), name=u'plone_portal_state')
-#        portal = portal_state.portal()
-#        catalog = getToolByName(portal, 'portal_catalog')
-#        sdm = getToolByName(portal, 'session_data_manager')
-#        properties = getToolByName(portal, 'portal_properties')
-#        pcp = IPortalCartProperties(properties)
-#        cart = getMultiAdapter((portal, sdm, catalog), IPortalSessionCatalog).cart
-#        products = getMultiAdapter((cart, catalog), ICartAdapter).products
-#        if products is not None:
-#            res = []
-#            for product in products:
-#                cpo = getMultiAdapter((product, catalog), ICartProductOriginal)
-#                cpa = ICartProductAdapter(product)
-#                item = dict(
-#                    title = cpa.title,
-#                    quantity = cpa.quantity,
-#                    uid = cpa.uid,
-#                    url = cpo.url,
-#                    select_quantity = cpo.select_quantity,
-#                    price_with_currency = pcp.price_with_currency(cpa.price),
-#                    subtotal_with_currency = pcp.price_with_currency(cpa.subtotal),
-#                )
-#                res.append(item)
-#            return res
 
     def totals_with_currency(self):
         return self.context.restrictedTraverse('totals-with-currency')()
-#        if self.products is not None:
-#            portal_state = getMultiAdapter((self.context, self.request), name=u'plone_portal_state')
-#            portal = portal_state.portal()
-#            catalog = getToolByName(portal, 'portal_catalog')
-#            sdm = getToolByName(portal, 'session_data_manager')
-#            properties = getToolByName(portal, 'portal_properties')
-#            pcp = IPortalCartProperties(properties)
-#            cart = getMultiAdapter((portal, sdm, catalog), IPortalSessionCatalog).cart
-#            ca = getMultiAdapter((cart, catalog), ICartAdapter)
-#            ci = ICartItself(cart)
-#            shipping_cost_with_currency = pcp.price_with_currency(ci.shipping_cost)
-#            if ci.shipping_cost == 0:
-#                shipping_cost_with_currency = None
-#            payment_cost_with_currency = pcp.price_with_currency(ca.payment_cost)
-#            if ca.payment_cost == 0:
-#                payment_cost_with_currency = None
-#            data = dict(
-#                products_subtotal_with_currency = pcp.price_with_currency(ca.subtotal),
-#                shipping_cost_with_currency = shipping_cost_with_currency,
-#                payment_cost_with_currency = payment_cost_with_currency,
-#                total_cost_with_currency = pcp.price_with_currency(ca.total_cost),
-#            )
-#            return data
 
+
+class CartTotalsViewlet(ViewletBase):
+
+    index = render = ViewPageTemplateFile("viewlets/cart_totals.pt")
+
+    def products(self):
+        return self.context.restrictedTraverse('products')()
+
+
+class CartTotalsProductsViewlet(ViewletBase):
+
+    index = render = ViewPageTemplateFile("viewlets/cost.pt")
+
+    def label(self):
+        return _(u'Products Subtotal')
+
+    def total(self):
+        context = aq_inner(self.context)
+        totals = context.restrictedTraverse('totals')()
+        return totals['products_subtotal_with_currency']
+
+
+class CartTotalCostViewlet(CartTotalsProductsViewlet):
+
+    def label(self):
+        return _(u'Total Cost')
+
+    def total(self):
+        context = aq_inner(self.context)
+        totals = context.restrictedTraverse('totals')()
+        return totals['total_cost_with_currency']
 
 class NextStepViewlet(CartViewletBase):
 

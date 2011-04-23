@@ -171,6 +171,7 @@ class TestSetup(TestCase):
     ## catalog.xml
     def test_catalog_index(self):
         self.failUnless('uid' in self.catalog.indexes())
+        self.failUnless('session_cart_id' in self.catalog.indexes())
 
     def test_metadata(self):
         self.failUnless('quantity' in self.catalog.schema())
@@ -466,7 +467,7 @@ class TestSetup(TestCase):
     def test_portlet(self):
         left_column = getUtility(IPortletManager, name=u"plone.leftcolumn")
         left_assignable = getMultiAdapter((self.portal, left_column), IPortletAssignmentMapping)
-        self.failUnless('cart' in left_assignable.keys())
+        self.failUnless(u'Cart' in left_assignable.keys())
 #        self.failUnless(u'Cart' in left_assignable.keys())
 
     ## Uninstalling

@@ -11,6 +11,7 @@ Imports and Defines
     >>> provideAdapter(AttributeAnnotations)
     >>> from Products.Archetypes.Schema.factory import instanceSchemaFactory
     >>> provideAdapter(instanceSchemaFactory)
+    >>> from decimal import Decimal
 
 IProduct
 ====
@@ -23,10 +24,13 @@ IProduct
     ...         return self.uid
     ...     def Title(self):
     ...         return self.title
+    ...     def absolute_url(self):
+    ...         return self.url
     >>> doc = Document(
     ...     id='doc01',
     ...     uid='uid01',
     ...     title="Document01",
+    ...     url='doc01_url',
     ... )
     >>> alsoProvides(doc, IAddableToCart)
     >>> IAddableToCart.providedBy(doc)
@@ -41,6 +45,8 @@ IProduct
     'uid01'
     >>> product.title
     'Document01'
+    >>> product.url
+    'doc01_url'
     >>> product.price
     0.0
     >>> from collective.cart.core.content.product import ProductAnnotations
@@ -48,11 +54,11 @@ IProduct
     >>> cannotasions = IAnnotations(doc)['collective.cart.core']
     >>> product.price
     0.0
-    >>> product.price = 5.0
+    >>> product.price = Decimal('5.00')
     >>> product.price
-    5.0
+    Decimal('5.00')
     >>> cannotasions.price
-    5.0
+    Decimal('5.00')
     >>> product.stock
     0
     >>> product.stock = 10
@@ -91,31 +97,38 @@ IProduct
     >>> provideUtility(SelectRange(), provides=ISelectRange)
     >>> product.select_quantity
     '<select id="quantity" name="quantity"><option value="1">1</option><option value="2">2</option><option value="3">3</option></select>'
-    >>> product.weight = 10.0
-    >>> product.weight
-    10.0
-    >>> product.weight_unit
-    'g'
-    >>> product.weight_unit = 'kg'
-    >>> product.weight_unit
-    'kg'
-    >>> 
-    >>> product.weight_in_kg()
-    10.0
-    >>> product.weight_unit = 'g'
-    >>> product.weight_in_kg()
-    0.01
-    >>> product.height = 10
-    >>> product.width = 25
-    >>> product.depth = 4
-    >>> product.dimension
-    0.001
-    >>> product.weight_in_kg()
-    0.01
-    >>> product.weight_in_kg(10)
-    0.01
-    >>> product.weight_in_kg(100)
-    0.10000000000000001
+    >>> product.input_quantity
+    '<input type="text "id="quantity" name="quantity" size="3" value="" />'
+
+
+ICartProduct
+====
+    >>> from collective.cart.core.interfaces import ICartProductContentType
+    >>> class Content(object):
+    ...     implements(ICartProductContentType)
+    ...     def __init__(self, **kwargs):
+    ...         for k, v in kwargs.items(): setattr(self, k, v)
+    >>> context = Content()
+    >>> context.uid = 'someuid'
+    >>> context.price = Decimal('5.00')
+    >>> context.quantity = 3
+    >>> context.title = 'Product01'
+    >>> context.subtotal = Decimal('15.00')
+    >>> from collective.cart.core.interfaces import ICartProduct
+    >>> from collective.cart.core.adapter.cart import CartProductAdapter
+    >>> provideAdapter(CartProductAdapter)
+    >>> cpadapter = ICartProduct(context)
+    >>> cpadapter.uid
+    'someuid'
+    >>> cpadapter.price
+    Decimal('5.00')
+    >>> cpadapter.quantity
+    3
+    >>> cpadapter.title
+    'Product01'
+    >>> cpadapter.subtotal
+    Decimal('15.00')
+
 
 IPortalCartProperties
 ====
@@ -207,330 +220,3 @@ IPortalCartProperties
     >>> provideUtility(Price('string'), provides=IPrice, name="string")
     >>> pcp.price_with_currency(5.0)
     '5.00 \xe5\x86\x86'
-
-ICartProductAdapter
-====
-    >>> from collective.cart.core.content.cart import CartProduct
-    >>> cproduct = CartProduct('cproduct')
-    >>> cproduct.uid = 'someuid'
-    >>> cproduct.price = 5.0
-    >>> cproduct.quantity = 3
-    >>> cproduct.title = 'Product01'
-    >>> from collective.cart.core.interfaces import ICartProductAdapter
-    >>> from collective.cart.core.adapter.cart import CartProductAdapter
-    >>> provideAdapter(CartProductAdapter)
-    >>> cpadapter = ICartProductAdapter(cproduct)
-    >>> cpadapter.uid
-    'someuid'
-    >>> cpadapter.price
-    5.0
-    >>> cpadapter.quantity
-    3
-    >>> cpadapter.title
-    'Product01'
-    >>> cpadapter.subtotal
-    15.0
-
-ICartProductOriginal
-====
-    >>> from collective.cart.core.interfaces import ICartProductOriginal
-    >>> from collective.cart.core.adapter.cart import CartProductOriginal
-    >>> provideAdapter(CartProductOriginal)
-    >>> class Brain(object):
-    ...     def __init__(self, **kwargs):
-    ...         for k, v in kwargs.items(): setattr(self, k, v)
-    ...     def getURL(self):
-    ...         return 'original_url'
-    ...     def getObject(self):
-    ...         return doc
-    >>> class Catalog(object):
-    ...     implements(IZCatalog)
-    ...     def __init__(self, **kwargs):
-    ...         for k, v in kwargs.items(): setattr(self, k, v)
-    ...     def __call__(self, **kwargs):
-    ...         return [Brain()]
-    ...     def unrestrictedSearchResults(self, query=None):
-    ...         return [Brain()]
-    >>> catalog = Catalog()
-    >>> cpo = getMultiAdapter((cproduct, catalog), ICartProductOriginal)
-    >>> cpo.brain
-    <Brain object at ...>
-    >>> cpo.obj
-    <Document object at ...>
-    >>> cpo.url
-    'original_url'
-    >>> product.unlimited_stock = True
-    >>> product.max_addable_quantity = 7
-    >>> product.stock = 5
-    >>> cproduct.quantity = 5
-    >>> cpo.updatable_quantity
-    7
-    >>> product.unlimited_stock = False
-    >>> product.max_addable_quantity = 5
-    >>> product.stock = 4
-    >>> cproduct.quantity = 6
-    >>> cpo.updatable_quantity
-    5
-    >>> product.max_addable_quantity = 5
-    >>> product.stock = 0
-    >>> cproduct.quantity = 3
-    >>> cpo.updatable_quantity
-    3
-    >>> cpo.select_quantity
-    '<select id="quantity" name="quantity"><option value="1">1</option><option value="2">2</option><option value="3" selected="selected">3</option></select>'
-
-ICartAdapter
-====
-    >>> from collective.cart.core.content import Cart
-    >>> cart = Cart('cart')
-    >>> from collective.cart.core.interfaces import ICart
-    >>> ICart.providedBy(cart)
-    True
-    >>> class Brain(object):
-    ...     def __init__(self, **kwargs):
-    ...         for k, v in kwargs.items(): setattr(self, k, v)
-    ...         self.kwargs = kwargs
-    ...     def getURL(self):
-    ...         return 'original_url'
-    ...     def getObject(self):
-    ...         return cproduct
-    >>> brain01 = Brain(id='1')
-    >>> brain02 = Brain(id='2')
-    >>> class Catalog(object):
-    ...     implements(IZCatalog)
-    ...     def __init__(self, **kwargs):
-    ...         for k, v in kwargs.items(): setattr(self, k, v)
-    ...     def unrestrictedSearchResults(self, query=None):
-    ...         return [brain01, brain02]
-    >>> catalog = Catalog()
-    >>> from collective.cart.core.interfaces import ICartAdapter
-    >>> from collective.cart.core.adapter.cart import CartAdapter
-    >>> provideAdapter(CartAdapter)
-    >>> cadapter = getMultiAdapter((cart, catalog), ICartAdapter)
-    >>> cadapter.products
-    [<CartProduct at cproduct>, <CartProduct at cproduct>]
-    >>> uid = 'uid01'
-    >>> cadapter.product(uid)
-    <CartProduct at cproduct>
-    >>> cadapter.subtotal
-    30.0
-
-#    >>> class Cart(object):
-#    ...     implements(ICart)
-#    ...     def __init__(self, **kwargs):
-#    ...         for k, v in kwargs.items(): setattr(self, k, v)
-#    ...         self.kwargs = kwargs
-#    ...     def invokeFactory(self, type, id, **kwargs):
-#    ...         for k, v in kwargs.items(): setattr(self, k, v)
-#    ...         self.cproduct = CartProduct('1')
-#    ...         self.cproduct.uid = 'uid02'
-#    ...     def getPhysicalPath(self):
-#    ...         return '/'
-#    >>> cart = Cart()
-#    >>> cadapter = getMultiAdapter((cart, catalog), ICartAdapter)
-#    >>> cadapter.add_new_product_to_cart('uid02', 2)
-
-IPortalSession
-====
-    >>> class Portal(object):
-    ...     implements(IPloneSiteRoot)
-    ...     def __init__(self, **kwargs):
-    ...         for k, v in kwargs.items(): setattr(self, k, v)
-    >>> portal = Portal()
-
-    >>> from collective.cart.core.interfaces import IPortalSession
-    >>> from collective.cart.core.adapter.portal import PortalSession
-    >>> provideAdapter(PortalSession)
-    >>> session = {'collective.cart.core.id': 5}
-    >>> try:
-    ...     from Products.Sessions.interfaces import ISessionDataManager
-    ... except ImportError:
-    ...     pass
-    >>> class SDM(object):
-    ...     try:
-    ...         implements(ISessionDataManager)
-    ...     except:
-    ...         pass
-    ...     def __init__(self, **kwargs):
-    ...         for k, v in kwargs.items(): setattr(self, k, v)
-    ...     def getSessionData(self, create=True):
-    ...         return session
-    >>> sdm = SDM()
-    >>> sdm.getSessionData()
-    {'collective.cart.core.id': 5}
-    >>> psession = getMultiAdapter((portal, sdm), IPortalSession)
-    >>> psession.cart_id
-    5
-    >>> psession.delete_cart_id_from_session()
-    >>> session
-    {}
-
-IPortalSessionCatalog
-====
-    >>> try:
-    ...     from Products.Sessions.interfaces import ISessionDataManager
-    ... except ImportError:
-    ...         pass
-    >>> from collective.cart.core.interfaces import IPortalSessionCatalog
-    >>> from collective.cart.core.adapter.portal import PortalSessionCatalog
-    >>> provideAdapter(PortalSessionCatalog)
-    >>> from collective.cart.core.content import Cart
-    >>> cart = Cart('cart')
-    >>> class Brain(object):
-    ...     def __init__(self, **kwargs):
-    ...         for k, v in kwargs.items(): setattr(self, k, v)
-    ...     def getObject(self):
-    ...         return cart
-    >>> brain = Brain()
-    >>> class Catalog(object):
-    ...     implements(IZCatalog)
-    ...     def __init__(self, **kwargs):
-    ...         for k, v in kwargs.items(): setattr(self, k, v)
-    ...     def unrestrictedSearchResults(self, query):
-    ...         return [brain]
-    >>> catalog = Catalog()
-    >>> psc = getMultiAdapter((portal, sdm, catalog), IPortalSessionCatalog)
-    >>> psc.cart_id
-    >>> session = {'collective.cart.core.id': 3}
-    >>> sdm = SDM()
-    >>> psc = getMultiAdapter((portal, sdm, catalog), IPortalSessionCatalog)
-    >>> psc.cart_id
-    3
-    >>> psc.cart
-    <Cart at cart>
-
-IPortalCatalog
-====
-    >>> from collective.cart.core.interfaces import IPortalCatalog
-    >>> from collective.cart.core.adapter.portal import PortalCatalog
-    >>> provideAdapter(PortalCatalog)
-    >>> from collective.cart.core.content import CartFolder
-    >>> cfolder = CartFolder('cfolder')
-    >>> class Brain(object):
-    ...     def __init__(self, **kwargs):
-    ...         for k, v in kwargs.items(): setattr(self, k, v)
-    ...     def getObject(self):
-    ...         return cfolder
-    >>> brain01 = Brain(id='1')
-    >>> brain02 = Brain(id='2')
-    >>> brain03 = Brain(id='3')
-    >>> brain06 = Brain(id='6')
-    
-    >>> class Catalog(object):
-    ...     implements(IZCatalog)
-    ...     def __init__(self, **kwargs):
-    ...         for k, v in kwargs.items(): setattr(self, k, v)
-    ...     def unrestrictedSearchResults(self, query):
-    ...         return [brain01, brain02, brain03, brain06]
-    >>> catalog = Catalog()
-    >>> pcatalog = getMultiAdapter((portal, catalog), IPortalCatalog)
-    >>> pcatalog
-    <collective.cart.core.adapter.portal.PortalCatalog object at ...>
-    >>> pcatalog.cart_folder
-    <CartFolder at cfolder>
-    >>> pcatalog.used_cart_ids
-    ['1', '2', '3', '6']
-    >>> pcatalog.incremental_cart_id
-    '4'
-    >>> pcatalog.incremental_cart_id
-    '5'
-    >>> pcatalog.incremental_cart_id
-    '7'
-    >>> from collective.cart.core.interfaces import IRandomDigits
-    >>> from collective.cart.core.utility.miscellaneous import RandomDigits
-    >>> provideUtility(RandomDigits(), provides=IRandomDigits)
-    >>> pcatalog.random_cart_id(1) not in pcatalog.used_cart_ids
-    True
-    >>> len(pcatalog.random_cart_id(2))
-    2
-
-IPortalAdapter
-====
-    >>> from collective.cart.core.content import CartFolder
-    >>> folder = CartFolder('folder')
-    >>> from collective.cart.core.interfaces import ICartFolder
-    >>> identifier = ICartFolder.__identifier__
-    >>> class Brain(object):
-    ...     def __init__(self, **kwargs):
-    ...         for k, v in kwargs.items(): setattr(self, k, v)
-    ...     def getObject(self):
-    ...         return folder
-    >>> brain = Brain()
-    >>> brain.getObject()
-    <CartFolder at folder>
-    >>> class Catalog(object):
-    ...     implements(IZCatalog)
-    ...     def __init__(self, **kwargs):
-    ...         for k, v in kwargs.items(): setattr(self, k, v)
-    ...     def unrestrictedSearchResults(self, query):
-    ...         if query.get('object_provides') == identifier:
-    ...             if ICartFolder.providedBy(folder):
-    ...                 return [brain]
-    ...         return []
-    >>> catalog = Catalog()
-    >>> query = dict(object_provides='')
-    >>> catalog.unrestrictedSearchResults(query)
-    []
-    >>> query = dict(object_provides=identifier)
-    >>> catalog.unrestrictedSearchResults(query)
-    [<Brain object at ...>]
-    >>> portal = Portal(portal_properties=properties, portal_catalog=catalog)
-    >>> from collective.cart.core.interfaces import IPortalAdapter
-    >>> from collective.cart.core.adapter.portal import PortalAdapter
-    >>> provideAdapter(PortalAdapter)
-    >>> padapter = IPortalAdapter(portal)
-    >>> padapter.cart_properties
-    <collective.cart.core.adapter.portal.PortalCartProperties object at ...>
-    >>> IPloneSiteRoot.providedBy(portal)
-    True
-    >>> IZCatalog.providedBy(portal.portal_catalog)
-    True
-    >>> padapter.next_cart_id('Incremental')
-    '1'
-    >>> padapter.next_cart_id('Incremental')
-    '2'
-    >>> padapter.next_cart_id('Random') in [str(n) for n in range(0,10)]
-    True
-
-IPortalCart
-====
-    >>> from collective.cart.core.interfaces import IPortalCart
-    >>> from collective.cart.core.adapter.portal import PortalCart
-    >>> provideAdapter(PortalCart)
-    >>> from zope.publisher.interfaces.browser import IBrowserRequest
-    >>> from zope.publisher.browser import TestRequest
-    >>> request = TestRequest()
-    >>> data = dict(
-    ...     uid = 'someuid',
-    ...     quantity = '3',
-    ... )
-    >>> request.form.update(data)
-    >>> IBrowserRequest.providedBy(request)
-    True
-    >>> class Portal(object):
-    ...     implements(IPloneSiteRoot)
-    ...     def __init__(self, **kwargs):
-    ...         for k, v in kwargs.items(): setattr(self, k, v)
-    >>> portal = Portal()
-    >>> IPloneSiteRoot.providedBy(portal)
-    True
-    >>> pcart = getMultiAdapter((portal, request), IPortalCart)
-
-
-IAvailableShippingMethods
-=========================
-    >>> from collective.cart.core.interfaces import IAvailableShippingMethods
-    >>> from collective.cart.core.adapter.portal import AvailableShippingMethods
-    >>> provideAdapter(AvailableShippingMethods)
-    >>> from OFS.interfaces import IItem
-    >>> alsoProvides(portal, IItem)
-    >>> IAvailableShippingMethods(portal)()
-
-IUpdateShippingMethod
-=====================
-    >>> from collective.cart.core.interfaces import IUpdateShippingMethod
-    >>> from collective.cart.core.adapter.portal import UpdateShippingMethod
-    >>> provideAdapter(UpdateShippingMethod)
-    >>> context = Mock()
-    >>> alsoProvides(context, IItem)
-    >>> IUpdateShippingMethod(context)()

@@ -1,6 +1,43 @@
+ICartFolder
+-----------
+    >>> from collective.cart.core.interfaces import ICartFolder
+    >>> cfolder01 = portal.folder01.cfolder01
+    >>> cfolder = ICartFolder(cfolder01)
+    >>> cfolder
+    <collective.cart.core.adapter.cart.CartFolderAdapter object at ...>
+    >>> cfolder.used_cart_ids
+    ['0', '1', '2', '3', '4', '5', '7', '8']
+    >>> cfolder.incremental_cart_id
+    '6'
+    >>> cfolder01.next_incremental_cart_id
+    7
+    >>> cfolder01.cart_id_numbering_method
+    'Incremental'
+    >>> cfolder.next_cart_id
+    '9'
+    >>> cfolder.create_cart('1')
+    <Cart at /plone/folder01/cfolder01/...>
+    >>> cfolder.used_cart_ids
+    ['0', '1', '2', '3', '4', '5', '7', '8', '10']
+    >>> cfolder01.cart_id_numbering_method = 'Random'
+    >>> cfolder01.random_digits_cart_id = 1
+    >>> cfolder.create_cart('1')
+    <Cart at /plone/folder01/cfolder01/...>
+    >>> cfolder.create_cart('1')
+    <Cart at /plone/folder01/cfolder01/...>
+    >>> len(cfolder.used_cart_ids)
+    11
+    >>> cfolder.create_cart('1')
+    <Cart at /plone/folder01/cfolder01/...>
+    >>> cfolder01.cart_id_numbering_method = 'Incremental'
+    >>> cfolder.create_cart('1')
+    <Cart at /plone/folder01/cfolder01/11>
+    >>> '11' in cfolder.used_cart_ids
+    True
+
     >>> doc01 = portal.folder01.folder03.folder04.doc01
-    >>> from collective.cart.core.interfaces import IProduct
-    >>> IProduct(doc01).cart_folder
+    >>> from collective.cart.core.interfaces import IPortal
+    >>> IPortal(doc01).cart_folder
     <CartFolder at /plone/folder01/folder03/folder04/cfolder04>
 
     >>> from Products.CMFCore.utils import getToolByName
@@ -9,16 +46,16 @@
     >>> paths = [path]
     >>> putils.deleteObjectsByPaths(paths=paths)
     (['cfolder04 (/plone/folder01/folder03/folder04/cfolder04)'], {})
-    >>> IProduct(doc01).cart_folder
+    >>> IPortal(doc01).cart_folder
     <CartFolder at /plone/folder01/folder03/cfolder03>
     >>> path = '/'.join(portal.folder01.folder03.cfolder03.getPhysicalPath())
     >>> paths = [path]
     >>> putils.deleteObjectsByPaths(paths=paths)
     (['cfolder03 (/plone/folder01/folder03/cfolder03)'], {})
-    >>> IProduct(doc01).cart_folder
+    >>> IPortal(doc01).cart_folder
     <CartFolder at /plone/folder01/cfolder01>
     >>> path = '/'.join(portal.folder01.cfolder01.getPhysicalPath())
     >>> paths = [path]
     >>> putils.deleteObjectsByPaths(paths=paths)
     (['cfolder01 (/plone/folder01/cfolder01)'], {})
-    >>> IProduct(doc01).cart_folder
+    >>> IPortal(doc01).cart_folder

@@ -2,6 +2,6 @@
 
   <!-- Handler -->
   <subscriber handler=".content_type.addable_to_cart" />
-  <subscriber handler=".content_type.delete_newly_created_cart_folder" />
+  <subscriber handler=".content_type.delete_old_cart_folder" />
 
 </configure>

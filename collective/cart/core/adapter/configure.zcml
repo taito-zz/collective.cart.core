@@ -1,20 +1,20 @@
 <configure
     xmlns="http://namespaces.zope.org/zope"
     i18n_domain="collective.cart.core">
-  <adapter factory=".portal.PortalCartProperties" />
-  <adapter factory=".portal.PortalAdapter" />
+<!--  <adapter factory=".portal.PortalCartProperties" />-->
+<!--  <adapter factory=".portal.PortalAdapter" />-->
 
+  <adapter factory=".cart.CartFolderAdapter" />
   <adapter factory=".cart.CartProductAdapter" />
-  <adapter factory=".cart.CartProductOriginal" />
   <adapter factory=".cart.CartAdapter" />
-  <adapter factory=".cart.CartItself" />
-  <adapter factory=".cart.ShippingCost" />
+<!--  <adapter factory=".product.Product" />-->
+  <adapter factory=".portal.Portal" />
+  <adapter factory=".portal.PortalCartProperties" />
   <adapter factory=".product.Product" />
-  <adapter factory=".portal.PortalCart" />
-  <adapter factory=".portal.PortalCatalog" />
-  <adapter factory=".portal.PortalSession" />
-  <adapter factory=".portal.PortalSessionCatalog" />
-  <adapter factory=".portal.AvailableShippingMethods" />
-  <adapter factory=".portal.UpdateShippingMethod" />
+<!--  <adapter factory=".portal.PortalCart" />-->
+<!--  <adapter factory=".portal.PortalSession" />-->
+<!--  <adapter factory=".portal.PortalSessionCatalog" />-->
+<!--  <adapter factory=".portal.AvailableShippingMethods" />-->
+<!--  <adapter factory=".portal.UpdateShippingMethod" />-->
 
 </configure>

@@ -1,0 +1,8 @@
+<tr id="cost">
+  <th>
+    <span tal:replace="view/label" />
+  </th>
+  <td>
+    <span tal:replace="view/total" />
+  </td>
+</tr>

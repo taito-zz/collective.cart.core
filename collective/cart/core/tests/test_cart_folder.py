@@ -17,6 +17,7 @@ class IntegrationTestCase(base.TestCase):
     def afterSetUp( self ):
         """Code that is needed is the afterSetUp of both test cases.
         """
+        ztc.utils.setupCoreSessions(self.app)
         self.setRoles(('Manager',))
         self.portal.invokeFactory('Folder', 'folder01')
         folder01 = self.portal.folder01
@@ -36,6 +37,73 @@ class IntegrationTestCase(base.TestCase):
         folder03.invokeFactory('CartFolder', 'cfolder03')
         folder02.invokeFactory('CartFolder', 'cfolder02')
         folder01.invokeFactory('CartFolder', 'cfolder01')
+
+        cfolder01 = folder01.cfolder01
+        cfolder01.invokeFactory(
+            'Cart',
+            '0',
+            title='0',
+        )
+        cart00 = cfolder01['0']
+        cart00.reindexObject()
+        cfolder01.invokeFactory(
+            'Cart',
+            '1',
+            title='1',
+        )
+        cart01 = cfolder01['1']
+        cart01.reindexObject()
+        cfolder01.invokeFactory(
+            'Cart',
+            '2',
+            title='2',
+        )
+        cart02 = cfolder01['2']
+        cart02.reindexObject()
+        cfolder01.invokeFactory(
+            'Cart',
+            '3',
+            title='3',
+        )
+        cart03 = cfolder01['3']
+        cart03.reindexObject()
+        cfolder01.invokeFactory(
+            'Cart',
+            '4',
+            title='4',
+        )
+        cart04 = cfolder01['4']
+        cart04.reindexObject()
+        cfolder01.invokeFactory(
+            'Cart',
+            '5',
+            title='5',
+        )
+        cart05 = cfolder01['5']
+        cart05.reindexObject()
+        cfolder01.invokeFactory(
+            'Cart',
+            '7',
+            title='7',
+        )
+        cart07 = cfolder01['7']
+        cart07.reindexObject()
+        cfolder01.invokeFactory(
+            'Cart',
+            '8',
+            title='8',
+        )
+        cart08 = cfolder01['8']
+        cart08.reindexObject()
+#        cfolder01.invokeFactory(
+#            'Cart',
+#            '5',
+#            title='5',
+#        )
+#        cart05 = cfolder01['5']
+#        cart05.reindexObject()
+
+
 
 def test_suite():
     return unittest.TestSuite([

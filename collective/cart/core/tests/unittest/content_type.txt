@@ -10,9 +10,11 @@ Creating CartFolder
      <CartFolder at cfolder>
     >>> cfolder.portal_type
     'CartFolder'
-    >>> from collective.cart.core.interfaces import ICartFolder
-    >>> ICartFolder.providedBy(cfolder)
+
+    >>> from collective.cart.core.interfaces import ICartFolderContentType
+    >>> ICartFolderContentType.providedBy(cfolder)
     True
+
     >>> cfolder.schema
     <Products.Archetypes.Schema.Schema object at ...>
     >>> names = [field.getName() for field in cfolder.schema.getSchemataFields('default')]
@@ -154,9 +156,11 @@ Creating Cart
      <Cart at cart>
     >>> cart.portal_type
     'Cart'
-    >>> from collective.cart.core.interfaces import ICart
-    >>> ICart.providedBy(cart)
+    >>> from collective.cart.core.interfaces import ICartContentType
+    >>> ICartContentType.providedBy(cart)
     True
+
+
     >>> cart.schema
     <Products.Archetypes.Schema.Schema object at ...>
     >>> names = [field.getName() for field in cart.schema.getSchemataFields('default')]
@@ -229,12 +233,12 @@ Creating CartProduct
      <CartProduct at product>
     >>> product.portal_type
     'CartProduct'
-    >>> from collective.cart.core.interfaces import ICartProduct
-    >>> ICartProduct.providedBy(product)
+    >>> from collective.cart.core.interfaces import ICartProductContentType
+    >>> ICartProductContentType.providedBy(product)
     True
     >>> names = [field.getName() for field in product.Schema().getSchemataFields('default')]
     >>> names
-    ['id', 'title', 'description', 'uid', 'price', 'quantity', 'weight', 'weight_unit', 'height', 'width', 'depth']
+    ['id', 'title', 'description']
 
 Field: id
 ----
@@ -293,180 +297,3 @@ Field: description
     u'label_description'
     >>> product.schema['description'].widget.description
     u'help_description'
-
-Field: uid
-----
-    >>> product.schema['uid']
-    <Field uid(string:rw)>
-    >>> product.schema['uid'].required == True
-    True
-    >>> product.schema['uid'].searchable == False
-    True
-    >>> product.schema['uid'].languageIndependent
-    True
-    >>> product.schema['uid'].storage
-    <Storage AnnotationStorage>
-    >>> product.schema['uid'].widget
-    <Products.Archetypes.Widget.StringWidget object at ...>
-    >>> product.schema['uid'].widget.label
-    u'Original Product UID'
-    >>> product.schema['uid'].widget.description
-    ''
-    >>> product.uid = 'uid'
-    >>> product.getUid()
-    'uid'
-
-Field: price
-----
-    >>> product.schema['price']
-    <Field price(float:rw)>
-    >>> product.schema['price'].required == True
-    True
-    >>> product.schema['price'].searchable == False
-    True
-    >>> product.schema['price'].languageIndependent
-    True
-    >>> product.schema['price'].storage
-    <Storage AnnotationStorage>
-    >>> product.schema['price'].widget
-    <Products.Archetypes.Widget.DecimalWidget object at ...>
-    >>> product.schema['price'].widget.label
-    u'Price'
-    >>> product.schema['price'].widget.description
-    u''
-    >>> product.price = 5.0
-    >>> product.getPrice()
-    5.0
-
-Field: quantity
-----
-    >>> product.schema['quantity']
-    <Field quantity(integer:rw)>
-    >>> product.schema['quantity'].required == True
-    True
-    >>> product.schema['quantity'].searchable == False
-    True
-    >>> product.schema['quantity'].languageIndependent
-    True
-    >>> product.schema['quantity'].storage
-    <Storage AnnotationStorage>
-    >>> product.schema['quantity'].widget
-    <Products.Archetypes.Widget.IntegerWidget object at ...>
-    >>> product.schema['quantity'].widget.label
-    u'Quantity'
-    >>> product.schema['quantity'].widget.description
-    u''
-    >>> product.quantity = 3
-    >>> product.getQuantity()
-    3
-
-Field: weight
-----
-    >>> product.schema['weight']
-    <Field weight(float:rw)>
-    >>> product.schema['weight'].required == False
-    True
-    >>> product.schema['weight'].searchable == False
-    True
-    >>> product.schema['weight'].languageIndependent
-    True
-    >>> product.schema['weight'].storage
-    <Storage AnnotationStorage>
-    >>> product.schema['weight'].widget
-    <Products.Archetypes.Widget.DecimalWidget object at ...>
-    >>> product.schema['weight'].widget.label
-    u'Weight'
-    >>> product.schema['weight'].widget.description
-    ''
-    >>> product.weight = 5.0
-    >>> product.getWeight()
-    5.0
-
-Field: weight_unit
-----
-    >>> product.schema['weight_unit']
-    <Field weight_unit(string:rw)>
-    >>> product.schema['weight_unit'].required == False
-    True
-    >>> product.schema['weight_unit'].searchable == False
-    True
-    >>> product.schema['weight_unit'].languageIndependent
-    True
-    >>> product.schema['weight_unit'].storage
-    <Storage AnnotationStorage>
-    >>> product.schema['weight_unit'].widget
-    <Products.Archetypes.Widget.StringWidget object at ...>
-    >>> product.schema['weight_unit'].widget.label
-    u'Weight Unit'
-    >>> product.schema['weight_unit'].widget.description
-    ''
-    >>> product.weight_unit = 'kg'
-    >>> product.getWeight_unit()
-    'kg'
-
-Field: height
-----
-    >>> product.schema['height']
-    <Field height(float:rw)>
-    >>> product.schema['height'].required == False
-    True
-    >>> product.schema['height'].searchable == False
-    True
-    >>> product.schema['height'].languageIndependent
-    True
-    >>> product.schema['height'].storage
-    <Storage AnnotationStorage>
-    >>> product.schema['height'].widget
-    <Products.Archetypes.Widget.DecimalWidget object at ...>
-    >>> product.schema['height'].widget.label
-    u'Height'
-    >>> product.schema['height'].widget.description
-    ''
-    >>> product.height = 5.0
-    >>> product.getHeight()
-    5.0
-
-Field: width
-----
-    >>> product.schema['width']
-    <Field width(float:rw)>
-    >>> product.schema['width'].required == False
-    True
-    >>> product.schema['width'].searchable == False
-    True
-    >>> product.schema['width'].languageIndependent
-    True
-    >>> product.schema['width'].storage
-    <Storage AnnotationStorage>
-    >>> product.schema['width'].widget
-    <Products.Archetypes.Widget.DecimalWidget object at ...>
-    >>> product.schema['width'].widget.label
-    u'Width'
-    >>> product.schema['width'].widget.description
-    ''
-    >>> product.width = 5.0
-    >>> product.getWidth()
-    5.0
-
-Field: depth
-----
-    >>> product.schema['depth']
-    <Field depth(float:rw)>
-    >>> product.schema['depth'].required == False
-    True
-    >>> product.schema['depth'].searchable == False
-    True
-    >>> product.schema['depth'].languageIndependent
-    True
-    >>> product.schema['depth'].storage
-    <Storage AnnotationStorage>
-    >>> product.schema['depth'].widget
-    <Products.Archetypes.Widget.DecimalWidget object at ...>
-    >>> product.schema['depth'].widget.label
-    u'Depth'
-    >>> product.schema['depth'].widget.description
-    ''
-    >>> product.depth = 5.0
-    >>> product.getDepth()
-    5.0
-

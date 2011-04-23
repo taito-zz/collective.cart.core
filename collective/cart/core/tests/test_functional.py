@@ -27,6 +27,12 @@ def test_suite():
             test_class=TestSetup,
             optionflags=doctest.REPORT_ONLY_FIRST_FAILURE | doctest.NORMALIZE_WHITESPACE | doctest.ELLIPSIS),
 
+        ztc.FunctionalDocFileSuite(
+            'tests/functional/content.txt',
+            package='collective.cart.core',
+            test_class=TestSetup,
+            optionflags=doctest.REPORT_ONLY_FIRST_FAILURE | doctest.NORMALIZE_WHITESPACE | doctest.ELLIPSIS),
+
             ])
 
 if __name__ == '__main__':

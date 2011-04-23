@@ -1,26 +1,24 @@
 from Acquisition import aq_inner
 from zope.interface import implements
-from zope.component import adapts, getUtility, getMultiAdapter
-from Products.ZCatalog.interfaces import IZCatalog
+from zope.component import adapts, getUtility#, getMultiAdapter
 from Products.CMFCore.utils import getToolByName
-from collective.cart.core.content import CartProduct
 from collective.cart.core.interfaces import (
     ICart,
-    ICartItself,
-    ICartAdapter,
+    ICartContentType,
+    ICartFolder,
+    ICartFolderContentType,
     ICartProduct,
-    ICartProductAdapter,
-    ICartProductOriginal,
+    ICartProductContentType,
     IProduct,
+    IRandomDigits,
     ISelectRange,
-    IShippingCost,
 )
 
 
 class CartProductAdapter(object):
 
-    implements(ICartProductAdapter)
-    adapts(CartProduct)
+    implements(ICartProduct)
+    adapts(ICartProductContentType)
 
     def __init__(self, context):
         self.context = context
@@ -43,217 +41,211 @@ class CartProductAdapter(object):
 
     @property
     def subtotal(self):
-        return self.price * self.quantity
-
-class CartProductOriginal(object):
-    implements(ICartProductOriginal)
-    adapts(ICartProduct, IZCatalog)
-
-    def __init__(self, context, catalog):
-        self.context = context
-        self.catalog = catalog
+        return self.context.subtotal
 
     @property
-    def brain(self):
-        query = dict(UID=self.context.uid)
-        return self.catalog.unrestrictedSearchResults(query)[0]
+    def product(self):
+        context = aq_inner(self.context)
+        catalog = getToolByName(context, 'portal_catalog')
+        query = dict(UID=self.uid)
+        return IProduct(catalog.unrestrictedSearchResults(query)[0].getObject())
 
     @property
-    def obj(self):
-        return self.brain.getObject()
-
-    @property
-    def url(self):
-        return self.brain.getURL()
-
-    @property
-    def updatable_quantity(self):
-        product = IProduct(self.obj)
-        if product.unlimited_stock:
-            return product.max_addable_quantity
+    def max_quantity(self):
+        if self.product.unlimited_stock:
+            return self.product.max_addable_quantity
         else:
-            addable_quantity = product.stock + self.context.quantity
-            if product.max_addable_quantity > addable_quantity:
-                return addable_quantity
+            quantity = self.quantity
+            if quantity is None:
+                quantity = 0
+            total_quantity = quantity + self.product.stock
+            if self.product.max_addable_quantity > total_quantity:
+                return total_quantity
             else:
-                return product.max_addable_quantity
+                return self.product.max_addable_quantity
 
     @property
     def select_quantity(self):
-        html = '<select id="quantity" name="quantity">'
-        for qtt in getUtility(ISelectRange)(self.updatable_quantity):
-            if qtt == self.context.quantity:
-                code = '<option value="%s" selected="selected">%s</option>' % (qtt,  qtt)
-                html += code
-            else:
-                html += '<option value="%s">%s</option>' %(qtt,  qtt)
-        html += '</select>'
-        return html
+        if self.max_quantity > 0:
+            html = '<select id="quantity" name="quantity">'
+            for qtt in getUtility(ISelectRange)(self.max_quantity):
+                if qtt == self.quantity:
+                    code = '<option value="%s" selected="selected">%s</option>' % (qtt,  qtt)
+                    html += code
+                else:
+                    html += '<option value="%s">%s</option>' %(qtt,  qtt)
+            html += '</select>'
+            return html
+
+    @property
+    def input_quantity(self):
+        if self.max_quantity > 0:
+            html = '<input type="text "id="quantity" name="quantity" size="3" value="%s" />' % self.quantity
+            return html
+
+    @property
+    def html_quantity(self):
+        return self.select_quantity
+
 
 class CartAdapter(object):
-    implements(ICartAdapter)
-    adapts(ICart, IZCatalog)
 
-    def __init__(self, context, catalog):
+    implements(ICart)
+    adapts(ICartContentType)
+
+    def __init__(self, context):
         self.context = context
-        self.catalog = catalog
 
     @property
     def products(self):
-        context = aq_inner(self.context)
-        path = '/'.join(context.getPhysicalPath())
-        query = dict(
-            path = path,
-            object_provides = ICartProduct.__identifier__,
-        )
-        brains = self.catalog.unrestrictedSearchResults(query)
-        if len(brains) != 0:
-            objs = [brain.getObject() for brain in brains]
-            return objs
+        return self.context.objectValues()
 
     def product(self, uid):
-        context = aq_inner(self.context)
-        path = '/'.join(context.getPhysicalPath())
-        query = dict(
-            path=path,
-            uid=uid,
-        )
-        brains = self.catalog.unrestrictedSearchResults(query)
-        if len(brains) != 0:
-            return brains[0].getObject()
+        product = [prod for prod in self.products if prod.uid == uid]
+        if product:
+            return product[0]
 
     @property
     def subtotal(self):
-        prices = [ICartProductAdapter(product).subtotal for product in self.products]
+        prices = [ICartProduct(product).subtotal for product in self.products]
         return sum(prices)
 
     @property
-    def payment_cost(self):
-        return 0
-
-    @property
     def total_cost(self):
-        total = self.subtotal + ICartItself(self.context).shipping_cost + self.payment_cost
-        return total
+        return self.subtotal
+
 
     def add_new_product_to_cart(self, uid, quantity):
         pid = '1'
         if self.products is not None:
-                pid = str(len(self.products) + 1)
+            ids = [product.id for product in self.products]
+            for r in range(1, len(ids) + 2):
+                pid = str(r)
+                if pid not in ids:
+                    pid = pid
+                    break
         self.context.invokeFactory(
             'CartProduct',
             pid,
-            uid=uid,
         )
         cproduct = self.context[pid]
+        cproduct.uid = uid
+        max_quantity = ICartProduct(cproduct).max_quantity
+        if quantity > max_quantity:
+            quantity = max_quantity
+        cproduct.quantity = quantity
+        product = ICartProduct(cproduct).product
+        cproduct.price = product.price
+        cproduct.title = product.title
+        cproduct.subtotal = cproduct.price * cproduct.quantity
         cproduct.reindexObject()
-        original = getMultiAdapter((cproduct, self.catalog), ICartProductOriginal)
-        cproduct.quantity=quantity
-        product = IProduct(original.obj)
-        cproduct.price=product.price
-        cproduct.title=product.title
-        cproduct.weight = product.weight
-        cproduct.weight_unit = product.weight_unit
-        cproduct.height = product.height
-        cproduct.width = product.width
-        cproduct.depth = product.depth
-        cproduct.reindexObject()
-        new_stock = product.stock - quantity
-        product.stock = new_stock
-
-    def add_existing_product_to_cart(self, uid, quantity):
-            cproduct = self.product(uid)
-            new_quantity = cproduct.quantity + quantity
-            cproduct.quantity = new_quantity
-            cproduct.reindexObject(idxs=['quantity'])
-            original = getMultiAdapter((cproduct, self.catalog), ICartProductOriginal)
-            product = IProduct(original.obj)
+        if not product.unlimited_stock:
             new_stock = product.stock - quantity
             product.stock = new_stock
 
+    def add_existing_product_to_cart(self, uid, quantity):
+            cproduct = self.product(uid)
+            product = ICartProduct(cproduct).product
+            total_quantity = product.stock + cproduct.quantity
+            max_quantity = ICartProduct(cproduct).max_quantity
+            new_quantity = cproduct.quantity + quantity
+            if new_quantity > max_quantity:
+                new_quantity = max_quantity
+            cproduct.quantity = new_quantity
+            cproduct.subtotal = cproduct.price * cproduct.quantity
+            cproduct.reindexObject(idxs=['quantity'])
+            product = ICartProduct(cproduct).product
+            if not product.unlimited_stock:
+                new_stock = total_quantity - new_quantity
+                product.stock = new_stock
+
     def update_cart(self, uid, quantity):
         cproduct = self.product(uid)
-        original = getMultiAdapter((cproduct, self.catalog), ICartProductOriginal)
-        product = IProduct(original.obj)
-        addable_quantity = product.stock + ICartProductAdapter(cproduct).quantity
+        icp = ICartProduct(cproduct)
+        product = icp.product
         if product.unlimited_stock:
-            addable_quantity = product.max_addable_quantity
-            if quantity > addable_quantity:
-                quantity = addable_quantity
+            if quantity > product.max_addable_quantity:
+                quantity = product.max_addable_quantity
             cproduct.quantity = quantity
             cproduct.reindexObject(idxs=['quantity'])
         else:
-            if quantity <= addable_quantity:
+            total_quantity = cproduct.quantity + product.stock
+            if quantity <= icp.max_quantity:
                 cproduct.quantity = quantity
-                cproduct.reindexObject(idxs=['quantity'])
-                new_stock = addable_quantity - quantity
-#                product.stock = new_stock
             else:
-                cproduct.quantity = updatable_quantity
-                cproduct.reindexObject(idxs=['quantity'])
-                new_stock = 0
+                cproduct.quantity = icp.max_quantity
+            cproduct.reindexObject(idxs=['quantity'])
+            new_stock = total_quantity - cproduct.quantity
             product.stock = new_stock
+        cproduct.subtotal = cproduct.price * cproduct.quantity
 
-    def delete_product_from_cart(self, uid):
+    def delete_product(self, uid):
         cproduct = self.product(uid)
         quantity = cproduct.quantity
-        original = getMultiAdapter((cproduct, self.catalog), ICartProductOriginal)
-        product = IProduct(original.obj)
-        new_stock = product.stock + quantity
-        product.stock = new_stock
+        product = ICartProduct(cproduct).product
+        if not product.unlimited_stock:
+            new_stock = product.stock + quantity
+            product.stock = new_stock
         cproduct.unindexObject()
-#        path = '/'.join(cproduct.getPhysicalPath())
-#        paths = [path]
-#        putils = getToolByName(self.context, 'plone_utils')
-#        putils.deleteObjectsByPaths(paths=paths)
-#        import pdb; pdb.set_trace()
-#        pass
         del self.context[cproduct.id]
 
 
-class ShippingCost(object):
+class CartFolderAdapter(object):
 
-    adapts(ICart)
-    implements(IShippingCost)
-
-    def __init__(self, context):
-        self.context = context
-
-    def __call__(self):
-        return 0
-
-
-class CartItself(object):
-    implements(ICartItself)
-    adapts(ICart)
+    adapts(ICartFolderContentType)
+    implements(ICartFolder)
 
     def __init__(self, context):
         self.context = context
+        context = aq_inner(self.context)
+        self.catalog = getToolByName(context, 'portal_catalog')
 
     @property
-    def products(self):
-        import pdb; pdb.set_trace()
-        pass
-
-
-    def product(self, uid):
-        import pdb; pdb.set_trace()
-        pass
-
-    @property
-    def subtotal(self):
-        prices = [ICartProductAdapter(product).subtotal for product in self.products]
-        return sum(prices)
+    def used_cart_ids(self):
+        context = aq_inner(self.context)
+        path = '/'.join(context.getPhysicalPath())
+        query = dict(
+            object_provides = ICartContentType.__identifier__,
+            path = path,
+        )
+        brains = self.catalog.unrestrictedSearchResults(query)
+        ids = [brain.id for brain in brains]
+        return ids
 
     @property
-    def shipping_cost(self):
-        return 0
+    def incremental_cart_id(self):
+        cart_id = self.context.next_incremental_cart_id
+        while str(cart_id) in self.used_cart_ids:
+            cart_id += 1
+        new_id = cart_id + 1
+        self.context.next_incremental_cart_id = new_id
+        return str(cart_id)
 
     @property
-    def payment_cost(self):
-        return 0
+    def random_cart_id(self):
+        digits = self.context.random_digits_cart_id
+        if digits is None:
+            digits = 1
+        while len([uci for uci in self.used_cart_ids if len(uci) == digits]) == 10 ** digits:
+            digits += 1
+            self.context.random_digits_cart_id = digits
+        return getUtility(IRandomDigits)(digits , [uci for uci in self.used_cart_ids if len(uci) == digits])
 
     @property
-    def total_cost(self):
-        total = self.subtotal + self.shipping_cost + self.payment_cost
-        return total
+    def next_cart_id(self):
+        if self.context.cart_id_numbering_method == 'Incremental':
+            return self.incremental_cart_id
+        else:
+            return self.random_cart_id
+
+    def create_cart(self, session_cart_id):
+        cart_id = self.next_cart_id
+        self.context.invokeFactory(
+            'Cart',
+            cart_id,
+            title=cart_id,
+        )
+        cart = self.context[cart_id]
+        cart.session_cart_id=session_cart_id
+        cart.reindexObject()
+        return cart

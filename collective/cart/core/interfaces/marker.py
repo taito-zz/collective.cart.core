@@ -4,9 +4,6 @@ from zope.annotation.interfaces import IAttributeAnnotatable
 class IPotentiallyAddableToCart(Interface):
     """Marker interface to content type instance to make potentially addable to cart."""
 
-#class IAddableToCart(IAttributeAnnotatable):
-#    """Marker interface to content type instance which is made addable to cart."""
-
 class IAddableToCart(IPotentiallyAddableToCart, IAttributeAnnotatable):
     """Marker interface to content type instance which is made addable to cart."""
 

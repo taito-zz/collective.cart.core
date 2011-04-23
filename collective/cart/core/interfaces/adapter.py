@@ -8,7 +8,10 @@ class IProduct(Interface):
     def title():
         """Returns product title."""
 
-    price = Attribute('Product Price')
+    def url():
+        """Returns product absolute url."""
+
+    price = Attribute('Product Decimal Price')
 
     stock = Attribute('Product Stock')
 
@@ -16,31 +19,17 @@ class IProduct(Interface):
 
     unlimited_stock = Attribute('Product Unlimited Stock')
 
-    weight = Attribute('Product Weight')
-
-    weight_unit = Attribute('Product Weight Unit')
-
-    height = Attribute('Product Height')
-
-    width = Attribute('Product Width')
-
-    depth = Attribute('Product Depth')
-
-    def dimension(self, height, width, depth):
-        """Product dimention"""
-
-    def weight_in_kg(ratio):
-        """Returns weight in kg."""
-
     def addable_quantity():
         """Returns addable quantity."""
 
     def select_quantity():
         """Returns html string for <select> quantity."""
 
+    def input_quantity():
+        """Returns html string for <input> quantity."""
+
     def cart_folder():
         """Returns cart folder object for this product."""
-
 
 
 class IPortalCartProperties(Interface):
@@ -62,7 +51,7 @@ class IPortalCartProperties(Interface):
         """Returns price with currency."""
 
 
-class ICartProductAdapter(Interface):
+class ICartProduct(Interface):
 
     def uid():
         """Returns original product uid."""
@@ -79,25 +68,16 @@ class ICartProductAdapter(Interface):
     def subtotal():
         """Returns sutbotal price."""
 
+    def product():
+        """Returns original product adapted by IProduct."""
 
-class ICartProductOriginal(Interface):
-
-    def brain():
-        """Returns original product brain."""
-
-    def obj():
-        """Retruns original product object."""
-
-    def url():
-        """Returns original product url."""
-
-    def updateble_quantity():
-        """Returns updatable quantity."""
+    def max_quantity():
+        """Returns max quantity."""
 
     def select_quantity():
-        """Returns select html string."""
+        """Returns html string for select quantity."""
 
-class ICartAdapter(Interface):
+class ICart(Interface):
 
     def products():
         """Returns product objects within cart."""
@@ -117,6 +97,22 @@ class ICartAdapter(Interface):
     def total_cost():
         """Returns total cost."""
 
+class ICartFolder(Interface):
+
+    def used_cart_ids():
+        """Returns used cart ids."""
+
+    def incremental_cart_id():
+        """Incremental cart id."""
+
+    def random_cart_id():
+        """Random cart id."""
+
+    def next_cart_id():
+        """Next cart id."""
+
+    def create_cart(session_cart_id):
+        """Create cart and return it."""
 
 class IPortalSession(Interface):
 
@@ -209,3 +205,42 @@ class ICartItself(Interface):
 
     def shipping_cost():
         """"""
+
+class ICartProduct(Interface):
+    """"""
+
+#class IContext(Interface):
+
+#    def get_closest_content(interface):
+#        """Get closest content from child."""
+
+class IPortal(Interface):
+    """Adapter interface for portal."""
+
+    catalog = Attribute('portal_catalog')
+    properties = Attribute('portal_properties')
+    sdm = Attribute('session_data_manager')
+    session = Attribute('Session')
+    session_cart_id = Attribute('Session Cart ID')
+
+    def cart_folder():
+        """Returns cart folder."""
+
+    def cart():
+        """Returns current cart."""
+
+    def decimal_price(price):
+        """Return decimal price."""
+
+    def add_to_cart(form):
+        """Add product to cart."""
+
+    def update_cart(form):
+        """Update product in cart."""
+
+    def delete_product(form):
+        """Delete product from cart."""
+
+    def cart_properties():
+        """Cart Properties"""
+

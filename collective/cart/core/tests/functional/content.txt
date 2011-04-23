@@ -1,0 +1,69 @@
+Initial imports and defines.
+----
+    >>> portal_url =  portal.absolute_url()
+
+Setting up.
+----
+    >>> try:
+    ...     from Testing.testbrowser import Browser
+    ... except ImportError:
+    ...     from Products.Five.testbrowser import Browser
+    >>> browser = Browser()
+
+For debugging.
+----
+    >>> browser.handleErrors = True
+    >>> portal.error_log._ignored_exceptions = ()
+
+Turn off portlets.
+----
+    >>> from zope.component import getUtility, getMultiAdapter
+    >>> from plone.portlets.interfaces import IPortletManager
+    >>> from plone.portlets.interfaces import IPortletAssignmentMapping
+
+    >>> column = getUtility(IPortletManager, name=u"plone.leftcolumn")
+    >>> assignable = getMultiAdapter((portal, column), IPortletAssignmentMapping)
+    >>> for name in assignable.keys():
+    ...     del assignable[name]
+
+    >>> column = getUtility(IPortletManager, name=u"plone.rightcolumn")
+    >>> assignable = getMultiAdapter((portal, column), IPortletAssignmentMapping)
+    >>> for name in assignable.keys():
+    ...     del assignable[name]
+
+Log in as the portal owner.
+----
+    >>> browser.open(portal_url)
+    >>> from Products.PloneTestCase.setup import portal_owner, default_password
+    >>> browser.open(portal_url + '/login_form?came_from=' + portal_url)
+    >>> browser.getControl(name='__ac_name').value = portal_owner
+    >>> browser.getControl(name='__ac_password').value = default_password
+    >>> browser.getControl(name='submit').click()
+
+Now create Cart Folder
+----
+    >>> browser.getLink(id='cartfolder').url.endswith("createObject?type_name=CartFolder")
+    True
+    >>> browser.open(portal_url)
+    >>> browser.getLink(id='cartfolder').click()
+    >>> browser.getControl(name="title").value = 'CartFolder01'
+    >>> browser.getControl("Save").click()
+    >>> cartfolder01 = portal['cartfolder01']
+    >>> cartfolder01
+    <CartFolder at /plone/cartfolder01>
+    >>> cartfolder01.getField('language').get(cartfolder01)
+    ''
+
+Add another CartFolder
+----
+    >>> browser.open(portal_url)
+    >>> browser.getLink(id='cartfolder').click()
+    >>> browser.getControl(name="title").value = 'CartFolder02'
+    >>> browser.getControl("Save").click()
+    >>> cartfolder02 = portal['cartfolder02']
+    >>> cartfolder02.getField('language').get(cartfolder02)
+    ''
+    >>> portal['cartfolder01']
+    Traceback (most recent call last):
+    ...
+    KeyError: 'cartfolder01'

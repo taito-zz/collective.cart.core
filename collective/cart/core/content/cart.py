@@ -27,7 +27,14 @@ from Products.Archetypes.public import (
 )
 from collective.cart.core import CartMessageFactory as _
 from collective.cart.core import PROJECTNAME
-from collective.cart.core.interfaces import ICart, ICartFolder, ICartProduct
+from collective.cart.core.interfaces import (
+#    ICart,
+    ICartContentType,
+#    ICartFolder,
+    ICartFolderContentType,
+#    ICartProduct,
+    ICartProductContentType,
+)
 
 CartFolderSchema = ATFolderSchema.copy() + Schema((
 
@@ -110,7 +117,8 @@ finalizeATCTSchema(CartFolderSchema, folderish=True, moveDiscussion=False)
 
 class CartFolder(ATFolder):
 
-    implements(ICartFolder)
+#    implements(ICartFolder)
+    implements(ICartFolderContentType)
     schema = CartFolderSchema
     portal_type = 'CartFolder'
 
@@ -128,14 +136,17 @@ finalizeATCTSchema(CartSchema, folderish=True, moveDiscussion=False)
 
 class Cart(ATFolder):
 
-    implements(ICart)
+#    implements(ICart)
+    implements(ICartContentType)
     schema = CartSchema
     portal_type = 'Cart'
 
-    shipping_method = None
-    payment_method = None
-    payer_info = None
-    receiver_info = None
+#    shipping_method = None
+#    payment_method = None
+#    payer_info = None
+#    receiver_info = None
+    info = None
+    session_cart_id = None
 
 registerATCT(Cart, PROJECTNAME)
 
@@ -231,24 +242,42 @@ CartProductSchema = ATContentTypeSchema.copy() + Schema((
         ),
     ),
 
+    FloatField(
+        name='depth',
+        required=False,
+        searchable=False,
+        languageIndependent=True,
+        storage=AnnotationStorage(),
+        widget=DecimalWidget(
+            label=_(u'Dimension'),
+        ),
+    ),
+
 ),
 )
 
 finalizeATCTSchema(CartProductSchema, folderish=False, moveDiscussion=False)
 
-class CartProduct(ATCTContent, HistoryAwareMixin):
+#class CartProduct(ATCTContent, HistoryAwareMixin):
+class CartProduct(ATCTContent):
 
-    implements(ICartProduct)
-    schema = CartProductSchema
+#    implements(ICartProduct)
+    implements(ICartProductContentType)
+#    schema = CartProductSchema
     portal_type = 'CartProduct'
 
-    uid = ATFieldProperty('uid')
-    price = ATFieldProperty('price')
-    quantity = ATFieldProperty('quantity')
-    weight = ATFieldProperty('weight')
-    weight_unit = ATFieldProperty('weight_unit')
-    height = ATFieldProperty('height')
-    width = ATFieldProperty('width')
-    depth = ATFieldProperty('depth')
+#    uid = ATFieldProperty('uid')
+#    price = ATFieldProperty('price')
+#    quantity = ATFieldProperty('quantity')
+    uid = None
+    price = None
+    quantity = None
+    subtotal = None
+#    weight = ATFieldProperty('weight')
+#    weight_unit = ATFieldProperty('weight_unit')
+##    height = ATFieldProperty('height')
+##    width = ATFieldProperty('width')
+##    depth = ATFieldProperty('depth')
+#    dimension = ATFieldProperty('dimension')
 
 registerATCT(CartProduct, PROJECTNAME)

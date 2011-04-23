@@ -3,15 +3,10 @@ from zope.component import adapter
 from zope.interface import alsoProvides
 from Products.CMFCore.utils import getToolByName
 from Products.Archetypes.interfaces import IObjectInitializedEvent
-from Products.statusmessages.interfaces import IStatusMessage
-from Products.Archetypes.interfaces.base import IBaseContent
 from Products.ATContentTypes.content.base import ATCTContent
-from Products.ATContentTypes.content.folder import ATFolder
-from collective.cart.core import CartMessageFactory as _
 from collective.cart.core.interfaces import (
-    IAddableToCart,
-    ICartFolder,
-    IPortalAdapter,
+#    ICartFolder,
+    ICartFolderContentType,
     IPotentiallyAddableToCart,
 )
 
@@ -23,19 +18,27 @@ def addable_to_cart(context, event):
     alsoProvides(context, IPotentiallyAddableToCart)
     context.reindexObject()
 
-@adapter(ICartFolder, IObjectInitializedEvent)
-def delete_newly_created_cart_folder(context, event):
+#@adapter(ICartFolder, IObjectInitializedEvent)
+@adapter(ICartFolderContentType, IObjectInitializedEvent)
+def delete_old_cart_folder(context, event):
+    """Delete Cart Folder in the same hierarchy."""
     assert context == event.object
     catalog = getToolByName(context, 'portal_catalog')
-    if len(catalog(object_provides=ICartFolder.__identifier__)) != 1:
-#        parent = aq_parent(aq_inner(context))
-#        parent.restrictedTraverse("delete-newly-created-cart-folder")()
-        context = aq_inner(context)
-#        url = context.absolute_url()
-#        parent_url = aq_parent(aq_inner(context)).absolute_url()
-        putils = getToolByName(context, 'plone_utils')
-        paths = ['/'.join(context.getPhysicalPath())]
-        putils.deleteObjectsByPaths(paths=paths)
-#        message = _(u"You need to delete other CartFolder before adding new CartFolder.")
-#        IStatusMessage(context.REQUEST).addStatusMessage(message, type='warn')
-#        return self.request.response.redirect(url)
+    parent = aq_parent(aq_inner(context))
+    path = '/'.join(parent.getPhysicalPath())
+    brains = catalog(
+        object_provides=ICartFolderContentType.__identifier__,
+        path=dict(
+            query=path,
+            depth=1,
+        ),
+    )
+    objs = [brain.getObject() for brain in brains if brain.UID != context.UID()]
+    if objs:
+        for obj in objs:
+            obj.unindexObject()
+            del parent[obj.id]
+    ## Make the content language neutral
+    if context.getField('language').get(context) != '':
+        context.getField('language').set(context, '')
+

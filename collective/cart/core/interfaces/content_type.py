@@ -4,12 +4,13 @@ from zope.app.container.constraints import contains
 from collective.cart.core import CartMessageFactory as _
 
 
-class ICartFolder(Interface):
-    """Interface for CartFolder content type.
+#class ICartFolder(Interface):
+class ICartFolderContentType(Interface):
+    """Interface for CartFolder Content Type.
     """
 
     contains(
-        'collective.cart.core.interfaces.ICart',
+        'collective.cart.core.interfaces.ICartContentType',
         )
 
     cart_id_numbering_method = schema.Choice(
@@ -43,56 +44,69 @@ class ICartFolder(Interface):
     )
 
 
-class ICart(Interface):
-    """Interface for Cart content type.
+#class ICart(Interface):
+class ICartContentType(Interface):
+    """Interface for Cart Content Type.
     """
 
-    shipping_method = Attribute('Shipping Method')
-    payment_method = Attribute('Payment Method')
-    payer_info = Attribute('Customer Info')
-    receiver_info = Attribute('Receiver Info')
+    contains(
+        'collective.cart.core.interfaces.ICartProductContentType',
+        )
+
+#    shipping_method = Attribute('Shipping Method')
+#    payment_method = Attribute('Payment Method')
+#    payer_info = Attribute('Customer Info')
+#    receiver_info = Attribute('Receiver Info')
+    info = Attribute('Additioinal Info besides products.')
+    session_cart_id = Attribute('Cart ID for Session.')
 
 
-class ICartProduct(Interface):
+#class ICartProduct(Interface):
+class ICartProductContentType(Interface):
     """Interface for CartProduct content type.
     """
 
-    uid = schema.TextLine(
-        title=_(u"Product UID"),
-        required=True,
-    )
+    uid = Attribute('Product UID')
+    price = Attribute('Product Price')
+    quantity = Attribute('Product Quantity')
+    subtotal = Attribute('Product Subtotal')
 
-    price = schema.Float(
-        title=_(u"Product Price"),
-        required=True,
-    )
+#    uid = schema.TextLine(
+#        title=_(u"Product UID"),
+#        required=True,
+#    )
 
-    quantity = schema.Int(
-        title=_(u'Product Quantity'),
-        required=True,
-    )
+#    price = schema.Float(
+#        title=_(u"Product Price"),
+#        required=True,
+#    )
 
-    weight = schema.Float(
-        title=_(u'Weight'),
-        required=False,
-    )
+#    quantity = schema.Int(
+#        title=_(u'Product Quantity'),
+#        required=True,
+#    )
 
-    weight_unit=schema.TextLine(
-        title=_('Weight Unit'),
-        required=False,
-    )
+#    weight = schema.Float(
+#        title=_(u'Weight'),
+#        required=False,
+#    )
 
-    height=schema.Float(
-        title=_(u"Height"),
-        required=False,
-    )
+#    weight_unit=schema.TextLine(
+#        title=_('Weight Unit'),
+#        required=False,
+#    )
 
-    width=schema.Float(
-        title=_(u"Width"),
-        required=False,
-    )
+#    height=schema.Float(
+#        title=_(u"Height"),
+#        required=False,
+#    )
 
-    depth=schema.Float(
-        title=_("Depth"),
-        required=False,
-    )
+#    width=schema.Float(
+#        title=_(u"Width"),
+#        required=False,
+#    )
+
+#    depth=schema.Float(
+#        title=_("Depth"),
+#        required=False,
+#    )

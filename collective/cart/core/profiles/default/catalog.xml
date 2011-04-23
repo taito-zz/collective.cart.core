@@ -4,6 +4,9 @@
  <index name="uid" meta_type="FieldIndex">
   <indexed_attr value="uid"/>
  </index>
+ <index name="session_cart_id" meta_type="FieldIndex">
+  <indexed_attr value="session_cart_id"/>
+ </index>
 
 <!-- CartProduct -->
  <column value="quantity"/>

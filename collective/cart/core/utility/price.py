@@ -79,6 +79,7 @@ class PriceWithCurrency(object):
         else:
             return '%s %s' %(price, symbol)
 
+
 class DecimalPlaces(object):
     implements(IDecimalPlaces)
 

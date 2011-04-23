@@ -3,24 +3,36 @@
     xmlns:five="http://namespaces.zope.org/five"
     i18n_domain="collective.cart.core">
 
-  <class class=".cart.Cart">
+  <class class=".cart.CartFolder">
+<!--    <require-->
+<!--        permission="cmf.ModifyPortalContent"-->
+<!--        interface="..interfaces.ICartFolder"-->
+<!--        />-->
     <require
-        permission="zope2.AccessContentsInformation"
-        interface="..interfaces.ICart"
+        permission="cmf.ModifyPortalContent"
+        interface="..interfaces.ICartFolderContentType"
         />
   </class>
 
-  <class class=".cart.CartFolder">
+  <class class=".cart.Cart">
+<!--    <require-->
+<!--        permission="zope2.AccessContentsInformation"-->
+<!--        interface="..interfaces.ICart"-->
+<!--        />-->
     <require
-        permission="cmf.ModifyPortalContent"
-        interface="..interfaces.ICartFolder"
+        permission="zope2.AccessContentsInformation"
+        interface="..interfaces.ICartContentType"
         />
   </class>
 
   <class class=".cart.CartProduct">
+<!--    <require-->
+<!--        permission="zope2.AccessContentsInformation"-->
+<!--        interface="..interfaces.ICartProduct"-->
+<!--        />-->
     <require
         permission="zope2.AccessContentsInformation"
-        interface="..interfaces.ICartProduct"
+        interface="..interfaces.ICartProductContentType"
         />
   </class>
 

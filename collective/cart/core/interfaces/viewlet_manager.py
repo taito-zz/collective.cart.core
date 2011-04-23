@@ -6,5 +6,8 @@ class ICartConfigViewletManager(IViewletManager):
 class ICartViewletManager(IViewletManager):
     """A viewlet manager for Cart."""
 
+class ICartTotalsViewletManager(IViewletManager):
+    """A viewlet manager for total prices."""
+
 class IFixedInfoViewletManager(IViewletManager):
     """A viewlet manager for fixed infos."""

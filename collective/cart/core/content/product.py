@@ -10,18 +10,9 @@ class ProductAnnotations(Persistent):
         stock = 0,
         max_addable_quantity = 100,
         unlimited_stock = False,
-        weight = 0.0,
-        weight_unit = 'g',
-        height = 0.0,
-        width = 0.0,
-        depth = 0.0,
+        **kwargs
     ):
         self.price = price
         self.stock = stock
         self.max_addable_quantity = max_addable_quantity
         self.unlimited_stock = unlimited_stock
-        self.weight = weight
-        self.weight_unit = weight_unit
-        self.height = height
-        self.width = width
-        self.depth = depth

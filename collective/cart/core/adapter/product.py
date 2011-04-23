@@ -1,23 +1,20 @@
-from Acquisition import aq_chain, aq_inner
+from Acquisition import aq_inner, aq_parent
 from zope.annotation.interfaces import IAnnotations
-from zope.component import adapts, getMultiAdapter, getUtility
+from zope.component import adapts, getUtility
 from zope.interface import implements
-from Products.CMFCore.utils import getToolByName
 from collective.cart.core.content.product import ProductAnnotations
 from collective.cart.core.interfaces import (
     IAddableToCart,
-    IPortalAdapter,
-    IPortalCatalog,
-    IPortalCartProperties,
-    IPortalSessionCatalog,
+    ICartFolderContentType,
     IProduct,
     ISelectRange,
 )
 
 
 class Product(object):
-    implements(IProduct)
+
     adapts(IAddableToCart)
+    implements(IProduct)
 
     def __init__(self, context):
         self.context = context
@@ -47,19 +44,8 @@ class Product(object):
         return self.context.Title()
 
     @property
-    def dimension(self):
-        if self.height and self.width and self.depth:
-            return float(self.height * self.width * self.depth) / 10 ** 6
-
-    def weight_in_kg(self, ratio=None):
-        weight = self.weight
-        if self.weight_unit == 'g':
-            weight = self.weight / 1000
-        if self.dimension and ratio:
-            d_weight = self.dimension * ratio
-            if d_weight > weight:
-                weight = d_weight
-        return weight
+    def url(self):
+        return self.context.absolute_url()
 
     @property
     def addable_quantity(self):
@@ -81,38 +67,14 @@ class Product(object):
             return html
 
     @property
+    def input_quantity(self):
+        if self.addable_quantity > 0:
+            html = '<input type="text "id="quantity" name="quantity" size="3" value="" />'
+            return html
+
+    @property
     def cart_folder(self):
         context = aq_inner(self.context)
-        chain = [obj for obj in aq_chain(context) if hasattr(obj, 'Type')]
-        for cha in chain:
-            objs = cha.objectValues()
-            for obj in objs:
-                if obj.meta_type == 'CartFolder':
-                    return obj
-
-    def next_cart_id(self, method, digits=1):
-        context = aq_inner(self.context)
-        portal = getToolByName(context, 'portal_url').getPortalObject()
-        pcatalog = getMultiAdapter((portal, portal.catalog), IPortalCatalog)
-        if method == 'Incremental':
-            return self.next_incremental_cart_id
-        else:
-            return pcatalog.random_cart_id(digits)
-
-    def add_to_cart(self, form):
-        context = aq_inner(self.context)
-        portal = getToolByName(context, 'portal_url').getPortalObject()
-        uid = form.get('uid')
-        quantity = int(form.get('quantity'))
-        psc = getMultiAdapter((portal, portal.session_data_manager, portal.portal_catalog),IPortalSessionCatalog)
-        if psc.cart is not None:
-            cart_id = psc.cart_id
-        if psc.cart is None:
-            properties = IPortalCartProperties(portal.portal_properties)
-            method = properties.cart_id_method
-            digits = properties.random_cart_id_digits
-            method = self.cart_folder.cart_id_numbering_method
-            digits = self.cart_folder.random_digits_cart_id
-            cart_id = IPortalAdapter(portal).next_cart_id(method, digits)
-        getMultiAdapter((portal, portal.session_data_manager, portal.portal_catalog), IPortalSessionCatalog).add_to_cart(uid, quantity, cart_id)
-
+        while not [obj for obj in aq_parent(context).objectValues() if ICartFolderContentType.providedBy(obj)]:
+            context = aq_parent(context)
+        return [obj for obj in aq_parent(context).objectValues() if ICartFolderContentType.providedBy(obj)][0]

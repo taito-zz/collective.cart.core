@@ -5,8 +5,23 @@
 
   <include package="plone.app.contentmenu" />
 
+<!--  <browser:menuItem-->
+<!--    for="..interfaces.ICartFolder"-->
+<!--    menu="plone_displayviews"-->
+<!--    title="Cart Folder View"-->
+<!--    action="@@view"-->
+<!--    description="Default representation of Cart Folder"-->
+<!--    />-->
+
+<!--  <browser:page-->
+<!--    for="collective.cart.core.interfaces.ICartFolder"-->
+<!--    name="view"-->
+<!--    class=".template.CartFolderView"-->
+<!--    permission="zope2.View"-->
+<!--    />-->
+
   <browser:menuItem
-    for="..interfaces.ICartFolder"
+    for="..interfaces.ICartFolderContentType"
     menu="plone_displayviews"
     title="Cart Folder View"
     action="@@view"
@@ -14,22 +29,37 @@
     />
 
   <browser:page
-    for="collective.cart.core.interfaces.ICartFolder"
+    for="collective.cart.core.interfaces.ICartFolderContentType"
     name="view"
     class=".template.CartFolderView"
     permission="zope2.View"
     />
 
+<!--  <browser:menuItem-->
+<!--    for="..interfaces.ICart"-->
+<!--    menu="plone_displayviews"-->
+<!--    title="Cart Folder View"-->
+<!--    action="@@view"-->
+<!--    description="Default representation of Cart"-->
+<!--    />-->
+
   <browser:menuItem
-    for="..interfaces.ICart"
+    for="..interfaces.ICartContentType"
     menu="plone_displayviews"
     title="Cart Folder View"
     action="@@view"
     description="Default representation of Cart"
     />
 
+<!--  <browser:page-->
+<!--    for="collective.cart.core.interfaces.ICart"-->
+<!--    name="view"-->
+<!--    class=".template.CartTypeView"-->
+<!--    permission="zope2.View"-->
+<!--    />-->
+
   <browser:page
-    for="collective.cart.core.interfaces.ICart"
+    for="collective.cart.core.interfaces.ICartContentType"
     name="view"
     class=".template.CartTypeView"
     permission="zope2.View"
@@ -95,13 +125,13 @@
         attribute="make_not_addable_to_cart"
         />
 
-    <browser:page
-        name="has-cart-contents"
-        for="*"
-        class=".miscellaneous.Miscellaneous"
-        permission="zope2.View"
-        attribute="has_cart_contents"
-        />
+<!--    <browser:page-->
+<!--        name="has-cart-contents"-->
+<!--        for="*"-->
+<!--        class=".miscellaneous.Miscellaneous"-->
+<!--        permission="zope2.View"-->
+<!--        attribute="has_cart_contents"-->
+<!--        />-->
 
     <browser:page
         name="products"
@@ -111,12 +141,20 @@
         attribute="products"
         />
 
+<!--   <browser:page-->
+<!--        name="totals-with-currency"-->
+<!--        for="*"-->
+<!--        class=".miscellaneous.Miscellaneous"-->
+<!--        permission="zope2.View"-->
+<!--        attribute="totals_with_currency"-->
+<!--        />-->
+
    <browser:page
-        name="totals-with-currency"
+        name="totals"
         for="*"
         class=".miscellaneous.Miscellaneous"
         permission="zope2.View"
-        attribute="totals_with_currency"
+        attribute="totals"
         />
 
     <browser:page
@@ -244,6 +282,20 @@
     permission="zope2.View"
     />
 
+<!--  <browser:viewlet-->
+<!--    name="collective.cart.core.cart.totals"-->
+<!--    manager="collective.cart.core.interfaces.ICartViewletManager"-->
+<!--    template="viewlets/cart_totals.pt"-->
+<!--    permission="zope2.View"-->
+<!--    />-->
+
+  <browser:viewlet
+    name="collective.cart.core.cart.totals"
+    manager="collective.cart.core.interfaces.ICartViewletManager"
+    class=".viewlet.CartTotalsViewlet"
+    permission="zope2.View"
+    />
+
   <browser:viewlet
     name="collective.cart.core.next.step"
     manager="collective.cart.core.interfaces.ICartViewletManager"
@@ -260,6 +312,27 @@
     view="plone.app.layout.globals.interfaces.IViewView"
     />
 
+  <!-- Totals -->
+  <browser:viewletManager
+    name="collective.cart.core.totals.manager"
+    provides="collective.cart.core.interfaces.ICartTotalsViewletManager"
+    permission="zope2.View"
+    class="plone.app.viewletmanager.manager.OrderedViewletManager"
+    />
+
+  <browser:viewlet
+    name="collective.cart.core.totals.products"
+    manager="collective.cart.core.interfaces.ICartTotalsViewletManager"
+    class=".viewlet.CartTotalsProductsViewlet"
+    permission="zope2.View"
+    />
+
+  <browser:viewlet
+    name="collective.cart.core.total.cost"
+    manager="collective.cart.core.interfaces.ICartTotalsViewletManager"
+    class=".viewlet.CartTotalCostViewlet"
+    permission="zope2.View"
+    />
 
   <!-- Fixed Infos -->
   <browser:viewlet

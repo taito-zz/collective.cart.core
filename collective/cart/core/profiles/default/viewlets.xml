@@ -9,7 +9,12 @@
   </order>
   <order manager="collective.cart.core.cart.manager">
     <viewlet name="collective.cart.core.cart.contents" />
+    <viewlet name="collective.cart.core.cart.totals" />
     <viewlet name="collective.cart.core.next.step" />
+  </order>
+  <order manager="collective.cart.core.totals.manager">
+    <viewlet name="collective.cart.core.totals.products" />
+    <viewlet name="collective.cart.core.total.cost" />
   </order>
   <order manager="plone.abovecontentbody">
     <viewlet name="collective.cart.core.fixed.info" />

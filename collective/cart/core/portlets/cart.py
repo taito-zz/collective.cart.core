@@ -1,5 +1,5 @@
 from Acquisition import aq_inner
-from zope.component import getMultiAdapter#, getUtility
+from zope.component import getMultiAdapter
 from zope.interface import implements
 from plone.app.portlets.portlets import base
 from plone.portlets.interfaces import IPortletDataProvider
@@ -7,8 +7,7 @@ from Products.CMFCore.utils import getToolByName
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from collective.cart.core import CartMessageFactory as _
 from collective.cart.core.interfaces import (
-    ICartAdapter,
-    ICartProductOriginal,
+    ICartProduct,
     IPortalSessionCatalog,
 )
 
@@ -44,24 +43,10 @@ class Renderer(base.Renderer):
     @property
     def available(self):
         context = aq_inner(self.context)
-        return context.restrictedTraverse('has-cart-contents')()
+        return context.restrictedTraverse('products')()
 
     def products(self):
-        portal_state = getMultiAdapter((self.context, self.request), name=u'plone_portal_state')
-        portal = portal_state.portal()
-        catalog = getToolByName(portal, 'portal_catalog')
-        sdm = getToolByName(portal, 'session_data_manager')
-        cart = getMultiAdapter((portal, sdm, catalog), IPortalSessionCatalog).cart
-        products = getMultiAdapter((cart, catalog), ICartAdapter).products
-        res = []
-        for product in products:
-            item = dict(
-                title = product.title,
-                quantity = product.quantity,
-                url = getMultiAdapter((product, catalog), ICartProductOriginal).url,
-            )
-            res.append(item)
-        return res
+        return self.available
 
 
 class AddForm(base.NullAddForm):
