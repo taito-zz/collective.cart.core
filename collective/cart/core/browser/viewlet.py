@@ -15,6 +15,7 @@ from collective.cart.core.interfaces import (
     IPortalCatalog,
     IPotentiallyAddableToCart,
     IProduct,
+    IRegularExpression,
 )
 
 
@@ -154,9 +155,12 @@ class CartProductValuesViewlet(CartViewletBase):
     def update(self):
         form = self.request.form
         if form.get('form.button.AddToCart', None) is not None:
-            context = aq_inner(self.context)
-            IPortal(context).add_to_cart(form)
-            return self.request.response.redirect(self.current_url) 
+            quantity = form.get('quantity', None)
+            re = getUtility(IRegularExpression)
+            if re.integer(quantity):
+                context = aq_inner(self.context)
+                IPortal(context).add_to_cart(form)
+                return self.request.response.redirect(self.current_url) 
 
     def items(self):
         context = aq_inner(self.context)
@@ -165,7 +169,8 @@ class CartProductValuesViewlet(CartViewletBase):
         product = IProduct(context)
         res = dict(
             uid = product.uid,
-            select_quantity = product.select_quantity,
+#            select_quantity = product.select_quantity,
+            html_quantity = product.html_quantity,
             price_with_currency = pcp.price_with_currency(product.price),
         )
         return res
@@ -179,8 +184,11 @@ class CartContentsViewlet(CartViewletBase):
         form = self.request.form
         context = aq_inner(self.context)
         if form.get('form.button.UpdateCartContent', None) is not None:
-            IPortal(context).update_cart(form)
-            return self.request.response.redirect(self.current_url)
+            quantity = form.get('quantity', None)
+            re = getUtility(IRegularExpression)
+            if re.integer(quantity):
+                IPortal(context).update_cart(form)
+                return self.request.response.redirect(self.current_url)
         if form.get('form.button.DeleteCartContent', None) is not None:
             IPortal(context).delete_product(form)
             return self.request.response.redirect(self.current_url)

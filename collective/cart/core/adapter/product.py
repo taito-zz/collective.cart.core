@@ -6,6 +6,7 @@ from collective.cart.core.content.product import ProductAnnotations
 from collective.cart.core.interfaces import (
     IAddableToCart,
     ICartFolderContentType,
+    IPortal,
     IProduct,
     ISelectRange,
 )
@@ -71,6 +72,14 @@ class Product(object):
         if self.addable_quantity > 0:
             html = '<input type="text "id="quantity" name="quantity" size="3" value="" />'
             return html
+
+    @property
+    def html_quantity(self):
+        context = aq_inner(self.context)
+        if IPortal(context).cart_folder.quantity_method == 'Select':
+            return self.select_quantity
+        else:
+            return self.input_quantity
 
     @property
     def cart_folder(self):

@@ -22,7 +22,8 @@
           <span tal:replace="item/price_with_currency" />
         </td>
         <td>
-          <div tal:replace="structure item/select_quantity" />
+<!--          <div tal:replace="structure item/select_quantity" />-->
+          <div tal:replace="structure item/html_quantity" />
         </td>
         <td>
           <input type="hidden"

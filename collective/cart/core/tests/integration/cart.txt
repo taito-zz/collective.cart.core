@@ -34,6 +34,15 @@
     Decimal('200.00')
     >>> ICartProduct(product).max_quantity
     5
+    >>> ICartProduct(product).select_quantity
+    '<select id="quantity" name="quantity"><option value="1">1</option><option value="2" selected="selected">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select>'
+    >>> ICartProduct(product).input_quantity
+    '<input type="text "id="quantity" name="quantity" size="3" value="2" />'
+    >>> ICartProduct(product).html_quantity == ICartProduct(product).select_quantity
+    True
+    >>> portal.cfolder.quantity_method = 'Input'
+    >>> ICartProduct(product).html_quantity == ICartProduct(product).input_quantity
+    True
     >>> original = ICartProduct(product).product
     >>> original
     <collective.cart.core.adapter.product.Product object at ...>

@@ -241,6 +241,8 @@ IRegularExpression
     False
     >>> re.integer('5.5')
     False
+    >>> re.integer('-1')
+    False
     >>> re.integer('5')
     True
     >>> re.integer('50')

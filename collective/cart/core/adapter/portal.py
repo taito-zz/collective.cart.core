@@ -1,35 +1,35 @@
 from Acquisition import aq_chain, aq_inner#, aq_parent
-from zope.publisher.interfaces.browser import IBrowserRequest
-try:
-    ## Plone4
-    from Products.Sessions.interfaces import ISessionDataManager
-except ImportError:
-    # Plone3
-    pass
-from zope.component import getUtility, adapts, getMultiAdapter
+#from zope.publisher.interfaces.browser import IBrowserRequest
+#try:
+#    ## Plone4
+#    from Products.Sessions.interfaces import ISessionDataManager
+#except ImportError:
+#    # Plone3
+#    pass
+from zope.component import getUtility, adapts#, getMultiAdapter
 from zope.interface import implements
 from OFS.interfaces import IItem
-from Products.ZCatalog.interfaces import IZCatalog
-from Products.CMFPlone.interfaces.siteroot import IPloneSiteRoot
+#from Products.ZCatalog.interfaces import IZCatalog
+#from Products.CMFPlone.interfaces.siteroot import IPloneSiteRoot
 from Products.CMFCore.utils import getToolByName
 from collective.cart.core.interfaces import (
-    IAvailableShippingMethods,
+#    IAvailableShippingMethods,
     ICart,
     ICartContentType,
     ICartFolder,
     ICartFolderContentType,
     IDecimalPlaces,
     IPortal,
-    IPortalAdapter,
-    IPortalCart,
+#    IPortalAdapter,
+#    IPortalCart,
     IPortalCartProperties,
-    IPortalCatalog,
-    IPortalSession,
-    IPortalSessionCatalog,
+#    IPortalCatalog,
+#    IPortalSession,
+#    IPortalSessionCatalog,
     IPrice,
     IPriceWithCurrency,
 #    IRandomDigits,
-    IUpdateShippingMethod,
+#    IUpdateShippingMethod,
 )
 from Products.CMFPlone.interfaces.properties import IPropertiesTool
 

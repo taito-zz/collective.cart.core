@@ -17,7 +17,7 @@ IProduct
 ====
     >>> from collective.cart.core.interfaces import IAddableToCart
     >>> class Document(object):
-    ...     implements(IAddableToCart)
+    ...     implements(IAddableToCart, IItem)
     ...     def __init__(self, **kwargs):
     ...         for k, v in kwargs.items(): setattr(self, k, v)
     ...     def UID(self):
@@ -97,6 +97,8 @@ IProduct
     >>> provideUtility(SelectRange(), provides=ISelectRange)
     >>> product.select_quantity
     '<select id="quantity" name="quantity"><option value="1">1</option><option value="2">2</option><option value="3">3</option></select>'
+    >>> from collective.cart.core.adapter.portal import Portal
+    >>> provideAdapter(Portal)
     >>> product.input_quantity
     '<input type="text "id="quantity" name="quantity" size="3" value="" />'
 

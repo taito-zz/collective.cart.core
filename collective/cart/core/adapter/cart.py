@@ -9,6 +9,7 @@ from collective.cart.core.interfaces import (
     ICartFolderContentType,
     ICartProduct,
     ICartProductContentType,
+    IPortal,
     IProduct,
     IRandomDigits,
     ISelectRange,
@@ -85,7 +86,11 @@ class CartProductAdapter(object):
 
     @property
     def html_quantity(self):
-        return self.select_quantity
+        context = aq_inner(self.context)
+        if IPortal(context).cart_folder.quantity_method == 'Select':
+            return self.select_quantity
+        else:
+            return self.input_quantity
 
 
 class CartAdapter(object):

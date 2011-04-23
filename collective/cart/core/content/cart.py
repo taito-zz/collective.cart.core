@@ -28,11 +28,8 @@ from Products.Archetypes.public import (
 from collective.cart.core import CartMessageFactory as _
 from collective.cart.core import PROJECTNAME
 from collective.cart.core.interfaces import (
-#    ICart,
     ICartContentType,
-#    ICartFolder,
     ICartFolderContentType,
-#    ICartProduct,
     ICartProductContentType,
 )
 

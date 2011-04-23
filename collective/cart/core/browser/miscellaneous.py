@@ -1,6 +1,6 @@
 from Acquisition import aq_inner, aq_parent
 from zope.annotation.interfaces import IAnnotations
-from zope.component import getMultiAdapter, getUtility
+from zope.component import getMultiAdapter#, getUtility
 from zope.interface import alsoProvides, noLongerProvides
 from Products.CMFCore.utils import getToolByName
 from Products.Five.browser import BrowserView
@@ -9,14 +9,13 @@ from collective.cart.core.interfaces import (
     IAddableToCart,
     ICart,
     ICartAware,
-#    ICartItself,
     ICartProduct,
     IPortal,
     IPortalCartProperties,
     IPortalCatalog,
     IPortalSessionCatalog,
     IPotentiallyAddableToCart,
-    IPriceInString,
+#    IPriceInString,
 )
 
 class Miscellaneous(BrowserView):
@@ -68,25 +67,9 @@ class Miscellaneous(BrowserView):
                 return res
 
     def totals(self):
-#        if self.has_cart_contents():
         if self.products():
             context = aq_inner(self.context)
             cart = IPortal(context).cart
-#            portal_state = getMultiAdapter((self.context, self.request), name=u'plone_portal_state')
-#            portal = portal_state.portal()
-#            catalog = getToolByName(portal, 'portal_catalog')
-#            sdm = getToolByName(portal, 'session_data_manager')
-#            properties = getToolByName(portal, 'portal_properties')
-#            pcp = IPortalCartProperties(properties)
-#            cart = getMultiAdapter((portal, sdm, catalog), IPortalSessionCatalog).cart
-#            ca = getMultiAdapter((cart, catalog), ICartAdapter)
-#            ci = ICartItself(cart)
-#            shipping_cost_with_currency = pcp.price_with_currency(ci.shipping_cost)
-#            if ci.shipping_cost == 0:
-#                shipping_cost_with_currency = None
-#            payment_cost_with_currency = pcp.price_with_currency(ca.payment_cost)
-#            if ca.payment_cost == 0:
-#                payment_cost_with_currency = None
             icart = ICart(cart)
             properties = getToolByName(context, 'portal_properties')
             pcp = IPortalCartProperties(properties)
@@ -107,15 +90,16 @@ class Miscellaneous(BrowserView):
         return getMultiAdapter((portal, sdm, catalog), IPortalSessionCatalog).cart_id
 
     def total_price(self):
-        context = aq_inner(self.context)
-        portal = getToolByName(context, 'portal_url').getPortalObject()
-        sdm = getToolByName(portal, 'session_data_manager')
-        catalog = getToolByName(portal, 'portal_catalog')
-        cart = getMultiAdapter((portal, sdm, catalog), IPortalSessionCatalog).cart
-        if cart is not None:
-            price = getMultiAdapter((cart, catalog), ICartAdapter).total_cost
-            pis = getUtility(IPriceInString)
-            return pis(price)
+        return self.totals['total_cost']
+#        context = aq_inner(self.context)
+#        portal = getToolByName(context, 'portal_url').getPortalObject()
+#        sdm = getToolByName(portal, 'session_data_manager')
+#        catalog = getToolByName(portal, 'portal_catalog')
+#        cart = getMultiAdapter((portal, sdm, catalog), IPortalSessionCatalog).cart
+#        if cart is not None:
+#            price = getMultiAdapter((cart, catalog), ICartAdapter).total_cost
+#            pis = getUtility(IPriceInString)
+#            return pis(price)
 
     def next_step(self):
         context = aq_inner(self.context)

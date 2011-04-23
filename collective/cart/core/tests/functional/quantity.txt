@@ -1,0 +1,140 @@
+Initial imports and defines.
+----
+    >>> portal_url =  portal.absolute_url()
+    >>> cfolder = portal.cfolder
+    >>> cfolder_url = cfolder.absolute_url()
+    >>> doc01 = portal.doc01
+    >>> doc01_url = doc01.absolute_url()
+    >>> cart_url = '%s/@@cart' % portal_url
+
+Setting up.
+----
+    >>> try:
+    ...     from Testing.testbrowser import Browser
+    ... except ImportError:
+    ...     from Products.Five.testbrowser import Browser
+    >>> browser = Browser()
+
+For debugging.
+----
+    >>> browser.handleErrors = True
+    >>> portal.error_log._ignored_exceptions = ()
+
+Turn off portlets.
+----
+    >>> from zope.component import getUtility, getMultiAdapter
+    >>> from plone.portlets.interfaces import IPortletManager
+    >>> from plone.portlets.interfaces import IPortletAssignmentMapping
+
+    >>> left_column = getUtility(IPortletManager, name=u"plone.leftcolumn")
+    >>> left_assignable = getMultiAdapter((portal, left_column), IPortletAssignmentMapping)
+    >>> for name in left_assignable.keys():
+    ...     del left_assignable[name]
+
+    >>> right_column = getUtility(IPortletManager, name=u"plone.rightcolumn")
+    >>> right_assignable = getMultiAdapter((portal, right_column), IPortletAssignmentMapping)
+    >>> for name in right_assignable.keys():
+    ...     del right_assignable[name]
+
+Go to doc01
+-----------
+    >>> browser.open(doc01_url)
+    >>> '<select id="quantity" name="quantity">' in browser.contents
+    True
+    >>> browser.getControl(name="quantity").value = ['2']
+    >>> 'value="2" selected="selected"' in browser.contents
+    False
+    >>> browser.getControl(name="form.button.AddToCart").click()
+    >>> browser.open(cart_url)
+    >>> 'value="2" selected="selected"' in browser.contents
+    True
+    >>> browser.getControl(name="quantity").value = ['4']
+    >>> 'value="4" selected="selected"' in browser.contents
+    False
+    >>> browser.getControl(name="form.button.UpdateCartContent").click()
+    >>> 'value="4" selected="selected"' in browser.contents
+    True
+
+Log in and change the Quantity Method
+--------------------------------------
+    >>> browser.open(portal_url)
+    >>> from Products.PloneTestCase.setup import portal_owner, default_password
+    >>> browser.open(portal_url + '/login_form?came_from=' + portal_url)
+    >>> browser.getControl(name='__ac_name').value = portal_owner
+    >>> browser.getControl(name='__ac_password').value = default_password
+    >>> browser.getControl(name='submit').click()
+    >>> browser.open(cfolder_url)
+    >>> browser.getLink('Edit').click()
+    >>> browser.getControl(name="quantity_method").value = ['Input']
+    >>> browser.getControl('Save').click()
+
+Log out and got to Product01.
+------------------------------
+    >>> browser.open(doc01_url)
+    >>> try:
+    ...     browser.getControl(name="form.button.AddToCart").click()
+    ... except:
+    ...     print portal.error_log.getLogEntries()[0]['tb_text']
+    ...     import pdb; pdb.set_trace()
+    >>> browser.open(cart_url)
+    >>> 'name="quantity" size="3" value="4"' in browser.contents
+    True
+
+    >>> browser.open(doc01_url)
+    >>> browser.getControl(name="quantity").value = 'aaa'
+    >>> try:
+    ...     browser.getControl(name="form.button.AddToCart").click()
+    ... except:
+    ...     print portal.error_log.getLogEntries()[0]['tb_text']
+    ...     import pdb; pdb.set_trace()
+    >>> browser.open(cart_url)
+    >>> 'name="quantity" size="3" value="4"' in browser.contents
+    True
+
+    >>> browser.open(doc01_url)
+    >>> browser.getControl(name="quantity").value = '-5'
+    >>> browser.getControl(name="form.button.AddToCart").click()
+    >>> browser.open(cart_url)
+    >>> 'name="quantity" size="3" value="4"' in browser.contents
+    True
+
+    >>> browser.open(doc01_url)
+    >>> browser.getControl(name="quantity").value = '3'
+    >>> browser.getControl(name="form.button.AddToCart").click()
+    >>> browser.open(cart_url)
+    >>> 'name="quantity" size="3" value="7"' in browser.contents
+    True
+
+    >>> browser.open(doc01_url)
+    >>> browser.getControl(name="quantity").value = '4'
+    >>> browser.getControl(name="form.button.AddToCart").click()
+    >>> browser.open(cart_url)
+    >>> 'name="quantity" size="3" value="10"' in browser.contents
+    True
+
+In the cart.
+------------
+    >>> browser.getControl(name="quantity").value = ''
+    >>> browser.getControl(name="form.button.UpdateCartContent").click()
+    >>> 'name="quantity" size="3" value="10"' in browser.contents
+    True
+
+    >>> browser.getControl(name="quantity").value = 'aaa'
+    >>> browser.getControl(name="form.button.UpdateCartContent").click()
+    >>> 'name="quantity" size="3" value="10"' in browser.contents
+    True
+
+    >>> browser.getControl(name="quantity").value = '-5'
+    >>> browser.getControl(name="form.button.UpdateCartContent").click()
+    >>> 'name="quantity" size="3" value="10"' in browser.contents
+    True
+
+    >>> browser.getControl(name="quantity").value = '11'
+    >>> browser.getControl(name="form.button.UpdateCartContent").click()
+    >>> 'name="quantity" size="3" value="10"' in browser.contents
+    True
+
+    >>> browser.getControl(name="quantity").value = '5'
+    >>> browser.getControl(name="form.button.UpdateCartContent").click()
+    >>> 'name="quantity" size="3" value="5"' in browser.contents
+    True
