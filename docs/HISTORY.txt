@@ -5,6 +5,7 @@ Changelog
 ------------------
 
 - Input support for quantity method.
+- Multiple cart folder support.
 
 0.1.1 (2011-04-21)
 ------------------
