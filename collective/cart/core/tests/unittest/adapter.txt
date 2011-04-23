@@ -55,10 +55,10 @@ IProduct
     >>> product.price
     0.0
     >>> product.price = Decimal('5.00')
-    >>> product.price
-    Decimal('5.00')
-    >>> cannotasions.price
-    Decimal('5.00')
+    >>> product.price == Decimal('5.00')
+    True
+    >>> cannotasions.price == Decimal('5.00')
+    True
     >>> product.stock
     0
     >>> product.stock = 10
@@ -122,14 +122,14 @@ ICartProduct
     >>> cpadapter = ICartProduct(context)
     >>> cpadapter.uid
     'someuid'
-    >>> cpadapter.price
-    Decimal('5.00')
+    >>> cpadapter.price == Decimal('5.00')
+    True
     >>> cpadapter.quantity
     3
     >>> cpadapter.title
     'Product01'
-    >>> cpadapter.subtotal
-    Decimal('15.00')
+    >>> cpadapter.subtotal == Decimal('15.00')
+    True
 
 
 IPortalCartProperties

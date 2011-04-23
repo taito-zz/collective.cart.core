@@ -124,10 +124,11 @@ Go to cfolder
     >>> cart2_url = cart.absolute_url()
     >>> browser.open(cart2_url)
     >>> product1 = cart['1']
-    >>> product1_url = product1.absolute_url()
-    >>> browser.open(product1_url)
-    >>> browser.url
-    'http://nohost/plone/cfolder/2/1'
+
+#    >>> product1_url = product1.absolute_url()
+#    >>> browser.open(product1_url)
+#    >>> browser.url
+#    'http://nohost/plone/cfolder/2/1'
 
 Go to cart
 ----

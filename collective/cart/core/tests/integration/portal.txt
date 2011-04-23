@@ -1,5 +1,6 @@
     >>> from Products.CMFCore.utils import getToolByName
     >>> sdm = getToolByName(self.portal, 'session_data_manager')
+    >>> from decimal import Decimal
 
     >>> doc01 = self.portal.doc01
     >>> from collective.cart.core.interfaces import IPortal
@@ -25,9 +26,9 @@
     '1'
     >>> IPortal(doc01).cart
     <Cart at /plone/cfolder/1>
-    >>> IPortal(doc01).decimal_price(1.0)
-    Decimal('1.00')
-    >>> IPortal(doc01).decimal_price('5')
-    Decimal('5.00')
+    >>> IPortal(doc01).decimal_price(1.0) == Decimal('1.00')
+    True
+    >>> IPortal(doc01).decimal_price('5') == Decimal('5.00')
+    True
     >>> IPortal(doc01).cart_properties
     <collective.cart.core.adapter.portal.PortalCartProperties object at ...>
