@@ -1,3 +1,5 @@
 *.pyc
 *.egg-info
 .svn
+.long-description.html
+dist

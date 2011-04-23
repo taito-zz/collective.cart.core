@@ -122,11 +122,6 @@ class TestSetup(TestCase):
         self.assertEquals('', ccp.getProperty('currency_symbol'))
         self.assertEquals('Behind', ccp.getProperty('symbol_location'))
         self.assertEquals((), ccp.getProperty('content_types'))
-#        self.assertEquals(2, ccp.getProperty('decimal_point'))
-#        self.assertEquals('/carts', ccp.getProperty('cart_folder_path'))
-#        self.assertEquals('Incremental', ccp.getProperty('cart_id_method'))
-#        self.assertEquals(5, ccp.getProperty('random_cart_id_digits'))
-#        self.assertEquals('Select', ccp.getProperty('quantity_method'))
 
     ## controlpanel.xml
     def test_configlet(self):
@@ -403,12 +398,8 @@ class TestSetup(TestCase):
         self.assertEqual(editable_for_customer_permission_roles, editable_for_customer.permission_roles)
         not_editable_for_customer_permission_roles = {
             'Modify portal content': (
-#                'Anonymous',
-#                'Authenticated',
                 'Contributor',
                 'Manager',
-#                'Member',
-#                'Owner',
                 'Site Administrator'
             ),
             'Access contents information': (
@@ -468,7 +459,6 @@ class TestSetup(TestCase):
         left_column = getUtility(IPortletManager, name=u"plone.leftcolumn")
         left_assignable = getMultiAdapter((self.portal, left_column), IPortletAssignmentMapping)
         self.failUnless(u'Cart' in left_assignable.keys())
-#        self.failUnless(u'Cart' in left_assignable.keys())
 
     ## Uninstalling
     def test_uninstall(self):

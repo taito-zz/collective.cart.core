@@ -1,7 +1,12 @@
 Changelog
 =========
 
-0.0.0dev (unreleased)
----------------------
+0.1.1 (2011-04-21)
+------------------
+
+- Double registration of cart portlet fixed.
+
+0.1.0 (2011-04-21)
+------------------
 
 - Initial release

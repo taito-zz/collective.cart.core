@@ -8,14 +8,14 @@ version = read('collective', 'cart', 'core', 'version.txt')[:-1]
 
 long_description = (
     open("README.txt").read() + "\n" +
-    open(os.path.join("docs", "HISTORY.txt")).read() + "\n" +
     open(os.path.join("docs", "INSTALL.txt")).read() + "\n" +
+    open(os.path.join("docs", "HISTORY.txt")).read() + "\n" +
     open(os.path.join("docs", "CREDITS.txt")).read()
     )
 
 setup(name='collective.cart.core',
       version=version,
-      description="",
+      description="Yet another cart for Plone.",
       long_description=long_description,
       # Get more strings from
       # http://pypi.python.org/pypi?%3Aaction=list_classifiers
@@ -24,8 +24,8 @@ setup(name='collective.cart.core',
         "Programming Language :: Python",
         ],
       keywords='',
-      author='',
-      author_email='',
+      author='Taito Horiuchi',
+      author_email='taito.horiuchi@gmail.com',
       url='http://svn.plone.org/svn/collective/',
       license='GPL',
       packages=find_packages(exclude=['ez_setup']),
