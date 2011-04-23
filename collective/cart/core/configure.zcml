@@ -22,4 +22,12 @@
       provides="Products.GenericSetup.interfaces.EXTENSION"
       />
 
+  <genericsetup:registerProfile
+      name="uninstall"
+      title="collective.cart.core"
+      directory="profiles/uninstall"
+      description="Uninstalls the collective.cart.core package"
+      provides="Products.GenericSetup.interfaces.EXTENSION"
+      />
+
 </configure>

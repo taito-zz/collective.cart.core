@@ -3,6 +3,8 @@ from zope.annotation.interfaces import IAnnotations
 from zope.component import getSiteManager
 from Products.CMFCore.utils import getToolByName
 
+EXTENSION_PROFILES = ('collective.cart.core:uninstall',)
+
 
 def uninstall(self):
     out = StringIO()
@@ -14,5 +16,13 @@ def uninstall(self):
 
     properties = getToolByName(self, 'portal_properties')
     properties.manage_delObjects(ids=['collective_cart_properties'])
+
+    setup = getToolByName(self, 'portal_setup')
+    for extension_id in EXTENSION_PROFILES:
+        profile = 'profile-%s' % extension_id
+        setup.runAllImportStepsFromProfile(
+            profile,
+            purge_old=False,
+        )
 
     return out.getvalue()

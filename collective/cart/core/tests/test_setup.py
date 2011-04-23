@@ -467,6 +467,11 @@ class TestSetup(TestCase):
         ids = [action.id for action in self.controlpanel.listActions()]
         self.failUnless('collective_cart_config' not in ids)
         self.failUnless(not hasattr(self.properties, 'collective_cart_properties'))
+        for type in self.content_types:
+            self.failIf(type in self.types.objectIds())
+        left_column = getUtility(IPortletManager, name=u"plone.leftcolumn")
+        left_assignable = getMultiAdapter((self.portal, left_column), IPortletAssignmentMapping)
+        self.failIf(u'Cart' in left_assignable.keys())
 
 def test_suite():
     suite = unittest.TestSuite()
