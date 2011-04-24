@@ -150,6 +150,8 @@ class CartAdapter(object):
         if not product.unlimited_stock:
             new_stock = product.stock - quantity
             product.stock = new_stock
+#        notify(AddFirstTimeToCart(product))
+        notify(ObjectInitializedEvent(cproduct))
 
     def add_existing_product_to_cart(self, uid, quantity):
             cproduct = self.product(uid)

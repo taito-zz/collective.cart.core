@@ -169,7 +169,7 @@ class EditProductViewlet(CartViewletBase):
             max_addable_quantity = form.get('max_addable_quantity')
             if re.integer(max_addable_quantity):
                 product.max_addable_quantity = int(max_addable_quantity)
-            return self.request.response.redirect(self.current_url) 
+            return self.request.response.redirect(self.current_url)
 
     def fields(self):
         context = aq_inner(self.context)

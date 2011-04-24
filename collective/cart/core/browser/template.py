@@ -2,11 +2,9 @@ from Acquisition import aq_inner
 from zope.component import getMultiAdapter, getUtility
 from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
-#from Products.CMFCore.utils import getToolByName
 from Products.statusmessages.interfaces import IStatusMessage
 from collective.cart.core.interfaces import (
     IPortal,
-#    IPortalCatalog,
     IProduct,
     IRegularExpression,
 )
