@@ -1,7 +1,9 @@
 from Acquisition import aq_inner
+from zope.event import notify
 from zope.interface import implements
-from zope.component import adapts, getUtility#, getMultiAdapter
+from zope.component import adapts, getUtility
 from Products.CMFCore.utils import getToolByName
+from Products.Archetypes.event import ObjectInitializedEvent
 from collective.cart.core.interfaces import (
     ICart,
     ICartContentType,
@@ -117,7 +119,8 @@ class CartAdapter(object):
 
     @property
     def total_cost(self):
-        return self.subtotal
+        context = aq_inner(self.context)
+        return sum(context.totals.values())
 
 
     def add_new_product_to_cart(self, uid, quantity):
@@ -252,5 +255,6 @@ class CartFolderAdapter(object):
         )
         cart = self.context[cart_id]
         cart.session_cart_id=session_cart_id
+        notify(ObjectInitializedEvent(cart))
         cart.reindexObject()
         return cart

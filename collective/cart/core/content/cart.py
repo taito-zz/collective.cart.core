@@ -1,7 +1,7 @@
+from persistent.dict import PersistentDict
 from zope.interface import implements
 from Products.ATContentTypes.content.base import ATCTContent
 from Products.ATContentTypes.content.folder import ATFolder, ATFolderSchema
-from Products.ATContentTypes.lib.historyaware import HistoryAwareMixin
 from Products.ATContentTypes.content.schemata import ATContentTypeSchema, finalizeATCTSchema
 from Products.ATContentTypes.content.base import registerATCT
 
@@ -133,7 +133,6 @@ finalizeATCTSchema(CartSchema, folderish=True, moveDiscussion=False)
 
 class Cart(ATFolder):
 
-#    implements(ICart)
     implements(ICartContentType)
     schema = CartSchema
     portal_type = 'Cart'
@@ -144,6 +143,8 @@ class Cart(ATFolder):
 #    receiver_info = None
     info = None
     session_cart_id = None
+    totals = PersistentDict()
+    total_cost = None
 
 registerATCT(Cart, PROJECTNAME)
 

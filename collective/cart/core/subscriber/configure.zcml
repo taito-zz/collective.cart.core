@@ -1,6 +1,9 @@
 <configure xmlns="http://namespaces.zope.org/zope">
 
   <!-- Handler -->
+  <subscriber handler=".cart.set_products_cost" />
+  <subscriber handler=".cart.set_total_cost" />
+
   <subscriber handler=".content_type.addable_to_cart" />
   <subscriber handler=".content_type.delete_old_cart_folder" />
 

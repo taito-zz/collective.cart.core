@@ -22,7 +22,7 @@ def test_suite():
             optionflags=doctest.REPORT_ONLY_FIRST_FAILURE | doctest.NORMALIZE_WHITESPACE | doctest.ELLIPSIS),
 
 #        DocFileSuite(
-#            'tests/unittest/portal_adapter.txt', package='collective.cart.core',
+#            'tests/unittest/event.txt', package='collective.cart.core',
 #            setUp=testing.setUp, tearDown=testing.tearDown,
 #            optionflags=doctest.REPORT_ONLY_FIRST_FAILURE | doctest.NORMALIZE_WHITESPACE | doctest.ELLIPSIS),
 

@@ -18,6 +18,10 @@
     >>> cart = IPortal(doc00).cart
     >>> cart
     <Cart at /plone/cfolder/1>
+    >>> cart.totals == {'products_cost': Decimal('200.00')}
+    True
+    >>> cart.total_cost == Decimal('200.00')
+    True
     >>> ICart(cart).products
     [<CartProduct at /plone/cfolder/1/1>]
     >>> ICart(cart).product(uid)
@@ -84,6 +88,10 @@ Add product00 again.
     <collective.cart.core.adapter.product.Product object at ...>
     >>> original.stock
     0
+    >>> cart.totals == {'products_cost': Decimal('400.00')}
+    True
+    >>> cart.total_cost == Decimal('400.00')
+    True
     >>> ICart(cart).subtotal == Decimal('400.00')
     True
     >>> ICart(cart).total_cost == Decimal('400.00')
@@ -119,6 +127,10 @@ Add product00 again more than 5.
     <collective.cart.core.adapter.product.Product object at ...>
     >>> original.stock
     0
+    >>> cart.totals == {'products_cost': Decimal('500.00')}
+    True
+    >>> cart.total_cost == Decimal('500.00')
+    True
     >>> ICart(cart).subtotal == Decimal('500.00')
     True
     >>> ICart(cart).total_cost == Decimal('500.00')
@@ -157,6 +169,10 @@ Add product01.
     <collective.cart.core.adapter.product.Product object at ...>
     >>> original.stock
     48
+    >>> cart.totals == {'products_cost': Decimal('520.00')}
+    True
+    >>> cart.total_cost == Decimal('520.00')
+    True
     >>> ICart(cart).subtotal == Decimal('520.00')
     True
     >>> ICart(cart).total_cost == Decimal('520.00')
@@ -179,6 +195,10 @@ Add product01 again.
     True
     >>> original.stock
     40
+    >>> cart.totals == {'products_cost': Decimal('600.00')}
+    True
+    >>> cart.total_cost == Decimal('600.00')
+    True
     >>> ICart(cart).subtotal == Decimal('600.00')
     True
     >>> ICart(cart).total_cost == Decimal('600.00')
@@ -203,6 +223,10 @@ Add more than what is in max_quantity.
     True
     >>> original.stock
     20
+    >>> cart.totals == {'products_cost': Decimal('800.00')}
+    True
+    >>> cart.total_cost == Decimal('800.00')
+    True
     >>> ICart(cart).subtotal == Decimal('800.00')
     True
     >>> ICart(cart).total_cost == Decimal('800.00')
@@ -241,6 +265,10 @@ Add product02.
     <collective.cart.core.adapter.product.Product object at ...>
     >>> original.stock
     0
+    >>> cart.totals == {'products_cost': Decimal('900.00')}
+    True
+    >>> cart.total_cost == Decimal('900.00')
+    True
     >>> ICart(cart).subtotal == Decimal('900.00')
     True
     >>> ICart(cart).total_cost == Decimal('900.00')

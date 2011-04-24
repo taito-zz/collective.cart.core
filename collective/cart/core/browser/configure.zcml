@@ -149,13 +149,13 @@
 <!--        attribute="totals_with_currency"-->
 <!--        />-->
 
-   <browser:page
-        name="totals"
-        for="*"
-        class=".miscellaneous.Miscellaneous"
-        permission="zope2.View"
-        attribute="totals"
-        />
+<!--   <browser:page-->
+<!--        name="totals"-->
+<!--        for="*"-->
+<!--        class=".miscellaneous.Miscellaneous"-->
+<!--        permission="zope2.View"-->
+<!--        attribute="totals"-->
+<!--        />-->
 
     <browser:page
         name="cart-id"

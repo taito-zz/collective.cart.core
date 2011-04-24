@@ -1,35 +1,20 @@
-from Acquisition import aq_chain, aq_inner#, aq_parent
-#from zope.publisher.interfaces.browser import IBrowserRequest
-#try:
-#    ## Plone4
-#    from Products.Sessions.interfaces import ISessionDataManager
-#except ImportError:
-#    # Plone3
-#    pass
-from zope.component import getUtility, adapts#, getMultiAdapter
+from Acquisition import aq_chain, aq_inner
+from zope.component import getUtility, adapts
+from zope.event import notify
 from zope.interface import implements
 from OFS.interfaces import IItem
-#from Products.ZCatalog.interfaces import IZCatalog
-#from Products.CMFPlone.interfaces.siteroot import IPloneSiteRoot
 from Products.CMFCore.utils import getToolByName
+from collective.cart.core.subscriber.event import UpdateCart, UpdateCartTotal
 from collective.cart.core.interfaces import (
-#    IAvailableShippingMethods,
     ICart,
     ICartContentType,
     ICartFolder,
     ICartFolderContentType,
     IDecimalPlaces,
     IPortal,
-#    IPortalAdapter,
-#    IPortalCart,
     IPortalCartProperties,
-#    IPortalCatalog,
-#    IPortalSession,
-#    IPortalSessionCatalog,
     IPrice,
     IPriceWithCurrency,
-#    IRandomDigits,
-#    IUpdateShippingMethod,
 )
 from Products.CMFPlone.interfaces.properties import IPropertiesTool
 
@@ -95,17 +80,23 @@ class Portal(object):
             icart.add_existing_product_to_cart(uid, quantity)
         else:
             icart.add_new_product_to_cart(uid, quantity)
+        notify(UpdateCart(cart))
+        notify(UpdateCartTotal(cart))
 
     def update_cart(self, form):
         if self.cart:
             uid = form.get('uid')
             quantity = int(form.get('quantity'))
             ICart(self.cart).update_cart(uid, quantity)
+            notify(UpdateCart(self.cart))
+            notify(UpdateCartTotal(self.cart))
 
     def delete_product(self, form):
         if self.cart:
             uid = form.get('uid')
             ICart(self.cart).delete_product(uid)
+            notify(UpdateCart(self.cart))
+            notify(UpdateCartTotal(self.cart))
 
     @property
     def cart_properties(self):

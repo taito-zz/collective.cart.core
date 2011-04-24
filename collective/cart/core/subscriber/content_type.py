@@ -5,7 +5,6 @@ from Products.CMFCore.utils import getToolByName
 from Products.Archetypes.interfaces import IObjectInitializedEvent
 from Products.ATContentTypes.content.base import ATCTContent
 from collective.cart.core.interfaces import (
-#    ICartFolder,
     ICartFolderContentType,
     IPotentiallyAddableToCart,
 )
@@ -18,7 +17,6 @@ def addable_to_cart(context, event):
     alsoProvides(context, IPotentiallyAddableToCart)
     context.reindexObject()
 
-#@adapter(ICartFolder, IObjectInitializedEvent)
 @adapter(ICartFolderContentType, IObjectInitializedEvent)
 def delete_old_cart_folder(context, event):
     """Delete Cart Folder in the same hierarchy."""

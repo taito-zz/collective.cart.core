@@ -8,11 +8,9 @@ from plone.app.layout.viewlets.common import ViewletBase
 from collective.cart.core import CartMessageFactory as _
 from collective.cart.core.interfaces import (
     IAddableToCart,
+    ICart,
     IPortal,
-#    IPortalAdapter,
-    IPortalCart,
     IPortalCartProperties,
-    IPortalCatalog,
     IPotentiallyAddableToCart,
     IProduct,
     IRegularExpression,
@@ -77,16 +75,16 @@ class CartConfigPropertiesViewlet(CartViewletBase):
         context = aq_inner(self.context)
         return IPortal(context).cart_properties.select_field('cart_id_method', ['Incremental', 'Random'])
 
-    @property
-    def next_cart_id(self):
-        context = aq_inner(self.context)
-        portal = getToolByName(context, 'portal_url').getPortalObject()
-        catalog = getToolByName(context, 'portal_catalog')
-        cfolder = getMultiAdapter((portal, catalog), IPortalCatalog).cart_folder
-        if cfolder is not None:
-            return cfolder.next_incremental_cart_id
-        else:
-            return 1
+#    @property
+#    def next_cart_id(self):
+#        context = aq_inner(self.context)
+#        portal = getToolByName(context, 'portal_url').getPortalObject()
+#        catalog = getToolByName(context, 'portal_catalog')
+#        cfolder = getMultiAdapter((portal, catalog), IPortalCatalog).cart_folder
+#        if cfolder is not None:
+#            return cfolder.next_incremental_cart_id
+#        else:
+#            return 1
 
     @property
     def random_cart_id_digits(self):
@@ -169,7 +167,6 @@ class CartProductValuesViewlet(CartViewletBase):
         product = IProduct(context)
         res = dict(
             uid = product.uid,
-#            select_quantity = product.select_quantity,
             html_quantity = product.html_quantity,
             price_with_currency = pcp.price_with_currency(product.price),
         )
@@ -217,8 +214,9 @@ class CartTotalsProductsViewlet(ViewletBase):
 
     def total(self):
         context = aq_inner(self.context)
-        totals = context.restrictedTraverse('totals')()
-        return totals['products_subtotal_with_currency']
+        iportal = IPortal(context)
+        price = ICart(iportal.cart).subtotal
+        return iportal.cart_properties.price_with_currency(price)
 
 
 class CartTotalCostViewlet(CartTotalsProductsViewlet):
@@ -227,9 +225,13 @@ class CartTotalCostViewlet(CartTotalsProductsViewlet):
         return _(u'Total Cost')
 
     def total(self):
+#        context = aq_inner(self.context)
+#        totals = context.restrictedTraverse('totals')()
+#        return totals['total_cost_with_currency']
         context = aq_inner(self.context)
-        totals = context.restrictedTraverse('totals')()
-        return totals['total_cost_with_currency']
+        iportal = IPortal(context)
+        price = ICart(iportal.cart).total_cost
+        return iportal.cart_properties.price_with_currency(price)
 
 class NextStepViewlet(CartViewletBase):
 
@@ -287,5 +289,3 @@ class FixedCartContentViewlet(CartContentsViewlet):
     def totals_with_currency(self):
         if self.products is not None:
             return self.context.restrictedTraverse('totals-with-currency')()
-
-#    index = render = ViewPageTemplateFile("viewlets/fc.pt")
