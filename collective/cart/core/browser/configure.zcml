@@ -5,21 +5,6 @@
 
   <include package="plone.app.contentmenu" />
 
-<!--  <browser:menuItem-->
-<!--    for="..interfaces.ICartFolder"-->
-<!--    menu="plone_displayviews"-->
-<!--    title="Cart Folder View"-->
-<!--    action="@@view"-->
-<!--    description="Default representation of Cart Folder"-->
-<!--    />-->
-
-<!--  <browser:page-->
-<!--    for="collective.cart.core.interfaces.ICartFolder"-->
-<!--    name="view"-->
-<!--    class=".template.CartFolderView"-->
-<!--    permission="zope2.View"-->
-<!--    />-->
-
   <browser:menuItem
     for="..interfaces.ICartFolderContentType"
     menu="plone_displayviews"
@@ -35,14 +20,6 @@
     permission="zope2.View"
     />
 
-<!--  <browser:menuItem-->
-<!--    for="..interfaces.ICart"-->
-<!--    menu="plone_displayviews"-->
-<!--    title="Cart Folder View"-->
-<!--    action="@@view"-->
-<!--    description="Default representation of Cart"-->
-<!--    />-->
-
   <browser:menuItem
     for="..interfaces.ICartContentType"
     menu="plone_displayviews"
@@ -50,13 +27,6 @@
     action="@@view"
     description="Default representation of Cart"
     />
-
-<!--  <browser:page-->
-<!--    for="collective.cart.core.interfaces.ICart"-->
-<!--    name="view"-->
-<!--    class=".template.CartTypeView"-->
-<!--    permission="zope2.View"-->
-<!--    />-->
 
   <browser:page
     for="collective.cart.core.interfaces.ICartContentType"
@@ -85,13 +55,6 @@
     class=".template.CartView"
     permission="zope2.View"
     />
-
-<!--  <browser:page-->
-<!--    name="verkkomaksut"-->
-<!--    class=".template.PFGVerkkomaksutView"-->
-<!--    for="collective.cart.core.interfaces.ICartAware"-->
-<!--    permission="zope2.View"-->
-<!--    />-->
 
     <browser:page
         name="potentially-addable-but-not-addable-to-cart"
@@ -125,14 +88,6 @@
         attribute="make_not_addable_to_cart"
         />
 
-<!--    <browser:page-->
-<!--        name="has-cart-contents"-->
-<!--        for="*"-->
-<!--        class=".miscellaneous.Miscellaneous"-->
-<!--        permission="zope2.View"-->
-<!--        attribute="has_cart_contents"-->
-<!--        />-->
-
     <browser:page
         name="products"
         for="*"
@@ -140,22 +95,6 @@
         permission="zope2.View"
         attribute="products"
         />
-
-<!--   <browser:page-->
-<!--        name="totals-with-currency"-->
-<!--        for="*"-->
-<!--        class=".miscellaneous.Miscellaneous"-->
-<!--        permission="zope2.View"-->
-<!--        attribute="totals_with_currency"-->
-<!--        />-->
-
-<!--   <browser:page-->
-<!--        name="totals"-->
-<!--        for="*"-->
-<!--        class=".miscellaneous.Miscellaneous"-->
-<!--        permission="zope2.View"-->
-<!--        attribute="totals"-->
-<!--        />-->
 
     <browser:page
         name="cart-id"
@@ -189,21 +128,6 @@
         attribute="test_step"
         />
 
-<!--    <browser:page-->
-<!--        name="verkkomaksut-on-success"-->
-<!--        for="collective.cart.core.interfaces.ICartAware"-->
-<!--        class=".miscellaneous.Miscellaneous"-->
-<!--        permission="zope2.View"-->
-<!--        attribute="verkkomaksut_on_success"-->
-<!--        />-->
-
-<!--    <browser:page-->
-<!--        name="make-cart-aware"-->
-<!--        for="Products.PloneFormGen.interfaces.IPloneFormGenActionAdapter"-->
-<!--        class=".miscellaneous.Miscellaneous"-->
-<!--        permission="cmf.ModifyPortalContent"-->
-<!--        attribute="make_cart_aware"-->
-<!--        />-->
 
     <browser:page
         name="make-cart-aware"
@@ -213,14 +137,6 @@
         attribute="make_cart_aware"
         />
 
-<!--    <browser:page-->
-<!--        name="make-not-cart-aware"-->
-<!--        for="Products.PloneFormGen.interfaces.IPloneFormGenActionAdapter"-->
-<!--        class=".miscellaneous.Miscellaneous"-->
-<!--        permission="cmf.ModifyPortalContent"-->
-<!--        attribute="make_not_cart_aware"-->
-<!--        />-->
-
     <browser:page
         name="make-not-cart-aware"
         for="*"
@@ -228,14 +144,6 @@
         permission="cmf.ModifyPortalContent"
         attribute="make_not_cart_aware"
         />
-
-<!--    <browser:page-->
-<!--        name="is-cart-aware"-->
-<!--        for="Products.PloneFormGen.interfaces.IPloneFormGenActionAdapter"-->
-<!--        class=".miscellaneous.Miscellaneous"-->
-<!--        permission="cmf.ModifyPortalContent"-->
-<!--        attribute="is_cart_aware"-->
-<!--        />-->
 
     <browser:page
         name="is-cart-aware"
@@ -265,6 +173,21 @@
     name="collective.cart.core.config.types"
     manager="collective.cart.core.interfaces.ICartConfigViewletManager"
     class=".viewlet.CartConfigTypesViewlet"
+    permission="cmf.ModifyPortalContent"
+    />
+
+  <!-- Edit Product -->
+  <browser:viewletManager
+    name="collective.cart.core.product.manager"
+    provides="collective.cart.core.interfaces.IEditProductViewletManager"
+    permission="cmf.ModifyPortalContent"
+    class="plone.app.viewletmanager.manager.OrderedViewletManager"
+    />
+
+  <browser:viewlet
+    name="collective.cart.core.product.basic"
+    manager="collective.cart.core.interfaces.IEditProductViewletManager"
+    class=".viewlet.EditProductViewlet"
     permission="cmf.ModifyPortalContent"
     />
 

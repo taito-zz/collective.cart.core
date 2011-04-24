@@ -1,0 +1,18 @@
+<div id="edit-product-basic">
+  <h1 i18n:translate="">Product Basic Values</h1>
+  <form method="post" tal:attributes="action view/current_url">
+    <tal:block tal:repeat="item view/fields">
+     <div class="field">
+       <lable tal:content="item/label" />
+       <div class="formHelp" id="description_help" 
+            tal:condition="item/description" tal:content="item/description" />
+       <div tal:replace="structure item/field" />
+     </div>
+    </tal:block>
+    <input type="submit"
+           class="standalone"
+           value="Update"
+           i18n:attributes="value"
+           name="form.button.UpdateProductBasic" />
+  </form>
+</div>
