@@ -141,7 +141,7 @@ class Cart(ATFolder):
 #    payment_method = None
 #    payer_info = None
 #    receiver_info = None
-    info = None
+    info = PersistentDict()
     session_cart_id = None
     totals = PersistentDict()
     total_cost = None

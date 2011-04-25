@@ -337,8 +337,11 @@ class FixedInfoViewlet(CartViewletBase):
 
     index = render = ViewPageTemplateFile("viewlets/fixed_info.pt")
 
-    def has_cart_contents(self):
-        return self.context.restrictedTraverse('has-cart-contents')()
+    def products(self):
+        context = aq_inner(self.context)
+        portal = getToolByName(context, 'portal_url').getPortalObject()
+        return portal.restrictedTraverse('products')()
+#        return self.context.restrictedTraverse('products')()
 
 class FixedCartContentViewlet(CartContentsViewlet):
 
@@ -354,27 +357,30 @@ class FixedCartContentViewlet(CartContentsViewlet):
 
     @property
     def products(self):
-        products = self.context.restrictedTraverse('has-cart-contents')()
-        if products is not None:
-            res = []
-            context = aq_inner(self.context)
-            catalog = getToolByName(context, 'portal_catalog')
-            portal = getToolByName(context, 'portal_url').getPortalObject()
-            properties = getToolByName(portal, 'portal_properties')
-            pcp = IPortalCartProperties(properties)
-            for product in products:
-                cpo = getMultiAdapter((product, catalog), ICartProductOriginal)
-                cpa = ICartProductAdapter(product)
-                item = dict(
-                    title = cpa.title,
-                    quantity = cpa.quantity,
-                    uid = cpa.uid,
-                    url = cpo.url,
-                    price_with_currency = pcp.price_with_currency(cpa.price),
-                    subtotal_with_currency = pcp.price_with_currency(cpa.subtotal),
-                )
-                res.append(item)
-            return res
+        context = aq_inner(self.context)
+        portal = getToolByName(context, 'portal_url').getPortalObject()
+        return portal.restrictedTraverse('products')()
+#        products = self.context.restrictedTraverse('has-cart-contents')()
+#        if products is not None:
+#            res = []
+#            context = aq_inner(self.context)
+#            catalog = getToolByName(context, 'portal_catalog')
+#            portal = getToolByName(context, 'portal_url').getPortalObject()
+#            properties = getToolByName(portal, 'portal_properties')
+#            pcp = IPortalCartProperties(properties)
+#            for product in products:
+#                cpo = getMultiAdapter((product, catalog), ICartProductOriginal)
+#                cpa = ICartProductAdapter(product)
+#                item = dict(
+#                    title = cpa.title,
+#                    quantity = cpa.quantity,
+#                    uid = cpa.uid,
+#                    url = cpo.url,
+#                    price_with_currency = pcp.price_with_currency(cpa.price),
+#                    subtotal_with_currency = pcp.price_with_currency(cpa.subtotal),
+#                )
+#                res.append(item)
+#            return res
 
     def totals_with_currency(self):
         if self.products is not None:

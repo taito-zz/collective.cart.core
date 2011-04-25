@@ -81,22 +81,31 @@ class Miscellaneous(BrowserView):
 
     def cart_id(self):
         context = aq_inner(self.context)
-        portal = getToolByName(context, 'portal_url').getPortalObject()
-        sdm = getToolByName(portal, 'session_data_manager')
-        catalog = getToolByName(portal, 'portal_catalog')
-        return getMultiAdapter((portal, sdm, catalog), IPortalSessionCatalog).cart_id
+        cart = IPortal(context).cart
+        if cart:
+            return cart.id
+#        portal = getToolByName(context, 'portal_url').getPortalObject()
+#        sdm = getToolByName(portal, 'session_data_manager')
+#        catalog = getToolByName(portal, 'portal_catalog')
+#        return getMultiAdapter((portal, sdm, catalog), IPortalSessionCatalog).cart_id
 
-    def total_price(self):
+    def set_info(self, items):
+        context = aq_inner(self.context)
+        IPortal(context).cart.info = items
+
+    def total_cost(self):
 #        return self.totals['total_cost']
         context = aq_inner(self.context)
-        iportal = IPortal(context)
-        return ICart(iportal.cart).total_cost
+        cart = IPortal(context).cart
+        if cart:
+            return str(ICart(cart).total_cost)
 
     def next_step(self):
         context = aq_inner(self.context)
-        portal = getToolByName(context, 'portal_url').getPortalObject()
-        catalog = getToolByName(portal, 'portal_catalog')
-        cfolder = getMultiAdapter((portal, catalog), IPortalCatalog).cart_folder
+#        portal = getToolByName(context, 'portal_url').getPortalObject()
+#        catalog = getToolByName(portal, 'portal_catalog')
+#        cfolder = getMultiAdapter((portal, catalog), IPortalCatalog).cart_folder
+        cfolder = IPortal(context).cart_folder
         form = cfolder.getNext_form()
         if form is not None:
             self.request.response.redirect(form.absolute_url())
