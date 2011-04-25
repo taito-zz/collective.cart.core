@@ -36,4 +36,4 @@ Once you have quickinstalled the package to Plone Site:
 
  * Now the Add To Cart button is appeared under Title of View.
  * If you add the product to cart, cart portlet appears.
- * You can check teh cart contents by clicking cart in the cart portlet.
+ * You can check the cart contents by clicking cart in the cart portlet.
