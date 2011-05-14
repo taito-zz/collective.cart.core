@@ -34,6 +34,14 @@ class Portal(object):
         self.session_cart_id = self.session.get('collective.cart.core.id')
 
     @property
+    def has_cart_folder(self):
+        context = aq_inner(self.context)
+        query = dict(
+                object_provides = ICartFolderContentType.__identifier__,
+            )
+        return self.catalog.unrestrictedSearchResults(query)
+
+    @property
     def cart_folder(self):
         context = aq_inner(self.context)
         chains = [obj for obj in aq_chain(context) if hasattr(obj, 'Type')]

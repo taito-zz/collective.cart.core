@@ -117,14 +117,21 @@ class CartConfigTypesViewlet(CartViewletBase):
                     portal_type=types,
                 )
                 if len(brains) != 0:
+                    objects = []
                     for brain in brains:
                         obj = brain.getObject()
                         if not IPotentiallyAddableToCart.providedBy(obj):
                             alsoProvides(obj, IPotentiallyAddableToCart)
-                addables = catalog(
+                    objects.append(obj)
+#                addables = catalog(
+#                    object_provides = IAddableToCart.__identifier__,
+#                )
+                
+                addables = [brain.getObject() for brain in catalog(
                     object_provides = IAddableToCart.__identifier__,
-                )
-                objs = [ad.getObject() for ad in addables if ad in brains]
+                )]
+#                objs = [ad.getObject() for ad in addables if ad in brains]
+                objs = [ad.getObject() for ad in addables if ad in objects]
                 if len(objs) != 0:
                     for obj in objs:
                         noLongerProvides(obj, [IAddableToCart, IPotentiallyAddableToCart])

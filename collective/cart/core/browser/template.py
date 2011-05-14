@@ -35,14 +35,8 @@ class CartConfigView(BrowserView):
     @property
     def has_cart_folder(self):
         context = aq_inner(self.context)
-        return IPortal(context).cart_folder
-#        try:
-#            return IPortal(context).cart_folder
-#        except AttributeError:
-#            return None
-#        portal = getToolByName(context, 'portal_url').getPortalObject()
-#        catalog = getToolByName(context, 'portal_catalog')
-#        return getMultiAdapter((portal, catalog), IPortalCatalog).cart_folder
+        return IPortal(context).has_cart_folder
+
 
 class EditProductView(BrowserView):
     template = ViewPageTemplateFile('templates/edit_product.pt')

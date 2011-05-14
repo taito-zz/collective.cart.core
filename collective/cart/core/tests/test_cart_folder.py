@@ -95,13 +95,6 @@ class IntegrationTestCase(base.TestCase):
         )
         cart08 = cfolder01['8']
         cart08.reindexObject()
-#        cfolder01.invokeFactory(
-#            'Cart',
-#            '5',
-#            title='5',
-#        )
-#        cart05 = cfolder01['5']
-#        cart05.reindexObject()
 
 
 

@@ -31,14 +31,14 @@ class Renderer(base.Renderer):
 
     render = ViewPageTemplateFile('cart.pt')
 
-#    def update( self ):
-#        pass
-
     @property
     def link_to_cart(self):
-        portal_state = getMultiAdapter((self.context, self.request), name=u'plone_portal_state')
-        portal_url = portal_state.portal_url()
-        return '%s/@@cart' % portal_url
+#        portal_state = getMultiAdapter((self.context, self.request), name=u'plone_portal_state')
+#        portal_url = portal_state.portal_url()
+#        return '%s/@@cart' % portal_url
+        context_state = getMultiAdapter((self.context, self.request), name=u'plone_context_state')
+        url = context_state.object_url()
+        return '%s/@@cart' % url
 
     @property
     def available(self):
