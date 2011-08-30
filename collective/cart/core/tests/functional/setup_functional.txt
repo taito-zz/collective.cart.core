@@ -10,9 +10,230 @@ Log in as the portal owner.
     >>> from plone.app.testing import TEST_USER_NAME, TEST_USER_PASSWORD
     >>> browser.login(TEST_USER_NAME, TEST_USER_PASSWORD)
 
-Check cart portlet
-----
+Check cart portlet.
+-------------------
     >>> 'class="portlet portletCart"' in browser.contents
+    False
+
+Check cart content.
+-------------------
+    >>> browser.open(cart_url)
+    >>> 'Cart is Empty.' in browser.contents
+    True
+
+Check Document01: There should not be 'Make Addable To Cart'
+------------------------------------------------------------
+    >>> browser.open(document01_url)
+    >>> 'make_addable_to_cart' not in browser.contents
+    True
+
+Go to Site Setup and to Cart Config
+-----------------------------------
+    >>> browser.getLink('Site Setup').click()
+    >>> browser.getLink('Cart Config').click()
+    >>> 'Warn' in browser.contents
+    True
+
+Now create Cart Folder
+----------------------
+    >>> browser.open(portal_url)
+    >>> browser.getLink(id='cartfolder').click()
+    >>> browser.getControl(name="title").value = 'CartFolder'
+    >>> browser.getControl("Save").click()
+
+If you try to add the other CartFolder, there gonna be warning.
+---------------------------------------------------------------
+    >>> browser.open(portal_url)
+    >>> browser.getLink(id='cartfolder').click()
+    >>> browser.getControl(name="title").value = 'Other Cart Folder'
+    >>> browser.getControl("Save").click()
+
+    >>> browser.open(portal_url)
+    >>> browser.getLink('Site Setup').click()
+    >>> browser.getLink('Cart Config').click()
+    >>> 'Warn' in browser.contents
+    False
+
+    >>> 'value="EUR" selected="selected"' in browser.contents
+    True
+    >>> 'value="Behind" selected="selected"' in browser.contents
+    True
+    >>> 'value="." selected="selected"' in browser.contents
+    True
+
+    >>> browser.getControl(name="currency").value = ['USD']
+    >>> browser.getControl(name="symbol_location").value = ['Front']
+    >>> browser.getControl(name="decimal_type").value = [',']
+    >>> browser.getControl(name="currency_symbol").value = '€'
+
+    >>> browser.getControl(name="form.button.UpdateCartProperties").click()
+
+    >>> 'value="USD" selected="selected"' in browser.contents
+    True
+    >>> 'value="Front" selected="selected"' in browser.contents
+    True
+    >>> 'value="," selected="selected"' in browser.contents
+    True
+    >>> '€' in browser.contents
+    True
+
+    >>> browser.getControl(name="currency").value = ['JPY']
+    >>> browser.getControl(name="symbol_location").value = ['Behind']
+    >>> browser.getControl(name="decimal_type").value = ['.']
+    >>> browser.getControl(name="currency_symbol").value = '円'
+
+    >>> browser.getControl(name="form.button.UpdateCartProperties").click()
+    >>> 'value="JPY" selected="selected"' in browser.contents
+    True
+    >>> 'value="Behind" selected="selected"' in browser.contents
+    True
+    >>> 'value="." selected="selected"' in browser.contents
+    True
+    >>> 'value="円"' in browser.contents
+    True
+
+    >>> browser.getControl(name="types").value = ['Document']
+    >>> browser.getControl(name="form.button.UpdateContentTypes").click()
+
+    >>> 'value="Document" selected="selected"' in browser.contents
+    True
+    >>> browser.getControl(name="types").value = ['Document', 'News Item']
+    >>> browser.getControl(name="form.button.UpdateContentTypes").click()
+    >>> 'value="Document" selected="selected"' in browser.contents
+    True
+    >>> 'value="News Item" selected="selected"' in browser.contents
+    True
+
+Go to Potal and add Document
+----------------------------
+    >>> browser.open(document01_url)
+    >>> 'make_addable_to_cart' in browser.contents
+    True
+    >>> 'make_not_addable_to_cart' in browser.contents
+    False
+    >>> 'Edit Product' in browser.contents
+    False
+    >>> browser.getLink(id='make_addable_to_cart').click()
+    >>> 'name="price"' in browser.contents
+    True
+    >>> 'name="stock"' in browser.contents
+    True
+    >>> 'name="max_addable_quantity"' in browser.contents
+    True
+    >>> browser.open(document01_url)
+    >>> 'make_addable_to_cart' in browser.contents
+    False
+    >>> 'make_not_addable_to_cart' in browser.contents
+    True
+    >>> 'Edit Product' in browser.contents
+    True
+    >>> browser.getLink('Edit Product').click()
+    >>> 'id="price"' in browser.contents
+    True
+    >>> 'id="stock"' in browser.contents
+    True
+    >>> 'id="max_addable_quantity"' in browser.contents
+    True
+    >>> 'id="unlimited_stock"' in browser.contents
+    True
+    >>> 'value="0.0"' in browser.contents
+    True
+    >>> 'value="on" checked="checked"' in browser.contents
+    False
+    >>> 'value="0"' in browser.contents
+    True
+    >>> 'value="100"' in browser.contents
+    True
+    >>> browser.getControl(name="price").value = '5.00'
+    >>> browser.getControl(name="unlimited_stock").value = True
+    >>> browser.getControl(name="stock").value = '25'
+    >>> browser.getControl(name="max_addable_quantity").value = '15'
+    >>> browser.getControl(name="form.button.UpdateProductBasic").click()
+    >>> 'value="5"' in browser.contents
+    True
+    >>> 'checked="checked"' in browser.contents
+    True
+    >>> 'value="25"' in browser.contents
+    True
+    >>> 'value="15"' in browser.contents
+    True
+    >>> browser.getControl(name="form.button.UpdateProductBasic").click()
+    >>> browser.getLink('View').click()
+    >>> '5 円' in browser.contents
+    True
+    >>> 'name="quantity"' in browser.contents
+    True
+    >>> 'name="form.button.AddToCart"' in browser.contents
+    True
+    >>> browser.getLink(id='make_not_addable_to_cart').click()
+    >>> 'make_addable_to_cart' in browser.contents
+    True
+    >>> 'make_not_addable_to_cart' in browser.contents
+    False
+    >>> 'Product Edit' in browser.contents
+    False
+
+
+Creat Document and see if there are 'make_addable_to_cart'
+----
+    >>> browser.open(portal_url)
+    >>> browser.getLink(id='document').click()
+    >>> browser.getControl(name="title").value = 'Document02'
+    >>> browser.getControl("Save").click()
+
+    >>> 'make_addable_to_cart' in browser.contents
+    True
+    >>> document02 = portal.document02
+    >>> document02_url = document02.absolute_url()
+
+Once again make Document01 addable to cart.
+----
+    >>> browser.open(document01_url)
+    >>> browser.getLink(id='make_addable_to_cart').click()
+    >>> browser.getLink('Edit Product').click()
+    >>> '5.0' in browser.contents
+    False
+    >>> browser.getControl(name="price").value = '5.00'
+    >>> browser.getControl(name="unlimited_stock").value = True
+    >>> browser.getControl(name="stock").value = '25'
+    >>> browser.getControl(name="max_addable_quantity").value = '15'
+    >>> browser.getControl(name="form.button.UpdateProductBasic").click()
+    >>> 'value="5"' in browser.contents
+    True
+    >>> 'checked="checked"' in browser.contents
+    True
+    >>> 'value="25"' in browser.contents
+    True
+    >>> 'value="15"' in browser.contents
+    True
+    >>> browser.getLink('View').click()
+
+    #>>> browser.getLink('Publish').click()
+    
+Now add Finnish language and check the translation.
+---------------------------------------------------
+    >>> url = '{0}/@@language-controlpanel'.format(portal_url)
+    >>> browser.open(url)
+    >>> browser.getControl(name='form.default_language').value = ['fi']
+    >>> browser.getControl(name="form.actions.save").click()
+
+Now go back to document01.
+--------------------------
+    >>> browser.open(document01_url)
+    >>> browser.openBrowser()
+
+    >>> IProduct(document01).stock
+    25
+
+    >>> browser.getControl(name="form.button.AddToCart").click()
+
+    >>> 'There was an error while rendering the portlet.' not in browser.contents
+    True
+    >>> 'class="portlet portletCart"' in browser.contents
+    True
+    >>> 'value="15"' in browser.contents
+    True
+    >>> 'value="16"' in browser.contents
     False
 
     >>> try:
@@ -21,6 +242,190 @@ Check cart portlet
     ...     print portal.error_log.getLogEntries()[0]['tb_text']
     ...     import pdb; pdb.set_trace()
 
+    >>> 'value="1" selected="selected"' in browser.contents
+    True
+    >>> 'value="15"' in browser.contents
+    True
+    >>> 'value="16"' in browser.contents
+    False
+
+Disable left column
+----
+    >>> left_column = getUtility(IPortletManager, name=u"plone.leftcolumn")
+    >>> left_assignable = getMultiAdapter((portal, left_column), IPortletAssignmentMapping)
+    >>> for name in left_assignable.keys():
+    ...     del left_assignable[name]
+
+Go to Document01 from link.
+----
+    >>> browser.getLink(id="Document01").click()
+    >>> browser.url
+    'http://nohost/plone/document01'
+
+Add some more to cart.
+----
+    >>> browser.getControl(name="quantity").value = ['2']
+    >>> browser.getControl(name="form.button.AddToCart").click()
+
+    >>> browser.open(cart_url)
+    >>> 'value="3" selected="selected"' in browser.contents
+    True
+    >>> 'value="15"' in browser.contents
+    True
+    >>> 'value="16"' in browser.contents
+    False
+
+Go to Document02 and make it addable.
+----
+    >>> browser.open(document02_url)
+    >>> browser.getLink(id='make_addable_to_cart').click()
+    >>> browser.getLink('Edit Product').click()
+    >>> browser.getControl(name="price").value = '10.00'
+    >>> browser.getControl(name="unlimited_stock").value = False
+    >>> browser.getControl(name="stock").value = '10'
+    >>> browser.getControl(name="max_addable_quantity").value = '20'
+    >>> browser.getControl(name="form.button.UpdateProductBasic").click()
+    >>> 'value="10"' in browser.contents
+    True
+    >>> 'value="11"' in browser.contents
+    False
+    >>> browser.getLink('Edit Product').click()
+    >>> browser.getControl(name="max_addable_quantity").value = '5'
+    >>> browser.getControl(name="form.button.UpdateProductBasic").click()
+    >>> 'value="6"' in browser.contents
+    False
+    >>> 'value="5"' in browser.contents
+    True
+    >>> browser.getLink('Edit Product').click()
+    >>> browser.getControl(name="max_addable_quantity").value = '20'
+    >>> browser.getControl(name="form.button.UpdateProductBasic").click()
+    >>> browser.getLink('View').click()
+    >>> browser.getLink('Publish').click()
+
+Add Document02 to Cart.
+----
+    >>> browser.getControl(name="quantity").value = ['4']
+    >>> browser.getControl(name="form.button.AddToCart").click()
+    >>> 'value="10"' in browser.contents
+    False
+    >>> 'value="6"' in browser.contents
+    True
+    >>> browser.getLink('Edit Product').click()
+    >>> browser.getControl(name="max_addable_quantity").value = '5'
+    >>> browser.getControl(name="form.button.UpdateProductBasic").click()
+    >>> browser.getLink('View').click()
+    >>> 'value="6"' in browser.contents
+    False
+    >>> 'value="5"' in browser.contents
+    True
+    >>> browser.getLink('Edit Product').click()
+    >>> browser.getControl(name="max_addable_quantity").value = '7'
+    >>> browser.getControl(name="form.button.UpdateProductBasic").click()
+    >>> browser.getLink('View').click()
+    >>> 'value="7"' in browser.contents
+    False
+    >>> 'value="6"' in browser.contents
+    True
+
+Go To Cart
+----
+    >>> browser.open(cart_url)
+
+    >>> 'value="3" selected="selected"' in browser.contents
+    True
+    >>> 'value="4" selected="selected"' in browser.contents
+    True
+
+    >>> browser.getControl(name="quantity", index=0).value = ['6']
+    >>> browser.getControl(name="form.button.UpdateCartContent", index=0).click()
+    >>> 'value="6" selected="selected"' in browser.contents
+    True
+    >>> 'value="4" selected="selected"' in browser.contents
+    True
+
+    >>> browser.open(document02_url)
+    >>> browser.getLink('Edit Product').click()
+    >>> browser.getControl(name="max_addable_quantity").value = '11'
+    >>> browser.getControl(name="form.button.UpdateProductBasic").click()
+    >>> browser.getLink('View').click()
+    >>> 'value="6"' in browser.contents
+    True
+    >>> 'value="7"' in browser.contents
+    False
+    >>> browser.open(cart_url)
+
+Delete Cart Contents
+----
+    >>> try:
+    ...     browser.getControl(name="form.button.DeleteCartContent", index=0).click()
+    ... except:
+    ...     print portal.error_log.getLogEntries()[0]['tb_text']
+    ...     import pdb; pdb.set_trace()
+
+#    >>> browser.getControl(name="form.button.DeleteCartContent", index=0).click()
+
+    >>> 'value="4" selected="selected"' in browser.contents
+    True
+    >>> 'value="10"' in browser.contents
+    True
+    >>> 'value="11"' in browser.contents
+    False
+
+    >>> browser.getControl(name="quantity", index=0).value = ['7']
+
+    >>> browser.getControl(name="form.button.UpdateCartContent", index=0).click()
+
+    >>> 'value="7" selected="selected"' in browser.contents
+    True
+    >>> 'value="10"' in browser.contents
+    True
+    >>> 'value="11"' in browser.contents
+    False
+
+    >>> try:
+    ...     browser.getControl(name="form.button.DeleteCartContent", index=0).click()
+    ... except:
+    ...     print portal.error_log.getLogEntries()[0]['tb_text']
+    ...     import pdb; pdb.set_trace()
+
+#    >>> browser.getControl(name="form.button.DeleteCartContent", index=0).click()
+
     >>> 'Cart is Empty.' in browser.contents
     True
 
+Add again to the cart.
+----
+    >>> browser.open(document02_url)
+    >>> 'value="10"' in browser.contents
+    True
+    >>> 'value="11"' in browser.contents
+    False
+    >>> browser.getControl(name="quantity", index=0).value = ['2']
+    >>> browser.getControl(name="form.button.AddToCart").click()
+    >>> 'value="8"' in browser.contents
+    True
+    >>> 'value="9"' in browser.contents
+    False
+
+#    >>> browser.getControl(name="form.button.AddToCart").click()
+
+    >>> browser.open(cart_url)
+    >>> 'value="2" selected="selected"' in browser.contents
+    True
+
+Log out
+----
+    >>> browser.getLink('Log out').click()
+    >>> browser.open(document01_url)
+    >>> browser.getControl(name="quantity", index=0).value = ['10']
+    >>> browser.getControl(name="form.button.AddToCart").click()
+
+    >>> browser.open(document02_url)
+    >>> browser.getControl(name="quantity", index=0).value = ['4']
+    >>> browser.getControl(name="form.button.AddToCart").click()
+    >>> 'value="4"' in browser.contents
+    True
+    >>> 'value="5"' in browser.contents
+    False
+
+    >>> browser.open(cart_url)

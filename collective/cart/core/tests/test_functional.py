@@ -1,3 +1,4 @@
+from Testing import ZopeTestCase as ztc
 from collective.cart.core.tests.base import FUNCTIONAL_TESTING
 from leo.testing.browser import Browser
 from plone.app.testing import setRoles
@@ -38,7 +39,7 @@ def setUp(self):
         'browser': Browser(layer['app']),
         # 'TEST_IMAGE': filename,
     })
-
+    ztc.utils.setupCoreSessions(layer['app'])
     portal = self.globs['portal']
     browser = self.globs['browser']
     portal_url = self.globs['portal_url']

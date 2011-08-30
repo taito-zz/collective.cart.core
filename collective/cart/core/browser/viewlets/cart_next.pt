@@ -1,4 +1,4 @@
-<div i18n:domain="collective.cart" id="cart-next">
+<div i18n:domain="collective.cart.core" id="cart-next">
   <form method="post"
         tal:attributes="action view/current_url">
     <input type="submit"

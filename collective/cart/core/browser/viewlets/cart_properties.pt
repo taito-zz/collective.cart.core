@@ -1,4 +1,4 @@
-<div id="cart-properties" i18n:domain="collective.cart">
+<div id="cart-properties" i18n:domain="collective.cart.core">
   <form method="post"
         tal:attributes="action view/current_url">
       <h2 i18n:translate="">Cart Properties</h2>

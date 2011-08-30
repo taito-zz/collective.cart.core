@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2011-08-30 03:22+0000\n"
+"POT-Creation-Date: 2011-08-30 18:03+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -12,10 +12,18 @@ msgstr ""
 "Language-Code: en\n"
 "Language-Name: English\n"
 "Preferred-Encodings: utf-8 latin1\n"
-"Domain: collective.cart.core\n"
+"Domain: DOMAIN\n"
 
 #: ./content/cart.py:172
 msgid ""
+msgstr ""
+
+#: ./browser/viewlets/product_values.pt:12
+msgid "Add To Cart"
+msgstr ""
+
+#: ./browser/viewlets/cart_types.pt:4
+msgid "Addable Content Types to Cart"
 msgstr ""
 
 #: ./browser/templates/cart.pt:10
@@ -29,21 +37,27 @@ msgstr ""
 msgid "Cart Config"
 msgstr ""
 
+#: ./browser/viewlets/fixed_cart_content.pt:2
+msgid "Cart Contents"
+msgstr ""
+
 #: ./content/cart.py:45
 #: ./interfaces/content_type.py:17
 msgid "Cart ID Numbering Method"
+msgstr ""
+
+#: ./browser/viewlets/cart_properties.pt:4
+msgid "Cart Properties"
 msgstr ""
 
 #: ./browser/templates/cart.pt:11
 msgid "Cart is Empty."
 msgstr ""
 
-#. Default: "CartFolder"
 #: ./profiles/default/types/CartFolder.xml
 msgid "CartFolder"
 msgstr ""
 
-#. Default: "CartProduct"
 #: ./profiles/default/types/CartProduct.xml
 msgid "CartProduct"
 msgstr ""
@@ -55,6 +69,10 @@ msgstr ""
 #: ./browser/template.py:92
 #: ./browser/viewlet.py:196
 msgid "Check this if you have unlimited amount of stock."
+msgstr ""
+
+#: ./browser/viewlets/cart_content.pt:23
+msgid "Delete"
 msgstr ""
 
 #: ./content/cart.py:239
@@ -116,6 +134,10 @@ msgstr ""
 msgid "Next Incremental Cart ID"
 msgstr ""
 
+#: ./browser/viewlets/cart_next.pt:4
+msgid "Next Step"
+msgstr ""
+
 #: ./content/cart.py:160
 msgid "Original Product UID"
 msgstr ""
@@ -126,10 +148,12 @@ msgstr ""
 
 #: ./browser/template.py:82
 #: ./browser/viewlet.py:186
-#: ./content/cart.py:171
+#: ./browser/viewlets/cart_content.pt:14
 msgid "Price"
 msgstr ""
 
+#: ./browser/viewlets/cart_content.pt:11
+#: ./browser/viewlets/fixed_cart_content.pt:6
 #: ./portlets/cart.pt:16
 msgid "Product Name"
 msgstr ""
@@ -138,8 +162,9 @@ msgstr ""
 msgid "Products Subtotal"
 msgstr ""
 
-#: ./content/cart.py:183
-#: ./portlets/cart.pt:19
+#: ./browser/viewlets/cart_content.pt:17
+#: ./browser/viewlets/fixed_cart_content.pt:12
+#: ./browser/viewlets/product_values.pt:9
 msgid "Quantity"
 msgstr ""
 
@@ -172,6 +197,11 @@ msgstr ""
 msgid "Stock"
 msgstr ""
 
+#: ./browser/viewlets/cart_content.pt:20
+#: ./browser/viewlets/fixed_cart_content.pt:15
+msgid "Subtotal"
+msgstr ""
+
 #: ./browser/viewlet.py:322
 msgid "Total Cost"
 msgstr ""
@@ -179,6 +209,12 @@ msgstr ""
 #: ./browser/template.py:91
 #: ./browser/viewlet.py:195
 msgid "Unlimited Stock"
+msgstr ""
+
+#: ./browser/viewlets/cart_content.pt:56
+#: ./browser/viewlets/cart_properties.pt:24
+#: ./browser/viewlets/cart_types.pt:11
+msgid "Update"
 msgstr ""
 
 #: ./content/cart.py:195

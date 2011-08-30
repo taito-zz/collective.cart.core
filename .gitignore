@@ -1,5 +1,7 @@
+*.backup
 *.pyc
 *.egg-info
+*.mo
 .svn
 .long-description.html
 dist

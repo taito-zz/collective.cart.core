@@ -1,4 +1,4 @@
-<div i18n:domain="collective.cart">
+<div i18n:domain="collective.cart.core">
   <h2 i18n:translate="">Cart Contents</h2>
   <table class="listing">
     <thead>

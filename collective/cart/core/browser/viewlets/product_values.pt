@@ -1,4 +1,4 @@
-<div id="product-values" i18n:domain="collective.cart">
+<div id="product-values" i18n:domain="collective.cart.core">
 <!--  <h1 i18n:translate="">Product Values</h1>-->
   <table tal:define="item view/items" class="listing">
     <thead>

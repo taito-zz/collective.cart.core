@@ -1,4 +1,4 @@
-<div i18n:domain="collective.cart" tal:condition="view/products">
+<div i18n:domain="collective.cart.core" tal:condition="view/products">
     <table class="listing">
       <thead>
         <tr>
