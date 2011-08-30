@@ -4,7 +4,8 @@ import os
 def read(*rnames):
     return open(os.path.join(os.path.dirname(__file__), *rnames)).read()
 
-version = read('collective', 'cart', 'core', 'version.txt')[:-1]
+# version = read('collective', 'cart', 'core', 'version.txt')[:-1]
+version = read('collective', 'cart', 'core', 'version.txt').strip()
 
 long_description = (
     open("README.txt").read() + "\n" +
@@ -26,14 +27,18 @@ setup(name='collective.cart.core',
       keywords='',
       author='Taito Horiuchi',
       author_email='taito.horiuchi@gmail.com',
-      url='http://svn.plone.org/svn/collective/',
-      license='GPL',
+      url='https://github.com/taito/collective.cart.core',
+      license='BSD',
       packages=find_packages(exclude=['ez_setup']),
       namespace_packages=['collective', 'collective.cart'],
       include_package_data=True,
       zip_safe=False,
       install_requires=[
+          'leo.testing',
+          'mock',
+          'pycountry',
           'setuptools',
+          'unittest2',
       ],
       entry_points="""
       # -*- Entry points: -*-

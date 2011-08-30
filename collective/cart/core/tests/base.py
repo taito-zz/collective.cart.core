@@ -1,35 +1,49 @@
-try:
-    from Zope2.App import zcml
-except ImportError:
-    from Products.Five import zcml
-from Products.Five import fiveconfigure
-from Testing import ZopeTestCase as ztc
-from Products.PloneTestCase import PloneTestCase as ptc
-from Products.PloneTestCase.layer import onsetup
+"""Base module for unittesting"""
 
-@onsetup
-def setup_product():
+import unittest2 as unittest
 
-    fiveconfigure.debug_mode = True
-    import collective.cart.core
-    zcml.load_config('configure.zcml', collective.cart.core)
-
-    fiveconfigure.debug_mode = False
-
-    ztc.installPackage('collective.cart.core')
-
-setup_product()
-ptc.setupPloneSite(products=['collective.cart.core',])
-
-class TestCase(ptc.PloneTestCase):
-    """We use this base class for all the tests in this package. If
-    necessary, we can put common utility or setup code in here. This
-    applies to unit test cases.
-    """
+from plone.app.testing import FunctionalTesting
+from plone.app.testing import IntegrationTesting
+from plone.app.testing import PLONE_FIXTURE
+from plone.app.testing import PloneSandboxLayer
+from plone.testing import z2
 
 
-class FunctionalTestCase(ptc.FunctionalTestCase):
-    """We use this class for functional integration tests that use
-    doctest syntax. Again, we can put basic common utility or setup
-    code in here.
-    """
+class CartCoreLayer(PloneSandboxLayer):
+
+    defaultBases = (PLONE_FIXTURE,)
+
+    def setUpZope(self, app, configurationContext):
+        """Set up Zope."""
+        # Load ZCML
+        import collective.cart.core
+        self.loadZCML(package=collective.cart.core)
+        z2.installProduct(app, 'collective.cart.core')
+
+    def setUpPloneSite(self, portal):
+        """Set up Plone."""
+        # Install into Plone site using portal_setup
+        self.applyProfile(portal, 'collective.cart.core:default')
+
+    def tearDownZope(self, app):
+        """Tear down Zope."""
+        z2.uninstallProduct(app, 'collective.cart.core')
+
+
+FIXTURE = CartCoreLayer()
+INTEGRATION_TESTING = IntegrationTesting(
+    bases=(FIXTURE,), name="CartCoreLayer:Integration")
+FUNCTIONAL_TESTING = FunctionalTesting(
+    bases=(FIXTURE,), name="CartCoreLayer:Functional")
+
+
+class IntegrationTestCase(unittest.TestCase):
+    """Base class for integration tests."""
+
+    layer = INTEGRATION_TESTING
+
+
+class FunctionalTestCase(unittest.TestCase):
+    """Base class for functional tests."""
+
+    layer = FUNCTIONAL_TESTING

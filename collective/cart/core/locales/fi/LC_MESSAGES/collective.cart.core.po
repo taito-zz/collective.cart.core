@@ -1,0 +1,196 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: YEAR-MO-DA HO:MI +ZONE\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0\n"
+"Language-Code: fi\n"
+"Language-Name: Finnish\n"
+"Preferred-Encodings: utf-8 latin1\n"
+"Domain: collective.cart.core\n"
+
+#: ./browser/templates/cart.pt:10
+#: ./portlets/cart.pt:6
+#: ./portlets/cart.py:27
+msgid "Cart"
+msgstr ""
+
+#: ./browser/templates/cart_config.pt:10
+#: ./profiles/default/controlpanel.xml
+msgid "Cart Config"
+msgstr ""
+
+#: ./content/cart.py:45
+#: ./interfaces/content_type.py:17
+msgid "Cart ID Numbering Method"
+msgstr ""
+
+#: ./browser/templates/cart.pt:11
+msgid "Cart is Empty."
+msgstr ""
+
+#. Default: "CartFolder"
+#: ./profiles/default/types/CartFolder.xml
+msgid "CartFolder"
+msgstr ""
+
+#. Default: "CartProduct"
+#: ./profiles/default/types/CartProduct.xml
+msgid "CartProduct"
+msgstr ""
+
+#: ./portlets/cart.pt:47
+msgid "Check Cart"
+msgstr ""
+
+#: ./browser/template.py:92
+#: ./browser/viewlet.py:196
+msgid "Check this if you have unlimited amount of stock."
+msgstr ""
+
+#: ./content/cart.py:239
+msgid "Depth"
+msgstr ""
+
+#: ./content/cart.py:250
+msgid "Dimension"
+msgstr ""
+
+#: ./profiles/default/actions.xml
+msgid "Edit Product"
+msgstr ""
+
+#: ./content/cart.py:217
+msgid "Height"
+msgstr ""
+
+#: ./content/cart.py:61
+#: ./interfaces/content_type.py:26
+msgid "If Incrementanl Cart ID is seleceted, give interger number here."
+msgstr ""
+
+#: ./content/cart.py:74
+#: ./interfaces/content_type.py:33
+msgid "If Random Cart ID is selected, give integer digits here."
+msgstr ""
+
+#: ./profiles/default/actions.xml
+msgid "Make Addable To Cart"
+msgstr ""
+
+#: ./profiles/default/actions.xml
+msgid "Make Cart Aware"
+msgstr ""
+
+#: ./profiles/default/actions.xml
+msgid "Make Not Addable To Cart"
+msgstr ""
+
+#: ./profiles/default/actions.xml
+msgid "Make Not Cart Aware"
+msgstr ""
+
+#: ./browser/template.py:103
+#: ./browser/viewlet.py:207
+msgid "Maximum Addable Quantity"
+msgstr ""
+
+#: ./content/cart.py:103
+msgid "Next Form"
+msgstr ""
+
+#: ./interfaces/content_type.py:25
+msgid "Next Incremenatal Cart ID"
+msgstr ""
+
+#: ./content/cart.py:60
+msgid "Next Incremental Cart ID"
+msgstr ""
+
+#: ./content/cart.py:160
+msgid "Original Product UID"
+msgstr ""
+
+#: ./browser/template.py:31
+msgid "Please add CartFolder first."
+msgstr ""
+
+#: ./browser/template.py:82
+#: ./browser/viewlet.py:186
+#: ./content/cart.py:171
+msgid "Price"
+msgstr ""
+
+#: ./portlets/cart.pt:16
+msgid "Product Name"
+msgstr ""
+
+#: ./browser/viewlet.py:310
+msgid "Products Subtotal"
+msgstr ""
+
+#: ./content/cart.py:183
+#: ./portlets/cart.pt:19
+msgid "Quantity"
+msgstr ""
+
+#: ./content/cart.py:86
+#: ./interfaces/content_type.py:39
+msgid "Quantity Method"
+msgstr ""
+
+#: ./content/cart.py:73
+#: ./interfaces/content_type.py:32
+msgid "Random Digits Cart ID"
+msgstr ""
+
+#: ./content/cart.py:46
+#: ./interfaces/content_type.py:18
+msgid "Select Incremental or Random for Cart ID Numbering."
+msgstr ""
+
+#: ./content/cart.py:104
+msgid "Select next form for check out. Only FormFolder from PloneFormGen is available."
+msgstr ""
+
+#: ./content/cart.py:87
+#: ./interfaces/content_type.py:40
+msgid "Select one method, Select or Input to determine how to put products into cart."
+msgstr ""
+
+#: ./browser/template.py:97
+#: ./browser/viewlet.py:201
+msgid "Stock"
+msgstr ""
+
+#: ./browser/viewlet.py:322
+msgid "Total Cost"
+msgstr ""
+
+#: ./browser/template.py:91
+#: ./browser/viewlet.py:195
+msgid "Unlimited Stock"
+msgstr ""
+
+#: ./content/cart.py:195
+msgid "Weight"
+msgstr ""
+
+#: ./content/cart.py:206
+msgid "Weight Unit"
+msgstr ""
+
+#: ./content/cart.py:228
+msgid "Width"
+msgstr ""
+
+#: ./browser/template.py:104
+#: ./browser/viewlet.py:208
+msgid "You need to specify this if you checked Unlimited Stock."
+msgstr ""
+
