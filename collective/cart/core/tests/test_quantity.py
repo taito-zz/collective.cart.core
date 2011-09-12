@@ -48,20 +48,10 @@ def setUp(self):
 
     setRoles(portal, TEST_USER_ID, ['Manager'])
 
-    # portal.invokeFactory(
-    #     'Document',
-    #     'document01',
-    #     title='Document01'
-    # )
-    # portal.document01.reindexObject()
-
-    # self.setRoles(('Manager',))
-    ## Set up sessioning objects
-    # ztc.utils.setupCoreSessions(self.app)
-    # wftool = getToolByName(portal, 'portal_workflow')
     portal.invokeFactory(
         'CartFolder',
         'cfolder',
+        title='CartFolder',
     )
     cfolder = portal.cfolder
     cfolder.reindexObject()

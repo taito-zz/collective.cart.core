@@ -75,17 +75,6 @@ class CartConfigPropertiesViewlet(CartViewletBase):
         context = aq_inner(self.context)
         return IPortal(context).cart_properties.select_field('cart_id_method', ['Incremental', 'Random'])
 
-#    @property
-#    def next_cart_id(self):
-#        context = aq_inner(self.context)
-#        portal = getToolByName(context, 'portal_url').getPortalObject()
-#        catalog = getToolByName(context, 'portal_catalog')
-#        cfolder = getMultiAdapter((portal, catalog), IPortalCatalog).cart_folder
-#        if cfolder is not None:
-#            return cfolder.next_incremental_cart_id
-#        else:
-#            return 1
-
     @property
     def random_cart_id_digits(self):
         context = aq_inner(self.context)
@@ -209,36 +198,6 @@ class EditProductViewlet(CartViewletBase):
             field = '<input type="text" name="max_addable_quantity" id="max_addable_quantity" value="%s" size="5" />' % product.max_addable_quantity,
         )
         res.append(max_addable_quantity)
-#        weight_unit = dict(
-#            label = _(u'Weight Unit'),
-#            description = _('Select Weight Unit.'),
-#            field = self.select_weight_unit(product),
-#        )
-#        res.append(weight_unit)
-#        weight =dict(
-#            label = _('Weight'),
-#            description = _('Input Weight.'),
-#            field = '<input type="text" name="weight" id="weight" value="%s" size="5" />' % product.weight,
-#        )
-#        res.append(weight)
-#        height =dict(
-#            label = _('Height'),
-#            description = _('Input Height in cm unit.'),
-#            field = '<input type="text" name="height" id="height" value="%s" size="5" />' % product.height,
-#        )
-#        res.append(height)
-#        width = dict(
-#            label = _('Width'),
-#            description = _('Input Width in cm unit.'),
-#            field = '<input type="text" name="width" id="width" value="%s" size="5" />' % product.width,
-#        )
-#        res.append(width)
-#        depth = dict(
-#            label = _('Depth'),
-#            description = _('Input Depth in cm unit.'),
-#            field = '<input type="text" name="depth" id="depth" value="%s" size="5" />' % product.depth,
-#        )
-#        res.append(depth)
         return res
 
 
@@ -322,9 +281,6 @@ class CartTotalCostViewlet(CartTotalsProductsViewlet):
         return _(u'Total Cost')
 
     def total(self):
-#        context = aq_inner(self.context)
-#        totals = context.restrictedTraverse('totals')()
-#        return totals['total_cost_with_currency']
         context = aq_inner(self.context)
         iportal = IPortal(context)
         price = ICart(iportal.cart).total_cost
@@ -348,7 +304,6 @@ class FixedInfoViewlet(CartViewletBase):
         context = aq_inner(self.context)
         portal = getToolByName(context, 'portal_url').getPortalObject()
         return portal.restrictedTraverse('products')()
-#        return self.context.restrictedTraverse('products')()
 
 class FixedCartContentViewlet(CartContentsViewlet):
 
@@ -367,27 +322,6 @@ class FixedCartContentViewlet(CartContentsViewlet):
         context = aq_inner(self.context)
         portal = getToolByName(context, 'portal_url').getPortalObject()
         return portal.restrictedTraverse('products')()
-#        products = self.context.restrictedTraverse('has-cart-contents')()
-#        if products is not None:
-#            res = []
-#            context = aq_inner(self.context)
-#            catalog = getToolByName(context, 'portal_catalog')
-#            portal = getToolByName(context, 'portal_url').getPortalObject()
-#            properties = getToolByName(portal, 'portal_properties')
-#            pcp = IPortalCartProperties(properties)
-#            for product in products:
-#                cpo = getMultiAdapter((product, catalog), ICartProductOriginal)
-#                cpa = ICartProductAdapter(product)
-#                item = dict(
-#                    title = cpa.title,
-#                    quantity = cpa.quantity,
-#                    uid = cpa.uid,
-#                    url = cpo.url,
-#                    price_with_currency = pcp.price_with_currency(cpa.price),
-#                    subtotal_with_currency = pcp.price_with_currency(cpa.subtotal),
-#                )
-#                res.append(item)
-#            return res
 
     def totals_with_currency(self):
         if self.products is not None:

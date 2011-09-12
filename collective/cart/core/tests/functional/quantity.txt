@@ -33,6 +33,7 @@ Log in and change the Quantity Method
     >>> browser.getLink('Edit').click()
     >>> browser.getControl(name="quantity_method").value = ['Input']
     >>> browser.getControl('Save').click()
+    >>> browser.openBrowser()
 
 Log out and got to Product01.
 ------------------------------
@@ -43,7 +44,6 @@ Log out and got to Product01.
     ...     print portal.error_log.getLogEntries()[0]['tb_text']
     ...     import pdb; pdb.set_trace()
     >>> browser.open(cart_url)
-    >>> browser.openBrowser()
     >>> 'name="quantity" size="3" value="4"' in browser.contents
     True
 
