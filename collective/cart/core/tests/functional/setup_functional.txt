@@ -216,11 +216,21 @@ Now add Finnish language and check the translation.
     >>> browser.open(url)
     >>> browser.getControl(name='form.default_language').value = ['fi']
     >>> browser.getControl(name="form.actions.save").click()
+    >>> 'Pääsivu' in browser.contents
+    False
+    >>> browser.open(portal_url)
+    >>> 'Pääsivu' in browser.contents
+    True
+
+Back to English Site
+--------------------
+    >>> browser.open(url)
+    >>> browser.getControl(name='form.default_language').value = ['en']
+    >>> browser.getControl(name="form.actions.save").click()
 
 Now go back to document01.
 --------------------------
     >>> browser.open(document01_url)
-    >>> browser.openBrowser()
 
     >>> IProduct(document01).stock
     25
@@ -251,10 +261,7 @@ Now go back to document01.
 
 Disable left column
 ----
-    >>> left_column = getUtility(IPortletManager, name=u"plone.leftcolumn")
-    >>> left_assignable = getMultiAdapter((portal, left_column), IPortletAssignmentMapping)
-    >>> for name in left_assignable.keys():
-    ...     del left_assignable[name]
+#    >>> browser.deletePortletManager(portal, u"plone.leftcolumn")
 
 Go to Document01 from link.
 ----
@@ -300,7 +307,6 @@ Go to Document02 and make it addable.
     >>> browser.getControl(name="max_addable_quantity").value = '20'
     >>> browser.getControl(name="form.button.UpdateProductBasic").click()
     >>> browser.getLink('View').click()
-    >>> browser.getLink('Publish').click()
 
 Add Document02 to Cart.
 ----
@@ -362,8 +368,6 @@ Delete Cart Contents
     ...     print portal.error_log.getLogEntries()[0]['tb_text']
     ...     import pdb; pdb.set_trace()
 
-#    >>> browser.getControl(name="form.button.DeleteCartContent", index=0).click()
-
     >>> 'value="4" selected="selected"' in browser.contents
     True
     >>> 'value="10"' in browser.contents
@@ -388,8 +392,6 @@ Delete Cart Contents
     ...     print portal.error_log.getLogEntries()[0]['tb_text']
     ...     import pdb; pdb.set_trace()
 
-#    >>> browser.getControl(name="form.button.DeleteCartContent", index=0).click()
-
     >>> 'Cart is Empty.' in browser.contents
     True
 
@@ -407,7 +409,6 @@ Add again to the cart.
     >>> 'value="9"' in browser.contents
     False
 
-#    >>> browser.getControl(name="form.button.AddToCart").click()
 
     >>> browser.open(cart_url)
     >>> 'value="2" selected="selected"' in browser.contents
