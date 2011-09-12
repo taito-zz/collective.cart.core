@@ -1,13 +1,12 @@
+from collective.cart.core.config import CURRENCY_DECIMAL
+from collective.cart.core.interfaces import IDecimalPlaces
+from collective.cart.core.interfaces import IPrice
+from collective.cart.core.interfaces import IPriceInString
+from collective.cart.core.interfaces import IPriceWithCurrency
+from decimal import Decimal
+from decimal import ROUND_HALF_UP
 from zope.component import getUtility
 from zope.interface import implements
-from collective.cart.core.config import CURRENCY_DECIMAL
-from collective.cart.core.interfaces import (
-    IDecimalPlaces,
-    IPrice,
-    IPriceInString,
-    IPriceWithCurrency,
-)
-from decimal import Decimal, ROUND_HALF_UP
 
 
 class Price(object):
@@ -63,6 +62,7 @@ class PriceInString(object):
             price = price.replace('.', ',')
         return price
 
+
 class PriceWithCurrency(object):
 
     implements(IPriceWithCurrency)
@@ -75,9 +75,9 @@ class PriceWithCurrency(object):
             price = price.replace('.', ',')
         symbol = symbol or currency
         if position == 'front':
-            return '%s %s' %(symbol, price)
+            return '%s %s' % (symbol, price)
         else:
-            return '%s %s' %(price, symbol)
+            return '%s %s' % (price, symbol)
 
 
 class DecimalPlaces(object):

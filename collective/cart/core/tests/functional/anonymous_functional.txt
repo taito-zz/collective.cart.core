@@ -22,8 +22,6 @@ Log in as the portal owner.
     ...     print portal.error_log.getLogEntries()[0]['tb_text']
     ...     import pdb; pdb.set_trace()
 
-#    >>> browser.getLink('Cart Config').click()
-
     >>> cfolder.next_incremental_cart_id
     1
 
@@ -91,11 +89,6 @@ Go to cfolder
     >>> browser.open(cart2_url)
     >>> product1 = cart['1']
 
-#    >>> product1_url = product1.absolute_url()
-#    >>> browser.open(product1_url)
-#    >>> browser.url
-#    'http://nohost/plone/cfolder/2/1'
-
 Go to cart
 ----
     >>> browser.open(cart_url)
@@ -145,4 +138,3 @@ Go to cart
 Go To Next Step
 ----
     >>> browser.getControl(name="form.button.NextStep").click()
-    >>> browser.openBrowser()

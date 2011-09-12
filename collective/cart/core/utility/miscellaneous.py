@@ -1,13 +1,12 @@
-import re
+from collective.cart.core.error import InfiniteLoopError
+from collective.cart.core.interfaces import IRandomDigits
+from collective.cart.core.interfaces import IRegularExpression
+from collective.cart.core.interfaces import ISelectRange
 from random import choice
 from string import digits
 from zope.interface import implements
-from collective.cart.core.error import InfiniteLoopError
-from collective.cart.core.interfaces import (
-    IRandomDigits,
-    IRegularExpression,
-    ISelectRange,
-)
+
+import re
 
 
 class SelectRange(object):
@@ -16,6 +15,7 @@ class SelectRange(object):
     def __call__(self, number):
         if number is not None and number > 0:
             return range(1, number + 1)
+
 
 class RandomDigits(object):
     implements(IRandomDigits)
@@ -38,6 +38,7 @@ class RandomDigits(object):
             digits = self.random_number(number)
         else:
             return digits
+
 
 class RegularExpression(object):
 

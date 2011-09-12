@@ -1,13 +1,13 @@
-from Acquisition import aq_inner, aq_parent
+from Acquisition import aq_inner
+from Acquisition import aq_parent
+from Products.ATContentTypes.content.base import ATCTContent
+from Products.Archetypes.interfaces import IObjectInitializedEvent
+from Products.CMFCore.utils import getToolByName
+from collective.cart.core.interfaces import ICartFolderContentType
+from collective.cart.core.interfaces import IPotentiallyAddableToCart
 from zope.component import adapter
 from zope.interface import alsoProvides
-from Products.CMFCore.utils import getToolByName
-from Products.Archetypes.interfaces import IObjectInitializedEvent
-from Products.ATContentTypes.content.base import ATCTContent
-from collective.cart.core.interfaces import (
-    ICartFolderContentType,
-    IPotentiallyAddableToCart,
-)
+
 
 @adapter(ATCTContent, IObjectInitializedEvent)
 def addable_to_cart(context, event):
@@ -16,6 +16,7 @@ def addable_to_cart(context, event):
         return
     alsoProvides(context, IPotentiallyAddableToCart)
     context.reindexObject()
+
 
 @adapter(ICartFolderContentType, IObjectInitializedEvent)
 def delete_old_cart_folder(context, event):
@@ -39,4 +40,3 @@ def delete_old_cart_folder(context, event):
     ## Make the content language neutral
     if context.getField('language').get(context) != '':
         context.getField('language').set(context, '')
-

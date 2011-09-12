@@ -1,19 +1,20 @@
-from Acquisition import aq_inner, aq_parent
-from zope.annotation.interfaces import IAnnotations
-from zope.component import getMultiAdapter
-from zope.interface import alsoProvides, noLongerProvides
+from Acquisition import aq_inner
+from Acquisition import aq_parent
 from Products.CMFCore.utils import getToolByName
 from Products.Five.browser import BrowserView
 from collective.cart.core.content.product import ProductAnnotations
-from collective.cart.core.interfaces import (
-    IAddableToCart,
-    ICart,
-    ICartAware,
-    ICartProduct,
-    IPortal,
-    IPortalCartProperties,
-    IPotentiallyAddableToCart,
-)
+from collective.cart.core.interfaces import IAddableToCart
+from collective.cart.core.interfaces import ICart
+from collective.cart.core.interfaces import ICartAware
+from collective.cart.core.interfaces import ICartProduct
+from collective.cart.core.interfaces import IPortal
+from collective.cart.core.interfaces import IPortalCartProperties
+from collective.cart.core.interfaces import IPotentiallyAddableToCart
+from zope.annotation.interfaces import IAnnotations
+from zope.component import getMultiAdapter
+from zope.interface import alsoProvides
+from zope.interface import noLongerProvides
+
 
 class Miscellaneous(BrowserView):
 
@@ -29,7 +30,7 @@ class Miscellaneous(BrowserView):
         context = aq_inner(self.context)
         if IPotentiallyAddableToCart.providedBy(context):
             alsoProvides(context, IAddableToCart)
-            url = '%s/@@edit-product' %context.absolute_url()
+            url = '%s/@@edit-product' % context.absolute_url()
             IAnnotations(context)['collective.cart.core'] = ProductAnnotations()
             return self.request.response.redirect(url)
 
@@ -52,49 +53,28 @@ class Miscellaneous(BrowserView):
                 for product in products:
                     cproduct = ICartProduct(product)
                     item = dict(
-                        uid = product.uid,
-                        title = product.title,
-                        quantity = product.quantity,
-                        url = cproduct.product.url,
-                        price_with_currency = pcp.price_with_currency(cproduct.price),
-                        html_quantity = cproduct.html_quantity,
-                        subtotal_with_currency = pcp.price_with_currency(cproduct.subtotal),
+                        uid=product.uid,
+                        title=product.title,
+                        quantity=product.quantity,
+                        url=cproduct.product.url,
+                        price_with_currency=pcp.price_with_currency(cproduct.price),
+                        html_quantity=cproduct.html_quantity,
+                        subtotal_with_currency=pcp.price_with_currency(cproduct.subtotal),
                     )
                     res.append(item)
                 return res
-
-#    def totals(self):
-#        if self.products():
-#            context = aq_inner(self.context)
-#            cart = IPortal(context).cart
-#            icart = ICart(cart)
-#            properties = getToolByName(context, 'portal_properties')
-#            pcp = IPortalCartProperties(properties)
-#            data = dict(
-#                products_subtotal = icart.subtotal,
-#                products_subtotal_with_currency = pcp.price_with_currency(icart.subtotal),
-#                total_cost = icart.total_cost,
-#                total_cost_with_currency = pcp.price_with_currency(icart.total_cost),
-#            )
-#            return data
-
 
     def cart_id(self):
         context = aq_inner(self.context)
         cart = IPortal(context).cart
         if cart:
             return cart.id
-#        portal = getToolByName(context, 'portal_url').getPortalObject()
-#        sdm = getToolByName(portal, 'session_data_manager')
-#        catalog = getToolByName(portal, 'portal_catalog')
-#        return getMultiAdapter((portal, sdm, catalog), IPortalSessionCatalog).cart_id
 
     def set_info(self, items):
         context = aq_inner(self.context)
         IPortal(context).cart.info = items
 
     def total_cost(self):
-#        return self.totals['total_cost']
         context = aq_inner(self.context)
         cart = IPortal(context).cart
         if cart:
@@ -102,9 +82,6 @@ class Miscellaneous(BrowserView):
 
     def next_step(self):
         context = aq_inner(self.context)
-#        portal = getToolByName(context, 'portal_url').getPortalObject()
-#        catalog = getToolByName(portal, 'portal_catalog')
-#        cfolder = getMultiAdapter((portal, catalog), IPortalCatalog).cart_folder
         cfolder = IPortal(context).cart_folder
         form = cfolder.getNext_form()
         if form is not None:
@@ -136,4 +113,3 @@ class Miscellaneous(BrowserView):
     def is_cart_aware(self):
         context = aq_inner(self.context)
         return ICartAware.providedBy(context)
-

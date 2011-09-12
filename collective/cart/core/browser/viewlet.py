@@ -1,20 +1,18 @@
-from zope.component import getMultiAdapter, getUtility
-from zope.schema.interfaces import IVocabularyFactory
-from zope.interface import alsoProvides, noLongerProvides
 from Acquisition import aq_inner
-from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.CMFCore.utils import getToolByName
-from plone.app.layout.viewlets.common import ViewletBase
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from collective.cart.core import CartMessageFactory as _
-from collective.cart.core.interfaces import (
-    IAddableToCart,
-    ICart,
-    IPortal,
-    IPortalCartProperties,
-    IPotentiallyAddableToCart,
-    IProduct,
-    IRegularExpression,
-)
+from collective.cart.core.interfaces import IAddableToCart
+from collective.cart.core.interfaces import ICart
+from collective.cart.core.interfaces import IPortal
+from collective.cart.core.interfaces import IPortalCartProperties
+from collective.cart.core.interfaces import IPotentiallyAddableToCart
+from collective.cart.core.interfaces import IProduct
+from collective.cart.core.interfaces import IRegularExpression
+from plone.app.layout.viewlets.common import ViewletBase
+from zope.component import getMultiAdapter, getUtility
+from zope.interface import alsoProvides, noLongerProvides
+from zope.schema.interfaces import IVocabularyFactory
 
 
 class CartViewletBase(ViewletBase):
@@ -25,6 +23,7 @@ class CartViewletBase(ViewletBase):
         context_state = getMultiAdapter((self.context, self.request),
                                             name=u'plone_context_state')
         return context_state.current_page_url()
+
 
 class CartConfigPropertiesViewlet(CartViewletBase):
     """Properties Viewlet for Cart Config."""
@@ -52,7 +51,7 @@ class CartConfigPropertiesViewlet(CartViewletBase):
     @property
     def currency(self):
         context = aq_inner(self.context)
-        
+
         return IPortal(context).cart_properties.select_field('currency', ['EUR', 'USD', 'JPY'])
 
     @property
@@ -115,9 +114,8 @@ class CartConfigTypesViewlet(CartViewletBase):
 #                addables = catalog(
 #                    object_provides = IAddableToCart.__identifier__,
 #                )
-                
                 addables = [brain.getObject() for brain in catalog(
-                    object_provides = IAddableToCart.__identifier__,
+                    object_provides=IAddableToCart.__identifier__,
                 )]
 #                objs = [ad.getObject() for ad in addables if ad in brains]
                 objs = [ad.getObject() for ad in addables if ad in objects]
@@ -134,9 +132,9 @@ class CartConfigTypesViewlet(CartViewletBase):
         html = '<select id="types" name="types" size="5" multiple="multiple">'
         for typ in types:
             if sct is not None and typ in sct:
-                html += '<option value="%s" selected="selected">%s</option>' %(typ, typ)
+                html += '<option value="%s" selected="selected">%s</option>' % (typ, typ)
             else:
-                html += '<option value="%s">%s</option>' %(typ, typ)
+                html += '<option value="%s">%s</option>' % (typ, typ)
         html += '</select>'
         return html
 
@@ -172,30 +170,30 @@ class EditProductViewlet(CartViewletBase):
         product = IProduct(context)
         res = []
         price = dict(
-            label = _(u'Price'),
-            description = 'Input Price.',
-            field = '<input type="text" name="price" id="price" value="%s" size="6" />' %product.price,
+            label=_(u'Price'),
+            description='Input Price.',
+            field='<input type="text" name="price" id="price" value="%s" size="6" />' % product.price,
         )
         res.append(price)
         unlimited_stock_field = '<input type="checkbox" name="unlimited_stock" id="unlimited_stock" value="on" />'
         if product.unlimited_stock == True:
             unlimited_stock_field = '<input type="checkbox" name="unlimited_stock" id="unlimited_stock" value="on" checked="checked" />'
         unlimited_stock = dict(
-            label = _(u'Unlimited Stock'),
-            description = _(u'Check this if you have unlimited amount of stock.'),
-            field = unlimited_stock_field,
+            label=_(u'Unlimited Stock'),
+            description=_(u'Check this if you have unlimited amount of stock.'),
+            field=unlimited_stock_field,
         )
         res.append(unlimited_stock)
         stock = dict(
-            label = _(u'Stock'),
-            description = 'Input Stock.',
-            field = '<input type="text" name="stock" id="stock" value="%s" size="5" />' %product.stock,
+            label=_(u'Stock'),
+            description='Input Stock.',
+            field='<input type="text" name="stock" id="stock" value="%s" size="5" />' % product.stock,
         )
         res.append(stock)
         max_addable_quantity = dict(
-            label = _(u'Maximum Addable Quantity'),
-            description = _('You need to specify this if you checked Unlimited Stock.'),
-            field = '<input type="text" name="max_addable_quantity" id="max_addable_quantity" value="%s" size="5" />' % product.max_addable_quantity,
+            label=_(u'Maximum Addable Quantity'),
+            description=_('You need to specify this if you checked Unlimited Stock.'),
+            field='<input type="text" name="max_addable_quantity" id="max_addable_quantity" value="%s" size="5" />' % product.max_addable_quantity,
         )
         res.append(max_addable_quantity)
         return res
@@ -214,7 +212,7 @@ class CartProductValuesViewlet(CartViewletBase):
             if re.integer(quantity):
                 context = aq_inner(self.context)
                 IPortal(context).add_to_cart(form)
-                return self.request.response.redirect(self.current_url) 
+                return self.request.response.redirect(self.current_url)
 
     def items(self):
         context = aq_inner(self.context)
@@ -222,9 +220,9 @@ class CartProductValuesViewlet(CartViewletBase):
         pcp = IPortalCartProperties(properties)
         product = IProduct(context)
         res = dict(
-            uid = product.uid,
-            html_quantity = product.html_quantity,
-            price_with_currency = pcp.price_with_currency(product.price),
+            uid=product.uid,
+            html_quantity=product.html_quantity,
+            price_with_currency=pcp.price_with_currency(product.price),
         )
         return res
 
@@ -286,6 +284,7 @@ class CartTotalCostViewlet(CartTotalsProductsViewlet):
         price = ICart(iportal.cart).total_cost
         return iportal.cart_properties.price_with_currency(price)
 
+
 class NextStepViewlet(CartViewletBase):
 
     index = render = ViewPageTemplateFile("viewlets/cart_next.pt")
@@ -296,6 +295,7 @@ class NextStepViewlet(CartViewletBase):
         if form.get('form.button.NextStep', None) is not None:
             return context.restrictedTraverse('next-step')()
 
+
 class FixedInfoViewlet(CartViewletBase):
 
     index = render = ViewPageTemplateFile("viewlets/fixed_info.pt")
@@ -304,6 +304,7 @@ class FixedInfoViewlet(CartViewletBase):
         context = aq_inner(self.context)
         portal = getToolByName(context, 'portal_url').getPortalObject()
         return portal.restrictedTraverse('products')()
+
 
 class FixedCartContentViewlet(CartContentsViewlet):
 

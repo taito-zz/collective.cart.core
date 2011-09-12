@@ -1,37 +1,29 @@
-from persistent.dict import PersistentDict
-from zope.interface import implements
 from Products.ATContentTypes.content.base import ATCTContent
-from Products.ATContentTypes.content.folder import ATFolder, ATFolderSchema
-from Products.ATContentTypes.content.schemata import ATContentTypeSchema, finalizeATCTSchema
 from Products.ATContentTypes.content.base import registerATCT
-
-try:
-    ## Plone4
-    from archetypes.referencebrowserwidget.widget import ReferenceBrowserWidget
-except ImportError:
-    ## Plone3
-    from Products.ATReferenceBrowserWidget.ATReferenceBrowserWidget import ReferenceBrowserWidget
-
-from Products.Archetypes.public import (
-    AnnotationStorage,
-    ATFieldProperty,
-    Schema,
-    FloatField,
-    IntegerField,
-    ReferenceField,
-    StringField,
-    DecimalWidget,
-    IntegerWidget,
-    SelectionWidget,
-    StringWidget,
-)
+from Products.ATContentTypes.content.folder import ATFolder
+from Products.ATContentTypes.content.folder import ATFolderSchema
+from Products.ATContentTypes.content.schemata import ATContentTypeSchema
+from Products.ATContentTypes.content.schemata import finalizeATCTSchema
+from Products.Archetypes.public import ATFieldProperty
+from Products.Archetypes.public import AnnotationStorage
+from Products.Archetypes.public import DecimalWidget
+from Products.Archetypes.public import FloatField
+from Products.Archetypes.public import IntegerField
+from Products.Archetypes.public import IntegerWidget
+from Products.Archetypes.public import ReferenceField
+from Products.Archetypes.public import Schema
+from Products.Archetypes.public import SelectionWidget
+from Products.Archetypes.public import StringField
+from Products.Archetypes.public import StringWidget
+from archetypes.referencebrowserwidget.widget import ReferenceBrowserWidget
 from collective.cart.core import CartMessageFactory as _
 from collective.cart.core import PROJECTNAME
-from collective.cart.core.interfaces import (
-    ICartContentType,
-    ICartFolderContentType,
-    ICartProductContentType,
-)
+from collective.cart.core.interfaces import ICartContentType
+from collective.cart.core.interfaces import ICartFolderContentType
+from collective.cart.core.interfaces import ICartProductContentType
+from persistent.dict import PersistentDict
+from zope.interface import implements
+
 
 CartFolderSchema = ATFolderSchema.copy() + Schema((
 
@@ -60,7 +52,7 @@ CartFolderSchema = ATFolderSchema.copy() + Schema((
             label=_(u'Next Incremental Cart ID'),
             description=_(u'If Incrementanl Cart ID is seleceted, give interger number here.'),
         ),
-        default = 1,
+        default=1,
     ),
 
     IntegerField(
@@ -73,7 +65,7 @@ CartFolderSchema = ATFolderSchema.copy() + Schema((
             label=_(u'Random Digits Cart ID'),
             description=_(u'If Random Cart ID is selected, give integer digits here.'),
         ),
-        default = 5,
+        default=5,
     ),
 
     StringField(
@@ -103,7 +95,7 @@ CartFolderSchema = ATFolderSchema.copy() + Schema((
             label=_(u'Next Form'),
             description=_(u'Select next form for check out. Only FormFolder from PloneFormGen is available.'),
         ),
-        allowed_types = ('FormFolder',),
+        allowed_types=('FormFolder',),
         relationship='next_form_relationship',
     ),
 
@@ -111,6 +103,7 @@ CartFolderSchema = ATFolderSchema.copy() + Schema((
 )
 
 finalizeATCTSchema(CartFolderSchema, folderish=True, moveDiscussion=False)
+
 
 class CartFolder(ATFolder):
 
@@ -130,6 +123,7 @@ registerATCT(CartFolder, PROJECTNAME)
 CartSchema = ATFolderSchema.copy()
 
 finalizeATCTSchema(CartSchema, folderish=True, moveDiscussion=False)
+
 
 class Cart(ATFolder):
 
@@ -255,6 +249,7 @@ CartProductSchema = ATContentTypeSchema.copy() + Schema((
 )
 
 finalizeATCTSchema(CartProductSchema, folderish=False, moveDiscussion=False)
+
 
 #class CartProduct(ATCTContent, HistoryAwareMixin):
 class CartProduct(ATCTContent):

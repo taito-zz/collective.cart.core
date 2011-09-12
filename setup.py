@@ -1,10 +1,11 @@
 from setuptools import setup, find_packages
+
 import os
+
 
 def read(*rnames):
     return open(os.path.join(os.path.dirname(__file__), *rnames)).read()
 
-# version = read('collective', 'cart', 'core', 'version.txt')[:-1]
 version = read('collective', 'cart', 'core', 'version.txt').strip()
 
 long_description = (

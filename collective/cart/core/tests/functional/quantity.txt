@@ -33,7 +33,6 @@ Log in and change the Quantity Method
     >>> browser.getLink('Edit').click()
     >>> browser.getControl(name="quantity_method").value = ['Input']
     >>> browser.getControl('Save').click()
-    >>> browser.openBrowser()
 
 Log out and got to Product01.
 ------------------------------

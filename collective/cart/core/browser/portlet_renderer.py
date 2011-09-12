@@ -1,6 +1,11 @@
+from plone.portlets.interfaces import IPortletManager
+from plone.portlets.interfaces import IPortletRenderer
+from plone.portlets.interfaces import IPortletRetriever
+from zope.component import getMultiAdapter
+from zope.component import getUtility
+from zope.component import queryMultiAdapter
 import Acquisition
-from zope.component import getUtility, getMultiAdapter, queryMultiAdapter
-from plone.portlets.interfaces import IPortletRetriever, IPortletManager, IPortletRenderer
+
 
 def get_portlet_manager(column):
     """ Return one of default Plone portlet managers.
@@ -11,6 +16,7 @@ def get_portlet_manager(column):
     """
     manager = getUtility(IPortletManager, name=column)
     return manager
+
 
 def render_portlet(context, request, view, manager, interface):
     """ Render a portlet defined in external location.
@@ -67,4 +73,3 @@ def render_portlet(context, request, view, manager, interface):
     html = renderer.render()
 
     return html
-

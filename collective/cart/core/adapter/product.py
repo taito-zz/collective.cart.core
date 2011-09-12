@@ -1,15 +1,14 @@
-from Acquisition import aq_inner, aq_parent
+from Acquisition import aq_parent
+from Acquisition import aq_inner
 from zope.annotation.interfaces import IAnnotations
 from zope.component import adapts, getUtility
 from zope.interface import implements
 from collective.cart.core.content.product import ProductAnnotations
-from collective.cart.core.interfaces import (
-    IAddableToCart,
-    ICartFolderContentType,
-    IPortal,
-    IProduct,
-    ISelectRange,
-)
+from collective.cart.core.interfaces import IAddableToCart
+from collective.cart.core.interfaces import ICartFolderContentType
+from collective.cart.core.interfaces import IPortal
+from collective.cart.core.interfaces import IProduct
+from collective.cart.core.interfaces import ISelectRange
 
 
 class Product(object):
@@ -63,7 +62,7 @@ class Product(object):
         if self.addable_quantity > 0:
             html = '<select id="quantity" name="quantity">'
             for qtt in getUtility(ISelectRange)(self.addable_quantity):
-                html += '<option value="%s">%s</option>' %(qtt,  qtt)
+                html += '<option value="%s">%s</option>' % (qtt,  qtt)
             html += '</select>'
             return html
 

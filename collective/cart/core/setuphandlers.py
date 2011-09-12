@@ -1,8 +1,10 @@
 from Products.CMFCore.utils import getToolByName
-from zope.component import getUtility, getMultiAdapter
-from zope.app.container.interfaces import INameChooser
-from plone.portlets.interfaces import IPortletManager, IPortletAssignmentMapping
 from collective.cart.core.portlets.cart import Assignment
+from plone.portlets.interfaces import IPortletAssignmentMapping
+from plone.portlets.interfaces import IPortletManager
+from zope.app.container.interfaces import INameChooser
+from zope.component import getMultiAdapter
+from zope.component import getUtility
 
 
 def setupCartProperties(portal):
@@ -30,15 +32,6 @@ def setupCartProperties(portal):
             metaTypesNotToList=types_not_listed)
 
 
-#def setupCartPortlet(portal):
-#        left_column = getUtility(IPortletManager, name=u"plone.leftcolumn")
-#        manager = getMultiAdapter((portal, left_column), IPortletAssignmentMapping)
-#        if 'cart' not in manager.keys():
-#            assignment = Assignment()
-#            chooser = INameChooser(manager)
-#            manager[chooser.chooseName(None, assignment)] = assignment
-
-
 def setupVarious(context):
 
     if context.readDataFile('collective.cart.core_various.txt') is None:
@@ -46,4 +39,3 @@ def setupVarious(context):
 
     portal = context.getSite()
     setupCartProperties(portal)
-#    setupCartPortlet(portal)

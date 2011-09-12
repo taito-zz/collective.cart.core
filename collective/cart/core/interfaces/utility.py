@@ -4,8 +4,7 @@ from zope.interface import Interface
 class IPriceInString(Interface):
 
     def __call__(price, currency="EUR", point='.'):
-        """Returns price in string based on its 
-            currency and point type."""
+        """Returns price in string based on its currency and point type."""
 
 
 class IPriceWithCurrency(Interface):

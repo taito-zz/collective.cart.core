@@ -1,4 +1,6 @@
-from zope.interface import Interface, Attribute
+from zope.interface import Attribute
+from zope.interface import Interface
+
 
 class IProduct(Interface):
 
@@ -77,6 +79,7 @@ class ICartProduct(Interface):
     def select_quantity():
         """Returns html string for select quantity."""
 
+
 class ICart(Interface):
 
     def products():
@@ -97,6 +100,7 @@ class ICart(Interface):
     def total_cost():
         """Returns total cost."""
 
+
 class ICartFolder(Interface):
 
     def used_cart_ids():
@@ -114,105 +118,14 @@ class ICartFolder(Interface):
     def create_cart(session_cart_id):
         """Create cart and return it."""
 
-#class IPortalSession(Interface):
-
-#    cart_id = Attribute('Cart ID')
-
-#    def delete_cart_id_from_session():
-#        """Delete current cart id from session."""
-
-#class IPortalSessionCatalog(Interface):
-
-#    cart_id = Attribute('Cart ID')
-
-#    def cart():
-#        """Returns current cart object from session."""
-
-#    def add_to_cart(uid, quantity, cart_id):
-#        """Add to cart."""
-
-#    def add_to_cart_first_time(uid, quantity):
-#        """Add product to cart first time."""
-
-#    
-
-#class IPortalCatalog(Interface):
-
-##    def cart_folder():
-##        """Returns Cart Folder."""
-
-#    def used_cart_ids():
-#        """Returns list of already used cart ids."""
-
-#    def incremental_cart_id():
-#        """Rerturns new incremental cart id and set the next cart id added by one."""
-
-#    def random_cart_id(digits):
-#        """Returns new random cart id."""
-
-#class IPortalAdapter(Interface):
-
-#    def cart_properties():
-#        """Returns portal IPortalCartProperties adapted."""
-
-#    def next_cart_id(method, digits):
-#        """Returns next cart id based on the method and digits."""
-
-#class IPortalCart(Interface):
-
-#    def add_to_cart():
-#        """Method to add product to cart."""
-
-#    def update_cart():
-#        """Update cart."""
-
-#    def delete_product_from_cart():
-#        """Delete product from cart."""
-
-
-#class IShippingCost(Interface):
-
-#    def __call__():
-#        """Returns shipping cost."""
-
-
-#class IAvailableShippingMethods(Interface):
-
-#    def __call__():
-#        """Returns available shipping methods."""
-
-#class IUpdateShippingMethod(Interface):
-
-#    def __call__(method):
-#        """Update shipping method."""
 
 class IProductAnnotationsAdapter(Interface):
     """"""
 
-#class ICartItself(Interface):
-
-#    def products():
-#        """Returns all the products under the cart."""
-
-#    def product(uid):
-#        """Returns product with uid."""
-
-#    def subtotal():
-#        """Returns products subtotal."""
-
-#    def weight():
-#        """Returns products total weight."""
-
-#    def shipping_cost():
-#        """"""
 
 class ICartProduct(Interface):
     """"""
 
-#class IContext(Interface):
-
-#    def get_closest_content(interface):
-#        """Get closest content from child."""
 
 class IPortal(Interface):
     """Adapter interface for portal."""
@@ -243,4 +156,3 @@ class IPortal(Interface):
 
     def cart_properties():
         """Cart Properties"""
-

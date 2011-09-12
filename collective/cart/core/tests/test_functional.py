@@ -1,12 +1,12 @@
+from PIL import Image
 from Testing import ZopeTestCase as ztc
 from collective.cart.core.tests.base import FUNCTIONAL_TESTING
+from datetime import datetime
 from leo.testing.browser import Browser
-from plone.app.testing import setRoles
 from plone.app.testing import TEST_USER_ID
+from plone.app.testing import setRoles
 from plone.testing import layered
 from zope.testing import renormalizing
-from datetime import datetime
-from PIL import Image
 
 import doctest
 import manuel.codeblock
@@ -27,17 +27,10 @@ CHECKER = renormalizing.RENormalizing([
 def setUp(self):
     layer = self.globs['layer']
     # Update global variables within the tests.
-#     width = 450
-#     height = 450
-#     black = (0, 0, 0)
-#     image = Image.new("RGB", (width, height), black)
-#     filename = 'dummy.png'
-#     image.save(filename)
     self.globs.update({
         'portal': layer['portal'],
         'portal_url': layer['portal'].absolute_url(),
         'browser': Browser(layer['app']),
-        # 'TEST_IMAGE': filename,
     })
     ztc.utils.setupCoreSessions(layer['app'])
     portal = self.globs['portal']
@@ -56,24 +49,6 @@ def setUp(self):
         title='Document01'
     )
     portal.document01.reindexObject()
-
-    # portal.invokeFactory(
-    #         'Document',
-    #         'doc01',
-    #         title='Style01',
-    #         description="Description of Style01",
-    #         subject=(
-    #             'leo.artwork.style',
-    #             'leo.artwork.media',
-    #             'leo.artwork.technique',
-    #             'leo.artwork.surface',
-    #         ),
-    #     )
-    # doc01 = portal.doc01
-    # doc01.reindexObject()
-    # self.globs.update({'doc_uid': doc01.UID()})
-    # year = str(datetime.now().year)
-    # self.globs.update({'current_year': year})
 
     transaction.commit()
 

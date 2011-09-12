@@ -1,22 +1,23 @@
-from Acquisition import aq_chain, aq_inner
-from zope.component import getUtility, adapts
-from zope.event import notify
-from zope.interface import implements
+from Acquisition import aq_chain
+from Acquisition import aq_inner
 from OFS.interfaces import IItem
 from Products.CMFCore.utils import getToolByName
-from collective.cart.core.subscriber.event import UpdateCart, UpdateCartTotal
-from collective.cart.core.interfaces import (
-    ICart,
-    ICartContentType,
-    ICartFolder,
-    ICartFolderContentType,
-    IDecimalPlaces,
-    IPortal,
-    IPortalCartProperties,
-    IPrice,
-    IPriceWithCurrency,
-)
 from Products.CMFPlone.interfaces.properties import IPropertiesTool
+from collective.cart.core.interfaces import ICart
+from collective.cart.core.interfaces import ICartContentType
+from collective.cart.core.interfaces import ICartFolder
+from collective.cart.core.interfaces import ICartFolderContentType
+from collective.cart.core.interfaces import IDecimalPlaces
+from collective.cart.core.interfaces import IPortal
+from collective.cart.core.interfaces import IPortalCartProperties
+from collective.cart.core.interfaces import IPrice
+from collective.cart.core.interfaces import IPriceWithCurrency
+from collective.cart.core.subscriber.event import UpdateCart
+from collective.cart.core.subscriber.event import UpdateCartTotal
+from zope.component import adapts
+from zope.component import getUtility
+from zope.event import notify
+from zope.interface import implements
 
 
 class Portal(object):
@@ -37,7 +38,7 @@ class Portal(object):
     def has_cart_folder(self):
         context = aq_inner(self.context)
         query = dict(
-                object_provides = ICartFolderContentType.__identifier__,
+                object_provides=ICartFolderContentType.__identifier__,
             )
         return self.catalog.unrestrictedSearchResults(query)
 
@@ -57,9 +58,9 @@ class Portal(object):
         if self.session_cart_id is not None:
             path = '/'.join(self.cart_folder.getPhysicalPath())
             query = dict(
-                object_provides = ICartContentType.__identifier__,
-                session_cart_id = self.session_cart_id,
-                path = path,
+                object_provides=ICartContentType.__identifier__,
+                session_cart_id=self.session_cart_id,
+                path=path,
             )
             brains = self.catalog.unrestrictedSearchResults(query)
             if brains:
@@ -110,8 +111,11 @@ class Portal(object):
     def cart_properties(self):
         return IPortalCartProperties(self.properties)
 
+
 class PortalCartProperties(object):
+
     adapts(IPropertiesTool)
+
     implements(IPortalCartProperties)
 
     def __init__(self, context):
@@ -140,12 +144,12 @@ class PortalCartProperties(object):
 
     def select_field(self, attribute, lists):
         value = getattr(self, attribute)
-        html = '<select id="%s" name="%s">' %(attribute, attribute)
+        html = '<select id="%s" name="%s">' % (attribute, attribute)
         for lis in lists:
             if lis == value:
-                html += '<option value="%s" selected="selected">%s</option>' %(lis,lis)
+                html += '<option value="%s" selected="selected">%s</option>' % (lis, lis)
             else:
-                html += '<option value="%s">%s</option>' %(lis, lis)
+                html += '<option value="%s">%s</option>' % (lis, lis)
         html += '</select>'
         return html
 
@@ -155,240 +159,3 @@ class PortalCartProperties(object):
             symbol = self.currency_symbol
         price = str(price)
         return getUtility(IPriceWithCurrency)(price, self.currency, self.symbol_location, self.decimal_type, symbol)
-
-#class PortalAdapter(object):
-
-#    adapts(IPloneSiteRoot)
-#    implements(IPortalAdapter)
-
-#    def __init__(self, context):
-#        self.context = context
-#        self.properties = self.context.portal_properties
-#        self.catalog = self.context.portal_catalog
-
-#    @property
-#    def cart_properties(self):
-#        return IPortalCartProperties(self.properties)
-
-#    def next_cart_id(self, method, digits=1):
-#        pcatalog = getMultiAdapter((self.context, self.catalog), IPortalCatalog)
-#        if method == 'Incremental':
-#            return pcatalog.incremental_cart_id
-#        else:
-#            return pcatalog.random_cart_id(digits)
-
-#    def subtotal_price(self, products):
-#        prices = [product.get('subtotal') for product in products]
-#        return sum(prices)
-
-#    def shipping_cost(self, products):
-#        return 0
-
-#    def payment_cost(self, products):
-#        return 0
-
-#    def total_cost(self, products):
-#        price = self.subtotal + self.shipping_cost + self.payment_cost
-#        return price
-
-#    def subtotal_price_with_currency(self, products):
-#        price = self.subtotal_price(products)
-#        return IPortalCartProperties(self.properties).price_with_currency(price)
-
-#    def shipping_cost_with_currency(self, products):
-#        price = self.shipping_cost(products)
-#        return IPortalCartProperties(self.properties).price_with_currency(price)
-
-#    def payment_cost_with_currency(self, products):
-#        price = self.payment_cost(products)
-#        return IPortalCartProperties(self.properties).price_with_currency(price)
-
-
-#    def total_cost_with_currency(self, products):
-#        price = self.total_cost(products)
-#        return IPortalCartProperties(self.properties).price_with_currency(price)
-
-#    def product_quantity_in_carts(self, uid):
-#        brains = self.catalog(
-#            portal_type='CartProduct',
-#            review_state='editable_for_customer',
-#            product_uid=uid,
-#        )
-#        quantity = 0
-#        if len(brains) != 0:
-#            for brain in brains:
-#                quantity += brain.product_quantity
-#        return quantity
-
-
-#class PortalCart(object):
-#    implements(IPortalCart)
-#    adapts(IPloneSiteRoot, IBrowserRequest)
-
-#    def __init__(self, portal, request):
-#        self.portal = portal
-#        self.request = request
-
-#    def add_to_cart(self, form):
-#        form = self.request.form
-#        uid = form.get('uid')
-#        quantity = int(form.get('quantity'))
-#        psc = getMultiAdapter((self.portal, self.portal.session_data_manager, self.portal.portal_catalog),IPortalSessionCatalog)
-#        if psc.cart is not None:
-#            cart_id = psc.cart_id
-#        if psc.cart is None:
-#            properties = IPortalCartProperties(self.portal.portal_properties)
-#            method = properties.cart_id_method
-#            digits = properties.random_cart_id_digits
-#            cart_id = IPortalAdapter(self.portal).next_cart_id(method, digits)
-#        getMultiAdapter((self.portal, self.portal.session_data_manager, self.portal.portal_catalog), IPortalSessionCatalog).add_to_cart(uid, quantity, cart_id)
-
-#    def update_cart(self):
-#        catalog = self.portal.portal_catalog
-#        cart = getMultiAdapter((self.portal, self.portal.session_data_manager, catalog),IPortalSessionCatalog).cart
-#        if cart is not None:
-#            form = self.request.form
-#            uid = form.get('uid')
-#            quantity = int(form.get('quantity'))
-#            getMultiAdapter((cart, catalog), ICartAdapter).update_cart(uid, quantity)
-
-#    def delete_product_from_cart(self):
-#        catalog = self.portal.portal_catalog
-#        cart = getMultiAdapter((self.portal, self.portal.session_data_manager, catalog),IPortalSessionCatalog).cart
-#        if cart is not None:
-#            form = self.request.form
-#            uid = form.get('uid')
-#            getMultiAdapter((cart, catalog), ICartAdapter).delete_product_from_cart(uid)
-
-##class PortalCatalog(object):
-##    implements(IPortalCatalog)
-##    adapts(IPloneSiteRoot, IZCatalog)
-
-##    def __init__(self, portal, catalog):
-##        self.portal = portal
-##        self.catalog = catalog
-
-##    @property
-##    def cart_folder(self):
-##        query = dict(
-###            object_provides = ICartFolder.__identifier__,
-##            object_provides = ICartFolderContentType.__identifier__,
-##        )
-##        brains = self.catalog.unrestrictedSearchResults(query)
-##        if len(brains) != 0:
-##            return brains[0].getObject()
-
-##    @property
-##    def used_cart_ids(self):
-##        query = dict(
-##            object_provides = ICart.__identifier__,
-##        )
-##        brains = self.catalog.unrestrictedSearchResults(query)
-##        ids = [brain.id for brain in brains]
-##        return ids
-
-##    @property
-##    def incremental_cart_id(self):
-##        cart_id = self.cart_folder.next_incremental_cart_id
-##        while str(cart_id) in self.used_cart_ids:
-##            cart_id += 1
-##        new_id = cart_id + 1
-##        self.cart_folder.next_incremental_cart_id = new_id
-##        return str(cart_id)
-
-##    def random_cart_id(self, digits):
-##        return getUtility(IRandomDigits)(digits , self.used_cart_ids)
-
-#class PortalSession(object):
-#    implements(IPortalSession)
-#    try:
-#        ## Plone4
-#        adapts(IPloneSiteRoot, ISessionDataManager)
-#    except NameError:
-#        ## Plone3
-#        adapts(IPloneSiteRoot, object)
-
-#    def __init__(self, portal, sdm):
-#        self.portal = portal
-#        self.sdm = sdm
-#        self.session = sdm.getSessionData(create=False)
-#        if self.session is None:
-#            self.session = sdm.getSessionData(create=True)
-#        self.cart_id = self.session.get('collective.cart.core.id')
-
-#    def delete_cart_id_from_session(self):
-#        if self.cart_id is not None:
-#            del self.session['collective.cart.core.id']
-
-#class PortalSessionCatalog(object):
-#    implements(IPortalSessionCatalog)
-
-#    try:
-#        ## Plone4
-#        adapts(IPloneSiteRoot, ISessionDataManager, IZCatalog)
-#    except NameError:
-#        ## Plone3
-#        adapts(IPloneSiteRoot, object, IZCatalog)
-
-#    def __init__(self, portal, sdm, catalog):
-#        self.portal = portal
-#        self.sdm = sdm
-#        self.session = sdm.getSessionData(create=False)
-#        if self.session is None:
-#            self.session = sdm.getSessionData(create=True)
-#        self.cart_id = self.session.get('collective.cart.core.id')
-#        self.catalog = catalog
-
-#    @property
-#    def cart(self):
-#        query = dict(
-#            object_provides = ICart.__identifier__,
-#            id = self.cart_id,
-#        )
-#        brains = self.catalog.unrestrictedSearchResults(query)
-#        if len(brains) != 0:
-#            return brains[0].getObject()
-
-#    def add_to_cart(self, uid, quantity, cart_id):
-#        cart = self.cart
-#        if cart is None:
-#            self.session.set('collective.cart.core.id', cart_id)
-#            cfolder = getMultiAdapter((self.portal, self.catalog), IPortalCatalog).cart_folder
-#            cfolder.invokeFactory(
-#                'Cart',
-#                cart_id,
-#            )
-#            cart = cfolder[cart_id]
-#            cart.reindexObject()
-#        cadapter = getMultiAdapter((cart, self.catalog), ICartAdapter)
-#        if cadapter.product(uid) is None:
-#            cadapter.add_new_product_to_cart(uid, quantity)
-#            method = IAvailableShippingMethods(self.portal)()
-#            IUpdateShippingMethod(self.portal)(method)
-#        else:
-#            cadapter.add_existing_product_to_cart(uid, quantity)
-
-
-#class AvailableShippingMethods(object):
-
-##    adapts(IPloneSiteRoot)
-#    adapts(IItem)
-#    implements(IAvailableShippingMethods)
-
-#    def __init__(self, context):
-#        self.context = context
-
-#    def __call__(self):
-#        return None
-
-
-#class UpdateShippingMethod(object):
-
-#    adapts(IItem)
-#    implements(IUpdateShippingMethod)
-
-#    def __init__(self, context):
-#        self.context = context
-
-#    def __call__(self, method=None):
-#        pass

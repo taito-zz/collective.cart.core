@@ -1,21 +1,20 @@
 from Acquisition import aq_inner
+from Products.Archetypes.event import ObjectInitializedEvent
+from Products.CMFCore.utils import getToolByName
+from collective.cart.core.interfaces import ICart
+from collective.cart.core.interfaces import ICartContentType
+from collective.cart.core.interfaces import ICartFolder
+from collective.cart.core.interfaces import ICartFolderContentType
+from collective.cart.core.interfaces import ICartProduct
+from collective.cart.core.interfaces import ICartProductContentType
+from collective.cart.core.interfaces import IPortal
+from collective.cart.core.interfaces import IProduct
+from collective.cart.core.interfaces import IRandomDigits
+from collective.cart.core.interfaces import ISelectRange
+from zope.component import adapts
+from zope.component import getUtility
 from zope.event import notify
 from zope.interface import implements
-from zope.component import adapts, getUtility
-from Products.CMFCore.utils import getToolByName
-from Products.Archetypes.event import ObjectInitializedEvent
-from collective.cart.core.interfaces import (
-    ICart,
-    ICartContentType,
-    ICartFolder,
-    ICartFolderContentType,
-    ICartProduct,
-    ICartProductContentType,
-    IPortal,
-    IProduct,
-    IRandomDigits,
-    ISelectRange,
-)
 
 
 class CartProductAdapter(object):
@@ -51,7 +50,9 @@ class CartProductAdapter(object):
         context = aq_inner(self.context)
         catalog = getToolByName(context, 'portal_catalog')
         query = dict(UID=self.uid)
-        return IProduct(catalog.unrestrictedSearchResults(query)[0].getObject())
+        obj = catalog.unrestrictedSearchResults(query)[0].getObject()
+        return IProduct(obj)
+        # return IProduct(catalog.unrestrictedSearchResults(query)[0].getObject())
 
     @property
     def max_quantity(self):
@@ -76,7 +77,7 @@ class CartProductAdapter(object):
                     code = '<option value="%s" selected="selected">%s</option>' % (qtt,  qtt)
                     html += code
                 else:
-                    html += '<option value="%s">%s</option>' %(qtt,  qtt)
+                    html += '<option value="%s">%s</option>' % (qtt, qtt)
             html += '</select>'
             return html
 
@@ -122,7 +123,6 @@ class CartAdapter(object):
         context = aq_inner(self.context)
         return sum(context.totals.values())
 
-
     def add_new_product_to_cart(self, uid, quantity):
         pid = '1'
         if self.products is not None:
@@ -150,7 +150,6 @@ class CartAdapter(object):
         if not product.unlimited_stock:
             new_stock = product.stock - quantity
             product.stock = new_stock
-#        notify(AddFirstTimeToCart(product))
         notify(ObjectInitializedEvent(cproduct))
 
     def add_existing_product_to_cart(self, uid, quantity):
@@ -215,8 +214,8 @@ class CartFolderAdapter(object):
         context = aq_inner(self.context)
         path = '/'.join(context.getPhysicalPath())
         query = dict(
-            object_provides = ICartContentType.__identifier__,
-            path = path,
+            object_provides=ICartContentType.__identifier__,
+            path=path,
         )
         brains = self.catalog.unrestrictedSearchResults(query)
         ids = [brain.id for brain in brains]
@@ -239,7 +238,7 @@ class CartFolderAdapter(object):
         while len([uci for uci in self.used_cart_ids if len(uci) == digits]) == 10 ** digits:
             digits += 1
             self.context.random_digits_cart_id = digits
-        return getUtility(IRandomDigits)(digits , [uci for uci in self.used_cart_ids if len(uci) == digits])
+        return getUtility(IRandomDigits)(digits, [uci for uci in self.used_cart_ids if len(uci) == digits])
 
     @property
     def next_cart_id(self):
@@ -256,7 +255,7 @@ class CartFolderAdapter(object):
             title=cart_id,
         )
         cart = self.context[cart_id]
-        cart.session_cart_id=session_cart_id
+        cart.session_cart_id = session_cart_id
         notify(ObjectInitializedEvent(cart))
         cart.reindexObject()
         return cart

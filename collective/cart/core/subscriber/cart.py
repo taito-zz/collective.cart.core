@@ -10,7 +10,7 @@ from collective.cart.core.interfaces import (
 def set_products_cost(event):
     cart = event.cart
     ICart(cart).subtotal
-    item = dict(products_cost = ICart(cart).subtotal)
+    item = dict(products_cost=ICart(cart).subtotal)
     cart.totals.update(item)
 
 

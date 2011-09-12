@@ -48,17 +48,6 @@ def setUp(self):
 
     setRoles(portal, TEST_USER_ID, ['Manager'])
 
-    # portal.invokeFactory(
-    #     'Document',
-    #     'document01',
-    #     title='Document01'
-    # )
-    # portal.document01.reindexObject()
-
-    # self.setRoles(('Manager',))
-    ## Set up sessioning objects
-    # ztc.utils.setupCoreSessions(self.app)
-    # wftool = getToolByName(portal, 'portal_workflow')
     portal.invokeFactory(
         'CartFolder',
         'cfolder',
@@ -71,7 +60,6 @@ def setUp(self):
         title='Document01',
     )
     document01 = portal.document01
-    # wftool.doActionFor(document01, "publish")
     document01.reindexObject()
     alsoProvides(document01, IAddableToCart)
     IAnnotations(document01)['collective.cart.core'] = ProductAnnotations()
@@ -86,14 +74,12 @@ def setUp(self):
         title='Document02',
     )
     document02 = portal.document02
-    # wftool.doActionFor(document02, "publish")
     document02.reindexObject()
     alsoProvides(document02, IAddableToCart)
     IAnnotations(document02)['collective.cart.core'] = ProductAnnotations()
     product02 = IProduct(document02)
     product02.price = 5.0
     product02.unlimited_stock = True
-
 
     transaction.commit()
 
