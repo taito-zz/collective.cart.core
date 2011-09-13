@@ -1,11 +1,8 @@
-from PIL import Image
-from Products.CMFCore.utils import getToolByName
 from Testing import ZopeTestCase as ztc
 from collective.cart.core.content.product import ProductAnnotations
 from collective.cart.core.interfaces import IAddableToCart
 from collective.cart.core.interfaces import IProduct
 from collective.cart.core.tests.base import FUNCTIONAL_TESTING
-from datetime import datetime
 from leo.testing.browser import Browser
 from plone.app.testing import TEST_USER_ID
 from plone.app.testing import setRoles

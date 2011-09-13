@@ -1,5 +1,5 @@
-from zope.interface import Interface
 from zope.annotation.interfaces import IAttributeAnnotatable
+from zope.interface import Interface
 
 
 class IPotentiallyAddableToCart(Interface):

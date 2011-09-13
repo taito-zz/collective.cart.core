@@ -1,4 +1,3 @@
-import unittest
 from zope.component import getMultiAdapter
 from zope.component import getUtility
 from plone.portlets.interfaces import IPortletAssignmentMapping
@@ -50,9 +49,9 @@ class TestSetup(IntegrationTestCase):
         self.assertEquals(('view', 'folder_tabular_view', 'folder_listing'), item.view_methods)
         aliases = {'edit': 'atct_edit', 'sharing': '@@sharing', '(Default)': '(dynamic view)', 'view': '(selected layout)'}
         self.assertEquals(aliases, item.getMethodAliases())
-        actions = [
-            (action.title, action.id, action.getActionExpression(), action.visible, action.permissions) for action in item.listActions()
-        ]
+        # actions = [
+        #     (action.title, action.id, action.getActionExpression(), action.visible, action.permissions) for action in item.listActions()
+        # ]
         self.assertEquals(
             [
                 ('View', 'view', 'string:${folder_url}/', True, (u'View',)),
@@ -77,9 +76,9 @@ class TestSetup(IntegrationTestCase):
         self.assertEquals(('view', 'folder_listing', 'folder_tabular_view'), item.view_methods)
         aliases = {'edit': 'atct_edit', 'sharing': '@@sharing', '(Default)': '(dynamic view)', 'view': '(selected layout)'}
         self.assertEquals(aliases, item.getMethodAliases())
-        actions = [
-            (action.title, action.id, action.getActionExpression(), action.visible, action.permissions) for action in item.listActions()
-        ]
+        # actions = [
+        #     (action.title, action.id, action.getActionExpression(), action.visible, action.permissions) for action in item.listActions()
+        # ]
         self.assertEquals(
             [
                 ('View', 'view', 'string:${folder_url}/', True, (u'View',)),
@@ -104,9 +103,9 @@ class TestSetup(IntegrationTestCase):
         self.assertEquals(('view',), item.view_methods)
         aliases = {'edit': 'atct_edit', 'sharing': '@@sharing', '(Default)': '(dynamic view)', 'view': '(selected layout)'}
         self.assertEquals(aliases, item.getMethodAliases())
-        actions = [
-            (action.title, action.id, action.getActionExpression(), action.visible, action.permissions) for action in item.listActions()
-        ]
+        # actions = [
+        #     (action.title, action.id, action.getActionExpression(), action.visible, action.permissions) for action in item.listActions()
+        # ]
         self.assertEquals(
             [
                 ('View', 'view', 'string:${object_url}', True, (u'View',)),
@@ -475,8 +474,3 @@ class TestSetup(IntegrationTestCase):
         left_column = getUtility(IPortletManager, name=u"plone.leftcolumn")
         left_assignable = getMultiAdapter((self.portal, left_column), IPortletAssignmentMapping)
         self.failIf(u'Cart' in left_assignable.keys())
-
-def test_suite():
-    suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(TestSetup))
-    return suite

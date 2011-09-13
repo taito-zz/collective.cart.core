@@ -1,10 +1,10 @@
-from zope.interface import Attribute, Interface
+from collective.cart.core import CartMessageFactory as _
 from zope import schema
 from zope.app.container.constraints import contains
-from collective.cart.core import CartMessageFactory as _
+from zope.interface import Attribute
+from zope.interface import Interface
 
 
-#class ICartFolder(Interface):
 class ICartFolderContentType(Interface):
     """Interface for CartFolder Content Type.
     """
@@ -44,7 +44,6 @@ class ICartFolderContentType(Interface):
     )
 
 
-#class ICart(Interface):
 class ICartContentType(Interface):
     """Interface for Cart Content Type.
     """
@@ -53,15 +52,10 @@ class ICartContentType(Interface):
         'collective.cart.core.interfaces.ICartProductContentType',
         )
 
-#    shipping_method = Attribute('Shipping Method')
-#    payment_method = Attribute('Payment Method')
-#    payer_info = Attribute('Customer Info')
-#    receiver_info = Attribute('Receiver Info')
     info = Attribute('Additioinal Info besides products.')
     session_cart_id = Attribute('Cart ID for Session.')
 
 
-#class ICartProduct(Interface):
 class ICartProductContentType(Interface):
     """Interface for CartProduct content type.
     """
@@ -70,43 +64,3 @@ class ICartProductContentType(Interface):
     price = Attribute('Product Price')
     quantity = Attribute('Product Quantity')
     subtotal = Attribute('Product Subtotal')
-
-#    uid = schema.TextLine(
-#        title=_(u"Product UID"),
-#        required=True,
-#    )
-
-#    price = schema.Float(
-#        title=_(u"Product Price"),
-#        required=True,
-#    )
-
-#    quantity = schema.Int(
-#        title=_(u'Product Quantity'),
-#        required=True,
-#    )
-
-#    weight = schema.Float(
-#        title=_(u'Weight'),
-#        required=False,
-#    )
-
-#    weight_unit=schema.TextLine(
-#        title=_('Weight Unit'),
-#        required=False,
-#    )
-
-#    height=schema.Float(
-#        title=_(u"Height"),
-#        required=False,
-#    )
-
-#    width=schema.Float(
-#        title=_(u"Width"),
-#        required=False,
-#    )
-
-#    depth=schema.Float(
-#        title=_("Depth"),
-#        required=False,
-#    )

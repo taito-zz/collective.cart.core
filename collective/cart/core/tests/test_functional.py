@@ -1,7 +1,5 @@
-from PIL import Image
 from Testing import ZopeTestCase as ztc
 from collective.cart.core.tests.base import FUNCTIONAL_TESTING
-from datetime import datetime
 from leo.testing.browser import Browser
 from plone.app.testing import TEST_USER_ID
 from plone.app.testing import setRoles

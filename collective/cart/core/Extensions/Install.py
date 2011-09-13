@@ -1,6 +1,4 @@
 from StringIO import StringIO
-from zope.annotation.interfaces import IAnnotations
-from zope.component import getSiteManager
 from Products.CMFCore.utils import getToolByName
 
 EXTENSION_PROFILES = ('collective.cart.core:uninstall',)

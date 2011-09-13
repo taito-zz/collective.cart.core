@@ -2,19 +2,15 @@ from Products.ATContentTypes.content.base import ATCTContent
 from Products.ATContentTypes.content.base import registerATCT
 from Products.ATContentTypes.content.folder import ATFolder
 from Products.ATContentTypes.content.folder import ATFolderSchema
-from Products.ATContentTypes.content.schemata import ATContentTypeSchema
 from Products.ATContentTypes.content.schemata import finalizeATCTSchema
 from Products.Archetypes.public import ATFieldProperty
 from Products.Archetypes.public import AnnotationStorage
-from Products.Archetypes.public import DecimalWidget
-from Products.Archetypes.public import FloatField
 from Products.Archetypes.public import IntegerField
 from Products.Archetypes.public import IntegerWidget
 from Products.Archetypes.public import ReferenceField
 from Products.Archetypes.public import Schema
 from Products.Archetypes.public import SelectionWidget
 from Products.Archetypes.public import StringField
-from Products.Archetypes.public import StringWidget
 from archetypes.referencebrowserwidget.widget import ReferenceBrowserWidget
 from collective.cart.core import CartMessageFactory as _
 from collective.cart.core import PROJECTNAME
@@ -107,7 +103,6 @@ finalizeATCTSchema(CartFolderSchema, folderish=True, moveDiscussion=False)
 
 class CartFolder(ATFolder):
 
-#    implements(ICartFolder)
     implements(ICartFolderContentType)
     schema = CartFolderSchema
     portal_type = 'CartFolder'
@@ -131,10 +126,6 @@ class Cart(ATFolder):
     schema = CartSchema
     portal_type = 'Cart'
 
-#    shipping_method = None
-#    payment_method = None
-#    payer_info = None
-#    receiver_info = None
     info = PersistentDict()
     session_cart_id = None
     totals = PersistentDict()
@@ -142,113 +133,113 @@ class Cart(ATFolder):
 
 registerATCT(Cart, PROJECTNAME)
 
-CartProductSchema = ATContentTypeSchema.copy() + Schema((
+# CartProductSchema = ATContentTypeSchema.copy() + Schema((
 
-    StringField(
-        name='uid',
-        required=True,
-        searchable=False,
-        languageIndependent=True,
-        storage=AnnotationStorage(),
-            widget=StringWidget(
-                label=_(u'Original Product UID'),
-            ),
-        ),
+#     StringField(
+#         name='uid',
+#         required=True,
+#         searchable=False,
+#         languageIndependent=True,
+#         storage=AnnotationStorage(),
+#             widget=StringWidget(
+#                 label=_(u'Original Product UID'),
+#             ),
+#         ),
 
-    FloatField(
-        name='price',
-        required=True,
-        searchable=False,
-        languageIndependent=True,
-        storage=AnnotationStorage(),
-        widget=DecimalWidget(
-            label=_(u'Price'),
-            description=_(u''),
-        ),
-    ),
+#     FloatField(
+#         name='price',
+#         required=True,
+#         searchable=False,
+#         languageIndependent=True,
+#         storage=AnnotationStorage(),
+#         widget=DecimalWidget(
+#             label=_(u'Price'),
+#             description=_(u''),
+#         ),
+#     ),
 
-    IntegerField(
-        name='quantity',
-        required=True,
-        searchable=False,
-        languageIndependent=True,
-        storage=AnnotationStorage(),
-        widget=IntegerWidget(
-            label=_(u'Quantity'),
-            description=_(u''),
-        ),
-    ),
+#     IntegerField(
+#         name='quantity',
+#         required=True,
+#         searchable=False,
+#         languageIndependent=True,
+#         storage=AnnotationStorage(),
+#         widget=IntegerWidget(
+#             label=_(u'Quantity'),
+#             description=_(u''),
+#         ),
+#     ),
 
-    FloatField(
-        name='weight',
-        required=False,
-        searchable=False,
-        languageIndependent=True,
-        storage=AnnotationStorage(),
-        widget=DecimalWidget(
-            label=_(u'Weight'),
-        ),
-    ),
+#     FloatField(
+#         name='weight',
+#         required=False,
+#         searchable=False,
+#         languageIndependent=True,
+#         storage=AnnotationStorage(),
+#         widget=DecimalWidget(
+#             label=_(u'Weight'),
+#         ),
+#     ),
 
-    StringField(
-        name='weight_unit',
-        required=False,
-        searchable=False,
-        languageIndependent=True,
-        storage=AnnotationStorage(),
-        widget=StringWidget(
-            label=_(u'Weight Unit'),
-        ),
-    ),
+#     StringField(
+#         name='weight_unit',
+#         required=False,
+#         searchable=False,
+#         languageIndependent=True,
+#         storage=AnnotationStorage(),
+#         widget=StringWidget(
+#             label=_(u'Weight Unit'),
+#         ),
+#     ),
 
-    FloatField(
-        name='height',
-        required=False,
-        searchable=False,
-        languageIndependent=True,
-        storage=AnnotationStorage(),
-        widget=DecimalWidget(
-            label=_(u'Height'),
-        ),
-    ),
+#     FloatField(
+#         name='height',
+#         required=False,
+#         searchable=False,
+#         languageIndependent=True,
+#         storage=AnnotationStorage(),
+#         widget=DecimalWidget(
+#             label=_(u'Height'),
+#         ),
+#     ),
 
-    FloatField(
-        name='width',
-        required=False,
-        searchable=False,
-        languageIndependent=True,
-        storage=AnnotationStorage(),
-        widget=DecimalWidget(
-            label=_(u'Width'),
-        ),
-    ),
+#     FloatField(
+#         name='width',
+#         required=False,
+#         searchable=False,
+#         languageIndependent=True,
+#         storage=AnnotationStorage(),
+#         widget=DecimalWidget(
+#             label=_(u'Width'),
+#         ),
+#     ),
 
-    FloatField(
-        name='depth',
-        required=False,
-        searchable=False,
-        languageIndependent=True,
-        storage=AnnotationStorage(),
-        widget=DecimalWidget(
-            label=_(u'Depth'),
-        ),
-    ),
+#     FloatField(
+#         name='depth',
+#         required=False,
+#         searchable=False,
+#         languageIndependent=True,
+#         storage=AnnotationStorage(),
+#         widget=DecimalWidget(
+#             label=_(u'Depth'),
+#         ),
+#     ),
 
-    FloatField(
-        name='depth',
-        required=False,
-        searchable=False,
-        languageIndependent=True,
-        storage=AnnotationStorage(),
-        widget=DecimalWidget(
-            label=_(u'Dimension'),
-        ),
-    ),
+#     FloatField(
+#         name='depth',
+#         required=False,
+#         searchable=False,
+#         languageIndependent=True,
+#         storage=AnnotationStorage(),
+#         widget=DecimalWidget(
+#             label=_(u'Dimension'),
+#         ),
+#     ),
 
-),
-)
+# ),
+# )
 
-finalizeATCTSchema(CartProductSchema, folderish=False, moveDiscussion=False)
+# finalizeATCTSchema(CartProductSchema, folderish=False, moveDiscussion=False)
 
 
 #class CartProduct(ATCTContent, HistoryAwareMixin):

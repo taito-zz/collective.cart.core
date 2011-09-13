@@ -1,20 +1,18 @@
-import mock
 import unittest2 as unittest
 
 
 class TestCartFolder(unittest.TestCase):
     """Test CartFolder content type."""
 
-
     def createCartFolder(self):
         from Products.Archetypes.Schema.factory import instanceSchemaFactory
         from zope.component import provideAdapter
         provideAdapter(instanceSchemaFactory)
-        from collective.cart.core.content import CartFolder
+        from collective.cart.core.content.cart import CartFolder
         return CartFolder('cfolder')
 
     def test_instance(self):
-        from collective.cart.core.content import CartFolder
+        from collective.cart.core.content.cart import CartFolder
         item = self.createCartFolder()
         isinstance(item, CartFolder)
 
@@ -27,7 +25,7 @@ class TestCartFolder(unittest.TestCase):
         item = self.createCartFolder()
         self.assertTrue(ICartFolderContentType.providedBy(item))
 
-    def test_schema(self):
+    def test_schema_fields(self):
         item = self.createCartFolder()
         names = [
             'id',
@@ -42,7 +40,7 @@ class TestCartFolder(unittest.TestCase):
             'quantity_method',
             'next_form'
         ]
-        self.assertTrue(
+        self.assertEqual(
             [field.getName() for field in item.schema.getSchemataFields('default')],
             names
         )
@@ -138,3 +136,24 @@ class TestCartFolder(unittest.TestCase):
         self.assertTrue(field.enforceVocabulary)
         item.quantity_method = u'Input'
         self.assertEqual(item.getQuantity_method(), u'Input')
+
+    def test_field__next_form(self):
+        item = self.createCartFolder()
+        field = item.schema['next_form']
+        from Products.Archetypes.Field import ReferenceField
+        isinstance(field, ReferenceField)
+        self.assertFalse(field.required)
+        self.assertFalse(field.searchable)
+        self.assertTrue(field.languageIndependent)
+        from Products.Archetypes.public import AnnotationStorage
+        isinstance(field.storage, AnnotationStorage)
+        widget = field.widget
+        from archetypes.referencebrowserwidget.widget import ReferenceBrowserWidget
+        isinstance(widget, ReferenceBrowserWidget)
+        self.assertEqual(widget.label, u'Next Form')
+        self.assertEqual(
+            widget.description,
+            u'Select next form for check out. Only FormFolder from PloneFormGen is available.'
+        )
+        self.assertEqual(field.allowed_types, ('FormFolder',))
+        self.assertEqual(field.relationship, 'next_form_relationship')

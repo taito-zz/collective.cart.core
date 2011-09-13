@@ -1,10 +1,4 @@
 from Products.CMFCore.utils import getToolByName
-from collective.cart.core.portlets.cart import Assignment
-from plone.portlets.interfaces import IPortletAssignmentMapping
-from plone.portlets.interfaces import IPortletManager
-from zope.app.container.interfaces import INameChooser
-from zope.component import getMultiAdapter
-from zope.component import getUtility
 
 
 def setupCartProperties(portal):

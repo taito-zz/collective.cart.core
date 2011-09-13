@@ -8,6 +8,7 @@ class IPriceInString(Interface):
 
 
 class IPriceWithCurrency(Interface):
+
     def __call__(price, currency, position, point, symbol):
         """Returns price with currency."""
 
@@ -19,6 +20,7 @@ class IPrice(Interface):
 
 
 class IDecimalPlaces(Interface):
+
     def __call__(currency):
         """Returns decimal places against currency."""
 
@@ -30,6 +32,7 @@ class ISelectRange(Interface):
 
 
 class IRandomDigits(Interface):
+
     def __call__(number, ids):
         """Returns randome digits which is not in ids."""
 
