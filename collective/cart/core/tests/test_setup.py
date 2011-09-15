@@ -35,7 +35,7 @@ class TestSetup(IntegrationTestCase):
         for type in self.content_types:
             self.failUnless(type in self.types.objectIds())
 
-    def test_cart_folder_content_type(self):
+    def test_CartFolder_content_type(self):
         item = self.types.getTypeInfo('CartFolder')
         self.assertEquals('CartFolder', item.title)
         self.assertEquals('CartFolder', item.description)
@@ -76,9 +76,6 @@ class TestSetup(IntegrationTestCase):
         self.assertEquals(('view', 'folder_listing', 'folder_tabular_view'), item.view_methods)
         aliases = {'edit': 'atct_edit', 'sharing': '@@sharing', '(Default)': '(dynamic view)', 'view': '(selected layout)'}
         self.assertEquals(aliases, item.getMethodAliases())
-        # actions = [
-        #     (action.title, action.id, action.getActionExpression(), action.visible, action.permissions) for action in item.listActions()
-        # ]
         self.assertEquals(
             [
                 ('View', 'view', 'string:${folder_url}/', True, (u'View',)),
@@ -103,9 +100,6 @@ class TestSetup(IntegrationTestCase):
         self.assertEquals(('view',), item.view_methods)
         aliases = {'edit': 'atct_edit', 'sharing': '@@sharing', '(Default)': '(dynamic view)', 'view': '(selected layout)'}
         self.assertEquals(aliases, item.getMethodAliases())
-        # actions = [
-        #     (action.title, action.id, action.getActionExpression(), action.visible, action.permissions) for action in item.listActions()
-        # ]
         self.assertEquals(
             [
                 ('View', 'view', 'string:${object_url}', True, (u'View',)),
