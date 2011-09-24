@@ -14,6 +14,7 @@
   <include package=".portlets" />
   <include package=".subscriber" />
   <include package=".utility" />
+  <includeDependencies package="." />
 
   <genericsetup:registerProfile
       name="default"

@@ -11,7 +11,6 @@ from collective.cart.core.interfaces import IPortal
 from collective.cart.core.interfaces import IPortalCartProperties
 from collective.cart.core.interfaces import IPotentiallyAddableToCart
 from zope.annotation.interfaces import IAnnotations
-from zope.component import getMultiAdapter
 from zope.interface import alsoProvides
 from zope.interface import noLongerProvides
 
@@ -90,9 +89,7 @@ class Miscellaneous(BrowserView):
             context.restrictedTraverse('test-step')
 
     def test_step(self):
-        context = aq_inner(self.context)
-        portal = getToolByName(context, 'portal_url').getPortalObject()
-        catalog = getToolByName(portal, 'portal_catalog')
+        """Method to provide test step."""
 
     def make_cart_aware(self):
         context = aq_inner(self.context)

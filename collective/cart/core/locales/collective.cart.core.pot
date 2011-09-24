@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2011-08-30 18:03+0000\n"
+"POT-Creation-Date: 2011-09-24 16:37+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -13,10 +13,6 @@ msgstr ""
 "Language-Name: English\n"
 "Preferred-Encodings: utf-8 latin1\n"
 "Domain: DOMAIN\n"
-
-#: ./content/cart.py:172
-msgid ""
-msgstr ""
 
 #: ./browser/viewlets/product_values.pt:12
 msgid "Add To Cart"
@@ -41,7 +37,7 @@ msgstr ""
 msgid "Cart Contents"
 msgstr ""
 
-#: ./content/cart.py:45
+#: ./content/cart.py:33
 #: ./interfaces/content_type.py:17
 msgid "Cart ID Numbering Method"
 msgstr ""
@@ -66,8 +62,8 @@ msgstr ""
 msgid "Check Cart"
 msgstr ""
 
-#: ./browser/template.py:92
-#: ./browser/viewlet.py:196
+#: ./browser/template.py:80
+#: ./browser/viewlet.py:183
 msgid "Check this if you have unlimited amount of stock."
 msgstr ""
 
@@ -75,28 +71,16 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
-#: ./content/cart.py:239
-msgid "Depth"
-msgstr ""
-
-#: ./content/cart.py:250
-msgid "Dimension"
-msgstr ""
-
 #: ./profiles/default/actions.xml
 msgid "Edit Product"
 msgstr ""
 
-#: ./content/cart.py:217
-msgid "Height"
-msgstr ""
-
-#: ./content/cart.py:61
+#: ./content/cart.py:49
 #: ./interfaces/content_type.py:26
 msgid "If Incrementanl Cart ID is seleceted, give interger number here."
 msgstr ""
 
-#: ./content/cart.py:74
+#: ./content/cart.py:62
 #: ./interfaces/content_type.py:33
 msgid "If Random Cart ID is selected, give integer digits here."
 msgstr ""
@@ -117,12 +101,12 @@ msgstr ""
 msgid "Make Not Cart Aware"
 msgstr ""
 
-#: ./browser/template.py:103
-#: ./browser/viewlet.py:207
+#: ./browser/template.py:91
+#: ./browser/viewlet.py:194
 msgid "Maximum Addable Quantity"
 msgstr ""
 
-#: ./content/cart.py:103
+#: ./content/cart.py:91
 msgid "Next Form"
 msgstr ""
 
@@ -130,7 +114,7 @@ msgstr ""
 msgid "Next Incremenatal Cart ID"
 msgstr ""
 
-#: ./content/cart.py:60
+#: ./content/cart.py:48
 msgid "Next Incremental Cart ID"
 msgstr ""
 
@@ -138,16 +122,12 @@ msgstr ""
 msgid "Next Step"
 msgstr ""
 
-#: ./content/cart.py:160
-msgid "Original Product UID"
-msgstr ""
-
-#: ./browser/template.py:31
+#: ./browser/template.py:30
 msgid "Please add CartFolder first."
 msgstr ""
 
-#: ./browser/template.py:82
-#: ./browser/viewlet.py:186
+#: ./browser/template.py:70
+#: ./browser/viewlet.py:173
 #: ./browser/viewlets/cart_content.pt:14
 msgid "Price"
 msgstr ""
@@ -158,7 +138,7 @@ msgstr ""
 msgid "Product Name"
 msgstr ""
 
-#: ./browser/viewlet.py:310
+#: ./browser/viewlet.py:267
 msgid "Products Subtotal"
 msgstr ""
 
@@ -168,32 +148,32 @@ msgstr ""
 msgid "Quantity"
 msgstr ""
 
-#: ./content/cart.py:86
+#: ./content/cart.py:74
 #: ./interfaces/content_type.py:39
 msgid "Quantity Method"
 msgstr ""
 
-#: ./content/cart.py:73
+#: ./content/cart.py:61
 #: ./interfaces/content_type.py:32
 msgid "Random Digits Cart ID"
 msgstr ""
 
-#: ./content/cart.py:46
+#: ./content/cart.py:34
 #: ./interfaces/content_type.py:18
 msgid "Select Incremental or Random for Cart ID Numbering."
 msgstr ""
 
-#: ./content/cart.py:104
+#: ./content/cart.py:92
 msgid "Select next form for check out. Only FormFolder from PloneFormGen is available."
 msgstr ""
 
-#: ./content/cart.py:87
+#: ./content/cart.py:75
 #: ./interfaces/content_type.py:40
 msgid "Select one method, Select or Input to determine how to put products into cart."
 msgstr ""
 
-#: ./browser/template.py:97
-#: ./browser/viewlet.py:201
+#: ./browser/template.py:85
+#: ./browser/viewlet.py:188
 msgid "Stock"
 msgstr ""
 
@@ -202,12 +182,12 @@ msgstr ""
 msgid "Subtotal"
 msgstr ""
 
-#: ./browser/viewlet.py:322
+#: ./browser/viewlet.py:279
 msgid "Total Cost"
 msgstr ""
 
-#: ./browser/template.py:91
-#: ./browser/viewlet.py:195
+#: ./browser/template.py:79
+#: ./browser/viewlet.py:182
 msgid "Unlimited Stock"
 msgstr ""
 
@@ -217,20 +197,8 @@ msgstr ""
 msgid "Update"
 msgstr ""
 
-#: ./content/cart.py:195
-msgid "Weight"
-msgstr ""
-
-#: ./content/cart.py:206
-msgid "Weight Unit"
-msgstr ""
-
-#: ./content/cart.py:228
-msgid "Width"
-msgstr ""
-
-#: ./browser/template.py:104
-#: ./browser/viewlet.py:208
+#: ./browser/template.py:92
+#: ./browser/viewlet.py:195
 msgid "You need to specify this if you checked Unlimited Stock."
 msgstr ""
 

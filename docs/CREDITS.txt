@@ -1,0 +1,3 @@
+Credits
+=========
+* Pekka Saari and Bo Granlund from the Finnish Association for Nature Conservation (Suomen Luonnonsuojeluliitto) who integrate this package into their site: http://www.sll.fi/

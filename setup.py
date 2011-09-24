@@ -1,4 +1,5 @@
-from setuptools import setup, find_packages
+from setuptools import find_packages
+from setuptools import setup
 
 import os
 
@@ -12,6 +13,7 @@ long_description = (
     open("README.txt").read() + "\n" +
     open(os.path.join("docs", "INSTALL.txt")).read() + "\n" +
     open(os.path.join("docs", "HISTORY.txt")).read() + "\n" +
+    open(os.path.join("docs", "CONTRIBUTORS.txt")).read() + "\n" +
     open(os.path.join("docs", "CREDITS.txt")).read()
     )
 
@@ -35,9 +37,9 @@ setup(name='collective.cart.core',
       include_package_data=True,
       zip_safe=False,
       install_requires=[
-          'leo.testing',
+          'Products.CMFPlone',
+          'hexagonit.testing',
           'mock',
-          'pycountry',
           'setuptools',
           'unittest2',
       ],

@@ -9,11 +9,10 @@ It makes any ATContentTypes addable to cart.
 
 .. _getpaid: http://pypi.python.org/pypi/Products.PloneGetPaid
 
-Currently tested with
+Tested with
 ---------------------
 
-* Plone-3.3.5
-* Plone-4.1b2
+* Plone-4.2x
 
 How To
 ------

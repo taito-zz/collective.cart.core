@@ -36,7 +36,6 @@ class Portal(object):
 
     @property
     def has_cart_folder(self):
-        context = aq_inner(self.context)
         query = dict(
                 object_provides=ICartFolderContentType.__identifier__,
             )

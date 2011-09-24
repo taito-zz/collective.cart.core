@@ -4,7 +4,6 @@ from plone.portlets.interfaces import IPortletRetriever
 from zope.component import getMultiAdapter
 from zope.component import getUtility
 from zope.component import queryMultiAdapter
-import Acquisition
 
 
 def get_portlet_manager(column):

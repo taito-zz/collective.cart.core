@@ -3,7 +3,7 @@ from collective.cart.core.content.product import ProductAnnotations
 from collective.cart.core.interfaces import IAddableToCart
 from collective.cart.core.interfaces import IProduct
 from collective.cart.core.tests.base import FUNCTIONAL_TESTING
-from leo.testing.browser import Browser
+from hexagonit.testing.browser import Browser
 from plone.app.testing import TEST_USER_ID
 from plone.app.testing import setRoles
 from plone.testing import layered
