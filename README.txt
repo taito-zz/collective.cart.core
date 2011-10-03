@@ -14,6 +14,13 @@ Tested with
 
 * Plone-4.2x
 
+Repository URL
+--------------
+
+`https://github.com/taito/collective.cart.core/
+<https://github.com/taito/collective.cart.core/>`_
+
+
 How To
 ------
 Once you have quickinstalled the package to Plone Site:

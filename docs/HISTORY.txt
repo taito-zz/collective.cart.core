@@ -1,6 +1,10 @@
 Changelog
 =========
 
+0.4.1 (2011-10-03)
+------------------
+- easy_install error fixed. [taito]
+
 0.4 (2011-09-24)
 ----------------
 - End of support for Plone-3.x.
