@@ -32,4 +32,17 @@
       provides="Products.GenericSetup.interfaces.EXTENSION"
       />
 
+  <permission
+    id="collective.cart.core.AddCartFolder"
+    title="collective.cart.core: Add CartFolder"
+    />
+  <permission
+    id="collective.cart.core.AddCart"
+    title="collective.cart.core: Add Cart"
+    />
+  <permission
+    id="collective.cart.core.AddCartProduct"
+    title="collective.cart.core: Add CartProduct"
+    />
+
 </configure>
