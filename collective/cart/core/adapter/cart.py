@@ -52,7 +52,6 @@ class CartProductAdapter(object):
         query = dict(UID=self.uid)
         obj = catalog.unrestrictedSearchResults(query)[0].getObject()
         return IProduct(obj)
-        # return IProduct(catalog.unrestrictedSearchResults(query)[0].getObject())
 
     @property
     def max_quantity(self):
