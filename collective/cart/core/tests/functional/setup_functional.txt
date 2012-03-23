@@ -216,10 +216,10 @@ Now add Finnish language and check the translation.
     >>> browser.open(url)
     >>> browser.getControl(name='form.default_language').value = ['fi']
     >>> browser.getControl(name="form.actions.save").click()
-    >>> 'Pääsivu' in browser.contents
+    >>> 'Sisältö' in browser.contents
     False
     >>> browser.open(portal_url)
-    >>> 'Pääsivu' in browser.contents
+    >>> 'Sisältö' in browser.contents
     True
 
 Back to English Site
