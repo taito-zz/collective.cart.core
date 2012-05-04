@@ -4,4 +4,4 @@ class InfiniteLoopError(Exception):
         self.number = number
 
     def __str__(self):
-        return 'All the numbers with digits %s are used.' % self.number
+        return 'All the numbers with digits {0} are used.'.format(self.number)
