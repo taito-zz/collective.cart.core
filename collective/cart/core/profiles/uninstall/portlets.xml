@@ -1,15 +1,16 @@
 <?xml version="1.0"?>
 <portlets
-    xmlns:i18n="http://xml.zope.org/namespaces/i18n"
-    i18n:domain="collective.cart.core">
+  i18n:domain="collective.cart.core"
+  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+  >
 
   <assignment
-    manager="plone.leftcolumn"
     category="context"
     key="/"
-    type="portlet.Cart"
+    manager="plone.leftcolumn"
     name="Cart"
     remove="True"
+    type="portlet.Cart"
     />
 
 </portlets>
