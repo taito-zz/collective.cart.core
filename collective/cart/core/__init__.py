@@ -1,6 +1,7 @@
 from zope.i18nmessageid import MessageFactory
 
 CartMessageFactory = MessageFactory('collective.cart.core')
+_ = MessageFactory('collective.cart.core')
 
 ADD_PERMISSIONS = {
     "CartFolder": "collective.cart.core: Add CartFolder",

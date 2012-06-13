@@ -4,6 +4,7 @@
   xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
   xmlns:grok="http://namespaces.zope.org/grok"
   xmlns:i18n="http://namespaces.zope.org/i18n"
+  xmlns:plone="http://namespaces.plone.org/plone"
   xmlns="http://namespaces.zope.org/zope"
   >
 
@@ -47,6 +48,13 @@
   <permission
     id="collective.cart.core.AddCartProduct"
     title="collective.cart.core: Add CartProduct"
+    />
+
+  <plone:behavior
+    description=""
+    factory=".behavior.Salable"
+    provides=".behavior.ISalable"
+    title="Price"
     />
 
 </configure>

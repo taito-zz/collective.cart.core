@@ -39,6 +39,8 @@ setup(
         'collective.beaker',
         'five.grok',
         'hexagonit.testing',
+        'plone.behavior',
+        'plone.directives.form',
         'setuptools',
     ],
     entry_points="""
