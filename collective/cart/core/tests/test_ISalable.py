@@ -8,6 +8,11 @@ class TestISalable(unittest.TestCase):
         from collective.cart.core.behavior import ISalable
         self.assertTrue(issubclass(ISalable, Schema))
 
+    def test_alsoProvides(self):
+        from plone.directives.form import IFormFieldProvider
+        from collective.cart.core.behavior import ISalable
+        self.assertTrue(IFormFieldProvider.providedBy(ISalable))
+
     def get_schema(self, name):
         """Get schema of ISalable interface.
 
@@ -30,12 +35,20 @@ class TestISalable(unittest.TestCase):
         schema = self.get_schema('price')
         self.assertTrue(schema.required)
 
+    def test_currency__instance(self):
+        from zope.interface import Attribute
+        schema = self.get_schema('currency')
+        self.assertTrue(isinstance(schema, Attribute))
+
+    def test_currency__doc(self):
+        schema = self.get_schema('currency')
+        self.assertEqual(schema.getDoc(), 'Currency like EUR')
+
     def test_money__instance(self):
         from zope.interface import Attribute
         schema = self.get_schema('money')
         self.assertTrue(isinstance(schema, Attribute))
 
     def test_money__doc(self):
-        from zope.interface import Attribute
         schema = self.get_schema('money')
         self.assertEqual(schema.getDoc(), 'Money instance')

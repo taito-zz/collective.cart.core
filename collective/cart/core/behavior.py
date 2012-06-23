@@ -21,26 +21,9 @@ from zope.component import getMultiAdapter
 from zope.interface import Attribute
 from collective.cart.core.interfaces import ISalable
 
+import logging
 
-# class ISalable(form.Schema):
-#     """Add salable field to dexterity type.
-#     """
-
-#     price = sDecimal(
-#     # price = TextLine(
-#             title=_(u"Price"),
-#             # description=_(u"Price"),
-#             required=True,
-#             # allow_uncommon=True,
-#         )
-
-#     money = Attribute('Money instance')
-
-# # @form.validator(field=ISalable['price'])
-# # def validatePrice(value):
-# #     value = value.replace(',', '.')
-# #     float(value)
-# #         # raise ValidationError(u'Use AAA!')
+logger = logging.getLogger(__name__)
 
 
 alsoProvides(ISalable, form.IFormFieldProvider)
@@ -56,24 +39,31 @@ class Salable(object):
 
     @getproperty
     def price(self):
-        return getattr(self.context, 'price', '')
+        return getattr(self.context, 'price', None)
 
     @setproperty
     def price(self, value):
-        """Setting price as Decimal.
+        """Setting price as Decimal and money as Money.
 
         :param value: Price value such as 5.00, 5,00 nor 1800.
         :type value: str
         """
         if isinstance(value, Decimal):
+            # Set price
             setattr(self.context, 'price', value)
-            registry = getUtility(IRegistry)
-            currency = registry.forInterface(ICurrency).default_currency
-            setattr(self.context, 'money', Money(value, currency=currency))
+            # Set money
+            setattr(self.context, 'money', Money(value, currency=self.currency))
+        else:
+            raise ValueError('Not Decimal.')
+
+    @property
+    def currency(self):
+        registry = getUtility(IRegistry)
+        return registry.forInterface(ICurrency).default_currency
 
     @getproperty
     def money(self):
-        return getattr(self.context, 'money', '')
+        return getattr(self.context, 'money', None)
 
     @setproperty
     def money(self, value):
@@ -82,3 +72,9 @@ class Salable(object):
         :param value: Money instance.
         :type value: moneyed.Money
         """
+        if isinstance(value, Money):
+            setattr(self.context, 'money', value)
+        else:
+            raise ValueError('Not Money.')
+
+
