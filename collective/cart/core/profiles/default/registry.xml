@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<registry>
+  <records interface="collective.cart.core.registry.ICurrency" />
+  <record name="collective.cart.core.VAT">
+    <field type="plone.registry.field.List">
+      <title>VAT</title>
+      <description>A list of VAT.</description>
+      <value_type type="plone.registry.field.Float" />
+    </field>
+  </record>
+</registry>

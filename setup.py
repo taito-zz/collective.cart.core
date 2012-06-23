@@ -22,9 +22,11 @@ setup(
     # http://pypi.python.org/pypi?%3Aaction=list_classifiers
     classifiers=[
         "Framework :: Plone",
-        "Framework :: Plone :: 4.1",
         "Framework :: Plone :: 4.2",
+        "Framework :: Plone :: 4.3",
+        "License :: OSI Approved :: BSD License",
         "Programming Language :: Python",
+        "Programming Language :: Python :: 2.7",
     ],
     keywords='',
     author='Taito Horiuchi',
@@ -41,6 +43,8 @@ setup(
         'hexagonit.testing',
         'plone.behavior',
         'plone.directives.form',
+        'py-moneyed',
+        'rwproperty',
         'setuptools',
     ],
     entry_points="""
@@ -48,5 +52,4 @@ setup(
 
     [z3c.autoinclude.plugin]
     target = plone
-    """,
-)
+    """,)
