@@ -50,11 +50,4 @@
     title="collective.cart.core: Add CartProduct"
     />
 
-  <plone:behavior
-    description=""
-    factory=".behavior.Salable"
-    provides=".behavior.ISalable"
-    title="Price"
-    />
-
 </configure>
