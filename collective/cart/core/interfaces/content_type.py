@@ -3,6 +3,7 @@ from zope import schema
 from zope.app.container.constraints import contains
 from zope.interface import Attribute
 from zope.interface import Interface
+from plone.directives import form
 
 
 class ICartFolderContentType(Interface):
@@ -64,3 +65,7 @@ class ICartProductContentType(Interface):
     price = Attribute('Product Price')
     quantity = Attribute('Product Quantity')
     subtotal = Attribute('Product Subtotal')
+
+
+class IArticle(form.Schema):
+    """Schema for Article content type."""

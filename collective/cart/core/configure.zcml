@@ -49,5 +49,9 @@
     id="collective.cart.core.AddCartProduct"
     title="collective.cart.core: Add CartProduct"
     />
+  <permission
+    id="collective.cart.core.AddArticle"
+    title="collective.cart.core: Add Article"
+    />
 
 </configure>

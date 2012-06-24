@@ -6,7 +6,7 @@ from collective.cart.core.interfaces.adapter import IPortal
 from collective.cart.core.interfaces.adapter import IPortalCartProperties
 from collective.cart.core.interfaces.adapter import IProduct
 from collective.cart.core.interfaces.adapter import IProductAnnotationsAdapter
-from collective.cart.core.interfaces.behavior import ISalable
+from collective.cart.core.interfaces.content_type import IArticle
 from collective.cart.core.interfaces.content_type import ICartContentType
 from collective.cart.core.interfaces.content_type import ICartFolderContentType
 from collective.cart.core.interfaces.content_type import ICartProductContentType

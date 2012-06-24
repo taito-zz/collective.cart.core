@@ -27,8 +27,13 @@ class TestSetup(IntegrationTestCase):
         self.actions = getToolByName(self.portal, 'portal_actions')
         self.sm = getSecurityManager()
 
-    def test_is_collective_cart_installed(self):
-        self.failUnless(self.installer.isProductInstalled('collective.cart.core'))
+    def test_instaled__collective_cart_core(self):
+        installer = getToolByName(self.portal, 'portal_quickinstaller')
+        self.failUnless(installer.isProductInstalled('collective.cart.core'))
+
+    def test_installed__plone_app_dexterity(self):
+        installer = getToolByName(self.portal, 'portal_quickinstaller')
+        self.failUnless(installer.isProductInstalled('plone.app.dexterity'))
 
     ## Content Types
     def test_content_installed(self):
