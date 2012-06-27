@@ -461,6 +461,158 @@ class TestSetup(IntegrationTestCase):
         left_assignable = getMultiAdapter((self.portal, left_column), IPortletAssignmentMapping)
         self.failUnless(u'Cart' in left_assignable.keys())
 
+    def test_types__collective_cart_core_Article__i18n_domain(self):
+        types = getToolByName(self.portal, 'portal_types')
+        ctype = types.getTypeInfo('collective.cart.core.Article')
+        self.assertEqual(ctype.i18n_domain, 'collective.cart.core')
+
+    def test_types__collective_cart_core_Article__meta_type(self):
+        types = getToolByName(self.portal, 'portal_types')
+        ctype = types.getTypeInfo('collective.cart.core.Article')
+        self.assertEqual(ctype.meta_type, 'Dexterity FTI')
+
+    def test_types__collective_cart_core_Article__title(self):
+        types = getToolByName(self.portal, 'portal_types')
+        ctype = types.getTypeInfo('collective.cart.core.Article')
+        self.assertEqual(ctype.title, 'Article')
+
+    def test_types__collective_cart_core_Article__description(self):
+        types = getToolByName(self.portal, 'portal_types')
+        ctype = types.getTypeInfo('collective.cart.core.Article')
+        self.assertEqual(ctype.description, '')
+
+    def test_types__collective_cart_core_Article__content_icon(self):
+        types = getToolByName(self.portal, 'portal_types')
+        ctype = types.getTypeInfo('collective.cart.core.Article')
+        self.assertEqual(ctype.getIcon(), '++resource++collective.cart.core/cart.png')
+
+    def test_types__collective_cart_core_Article__allow_discussion(self):
+        types = getToolByName(self.portal, 'portal_types')
+        ctype = types.getTypeInfo('collective.cart.core.Article')
+        self.assertFalse(ctype.allow_discussion)
+
+    def test_types__collective_cart_core_Article__global_allow(self):
+        types = getToolByName(self.portal, 'portal_types')
+        ctype = types.getTypeInfo('collective.cart.core.Article')
+        self.assertTrue(ctype.global_allow)
+
+    def test_types__collective_cart_core_Article__filter_content_types(self):
+        types = getToolByName(self.portal, 'portal_types')
+        ctype = types.getTypeInfo('collective.cart.core.Article')
+        self.assertTrue(ctype.filter_content_types)
+
+    def test_types__collective_cart_core_Article__allowed_content_types(self):
+        types = getToolByName(self.portal, 'portal_types')
+        ctype = types.getTypeInfo('collective.cart.core.Article')
+        self.assertEqual(ctype.allowed_content_types, ('Image',))
+
+    def test_types__collective_cart_core_Article__schema(self):
+        types = getToolByName(self.portal, 'portal_types')
+        ctype = types.getTypeInfo('collective.cart.core.Article')
+        self.assertEqual(ctype.schema, 'collective.cart.core.interfaces.IArticle')
+
+    def test_types__collective_cart_core_Article__klass(self):
+        types = getToolByName(self.portal, 'portal_types')
+        ctype = types.getTypeInfo('collective.cart.core.Article')
+        self.assertEqual(ctype.klass, 'plone.dexterity.content.Container')
+
+    def test_types__collective_cart_core_Article__add_permission(self):
+        types = getToolByName(self.portal, 'portal_types')
+        ctype = types.getTypeInfo('collective.cart.core.Article')
+        self.assertEqual(ctype.add_permission, 'collective.cart.core.AddArticle')
+
+    def test_types__collective_cart_core_Article__behaviors(self):
+        types = getToolByName(self.portal, 'portal_types')
+        ctype = types.getTypeInfo('collective.cart.core.Article')
+        self.assertEqual(
+            ctype.behaviors,
+            (
+                'plone.app.content.interfaces.INameFromTitle',
+                'plone.app.dexterity.behaviors.metadata.IDublinCore',
+                'collective.behavior.salable.interfaces.ISalable'))
+
+    def test_types__collective_cart_core_Article__default_view(self):
+        types = getToolByName(self.portal, 'portal_types')
+        ctype = types.getTypeInfo('collective.cart.core.Article')
+        self.assertEqual(ctype.default_view, 'view')
+
+    def test_types__collective_cart_core_Article__default_view_fallback(self):
+        types = getToolByName(self.portal, 'portal_types')
+        ctype = types.getTypeInfo('collective.cart.core.Article')
+        self.assertFalse(ctype.default_view_fallback)
+
+    def test_types__collective_cart_core_Article__view_methods(self):
+        types = getToolByName(self.portal, 'portal_types')
+        ctype = types.getTypeInfo('collective.cart.core.Article')
+        self.assertEqual(ctype.view_methods, ('view',))
+
+    def test_types__collective_cart_core_Article__default_aliases(self):
+        types = getToolByName(self.portal, 'portal_types')
+        ctype = types.getTypeInfo('collective.cart.core.Article')
+        self.assertEqual(
+            ctype.default_aliases,
+            {'edit': '@@edit', 'sharing': '@@sharing', '(Default)': '(dynamic view)', 'view': '(selected layout)'})
+
+    def test_types__collective_cart_core_Article__action__view__title(self):
+        types = getToolByName(self.portal, 'portal_types')
+        ctype = types.getTypeInfo('collective.cart.core.Article')
+        action = ctype.getActionObject('object/view')
+        self.assertEqual(action.title, 'View')
+
+    def test_types__collective_cart_core_Article__action__view__condition(self):
+        types = getToolByName(self.portal, 'portal_types')
+        ctype = types.getTypeInfo('collective.cart.core.Article')
+        action = ctype.getActionObject('object/view')
+        self.assertEqual(action.condition, '')
+
+    def test_types__collective_cart_core_Article__action__view__url_expr(self):
+        types = getToolByName(self.portal, 'portal_types')
+        ctype = types.getTypeInfo('collective.cart.core.Article')
+        action = ctype.getActionObject('object/view')
+        self.assertEqual(action.getActionExpression(), 'string:${folder_url}/')
+
+    def test_types__collective_cart_core_Article__action__view__visible(self):
+        types = getToolByName(self.portal, 'portal_types')
+        ctype = types.getTypeInfo('collective.cart.core.Article')
+        action = ctype.getActionObject('object/view')
+        self.assertTrue(action.visible)
+
+    def test_types__collective_cart_core_Article__action__view__permissions(self):
+        types = getToolByName(self.portal, 'portal_types')
+        ctype = types.getTypeInfo('collective.cart.core.Article')
+        action = ctype.getActionObject('object/view')
+        self.assertEqual(action.permissions, (u'View',))
+
+    def test_types__collective_cart_core_Article__action__edit__title(self):
+        types = getToolByName(self.portal, 'portal_types')
+        ctype = types.getTypeInfo('collective.cart.core.Article')
+        action = ctype.getActionObject('object/edit')
+        self.assertEqual(action.title, 'Edit')
+
+    def test_types__collective_cart_core_Article__action__edit__condition(self):
+        types = getToolByName(self.portal, 'portal_types')
+        ctype = types.getTypeInfo('collective.cart.core.Article')
+        action = ctype.getActionObject('object/edit')
+        self.assertEqual(action.condition, '')
+
+    def test_types__collective_cart_core_Article__action__edit__url_expr(self):
+        types = getToolByName(self.portal, 'portal_types')
+        ctype = types.getTypeInfo('collective.cart.core.Article')
+        action = ctype.getActionObject('object/edit')
+        self.assertEqual(action.getActionExpression(), 'string:${object_url}/edit')
+
+    def test_types__collective_cart_core_Article__action__edit__visible(self):
+        types = getToolByName(self.portal, 'portal_types')
+        ctype = types.getTypeInfo('collective.cart.core.Article')
+        action = ctype.getActionObject('object/edit')
+        self.assertTrue(action.visible)
+
+    def test_types__collective_cart_core_Article__action__edit__permissions(self):
+        types = getToolByName(self.portal, 'portal_types')
+        ctype = types.getTypeInfo('collective.cart.core.Article')
+        action = ctype.getActionObject('object/edit')
+        self.assertEqual(action.permissions, (u'Modify portal content',))
+
     ## Uninstalling
     def test_uninstall(self):
         self.installer.uninstallProducts(['collective.cart.core'])
@@ -473,3 +625,9 @@ class TestSetup(IntegrationTestCase):
         left_column = getUtility(IPortletManager, name=u"plone.leftcolumn")
         left_assignable = getMultiAdapter((self.portal, left_column), IPortletAssignmentMapping)
         self.failIf(u'Cart' in left_assignable.keys())
+
+    def test_uninstall__types__collective_cart_core_Article(self):
+        self.installer.uninstallProducts(['collective.cart.core'])
+        self.failUnless(not self.installer.isProductInstalled('collective.cart.core'))
+        types = getToolByName(self.portal, 'portal_types')
+        self.assertIsNone(types.getTypeInfo('collective.cart.core.Article'))

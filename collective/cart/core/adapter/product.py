@@ -62,7 +62,7 @@ class Product(object):
         if self.addable_quantity > 0:
             html = '<select id="quantity" name="quantity">'
             for qtt in getUtility(ISelectRange)(self.addable_quantity):
-                html += '<option value="%s">%s</option>' % (qtt,  qtt)
+                html += '<option value="%s">%s</option>' % (qtt, qtt)
             html += '</select>'
             return html
 

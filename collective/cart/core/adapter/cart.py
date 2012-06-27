@@ -73,7 +73,7 @@ class CartProductAdapter(object):
             html = '<select id="quantity" name="quantity">'
             for qtt in getUtility(ISelectRange)(self.max_quantity):
                 if qtt == self.quantity:
-                    code = '<option value="%s" selected="selected">%s</option>' % (qtt,  qtt)
+                    code = '<option value="%s" selected="selected">%s</option>' % (qtt, qtt)
                     html += code
                 else:
                     html += '<option value="%s">%s</option>' % (qtt, qtt)
