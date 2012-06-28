@@ -1,7 +1,8 @@
 <configure
-    xmlns="http://namespaces.zope.org/zope"
-    xmlns:browser="http://namespaces.zope.org/browser"
-    i18n_domain="collective.cart.core">
+  i18n_domain="collective.cart.core"
+  xmlns:browser="http://namespaces.zope.org/browser"
+  xmlns="http://namespaces.zope.org/zope"
+  >
 
   <include package="plone.app.contentmenu" />
 
@@ -56,37 +57,37 @@
     permission="zope2.View"
     />
 
-    <browser:page
-        name="potentially-addable-but-not-addable-to-cart"
-        for="*"
-        class=".miscellaneous.Miscellaneous"
-        permission="cmf.ModifyPortalContent"
-        attribute="potentially_addable_but_not_addable_to_cart"
-        />
+  <!-- <browser:page
+    attribute="potentially_addable_but_not_addable_to_cart"
+    class=".miscellaneous.Miscellaneous"
+    for="*"
+    name="potentially-addable-but-not-addable-to-cart"
+    permission="cmf.ModifyPortalContent"
+    /> -->
 
-    <browser:page
+    <!-- <browser:page
         name="addable-to-cart"
         for="*"
         class=".miscellaneous.Miscellaneous"
         permission="cmf.ModifyPortalContent"
         attribute="addable_to_cart"
-        />
+        /> -->
 
-    <browser:page
-        name="make-addable-to-cart"
-        for="*"
-        class=".miscellaneous.Miscellaneous"
-        permission="cmf.ModifyPortalContent"
-        attribute="make_addable_to_cart"
-        />
+  <!-- <browser:page
+    attribute="make_addable_to_cart"
+    class=".miscellaneous.Miscellaneous"
+    for="*"
+    name="make-addable-to-cart"
+    permission="cmf.ModifyPortalContent"
+    /> -->
 
-    <browser:page
+    <!-- <browser:page
         name="make-not-addable-to-cart"
         for="*"
         class=".miscellaneous.Miscellaneous"
         permission="cmf.ModifyPortalContent"
         attribute="make_not_addable_to_cart"
-        />
+        / -->>
 
     <browser:page
         name="products"
@@ -137,29 +138,29 @@
         />
 
 
-    <browser:page
+    <!-- <browser:page
         name="make-cart-aware"
         for="*"
         class=".miscellaneous.Miscellaneous"
         permission="cmf.ModifyPortalContent"
         attribute="make_cart_aware"
-        />
+        /> -->
 
-    <browser:page
+    <!-- <browser:page
         name="make-not-cart-aware"
         for="*"
         class=".miscellaneous.Miscellaneous"
         permission="cmf.ModifyPortalContent"
         attribute="make_not_cart_aware"
-        />
+        /> -->
 
-    <browser:page
+    <!-- <browser:page
         name="is-cart-aware"
         for="*"
         class=".miscellaneous.Miscellaneous"
         permission="cmf.ModifyPortalContent"
         attribute="is_cart_aware"
-        />
+        /> -->
 
   <!-- Viewlet Managers -->
   <browser:viewletManager

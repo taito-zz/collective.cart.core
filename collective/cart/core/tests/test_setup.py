@@ -431,30 +431,89 @@ class TestSetup(IntegrationTestCase):
         self.assertEqual('not_editable_for_customer', fix.new_state_id)
         self.assertEqual('editable_for_customer', unfix.new_state_id)
 
-    ## actions.xml
-    def test_make_addable_to_cart(self):
-        matc = self.actions.object_buttons.make_addable_to_cart
-        self.assertEqual('Make Addable To Cart', matc.getProperty('title'))
-        self.assertEqual('string:${globals_view/getCurrentObjectUrl}/@@make-addable-to-cart', matc.getProperty('url_expr'))
-        self.assertEqual('python: object.restrictedTraverse("potentially-addable-but-not-addable-to-cart")()', matc.getProperty('available_expr'))
-        self.assertEqual(('Modify portal content',), matc.getProperty('permissions'))
-        self.assertEqual(True, matc.getProperty('visible'))
+    def test_actions__object_buttons__make_shopping_site__i18n_domain(self):
+        actions = getToolByName(self.portal, 'portal_actions')
+        action = getattr(actions, 'object_buttons').make_shopping_site
+        self.assertEqual(action.i18n_domain, 'collective.cart.core')
 
-    def test_make_not_addable_to_cart(self):
-        matc = self.actions.object_buttons.make_not_addable_to_cart
-        self.assertEqual('Make Not Addable To Cart', matc.getProperty('title'))
-        self.assertEqual('string:${globals_view/getCurrentObjectUrl}/@@make-not-addable-to-cart', matc.getProperty('url_expr'))
-        self.assertEqual('python: object.restrictedTraverse("addable-to-cart")()', matc.getProperty('available_expr'))
-        self.assertEqual(('Modify portal content',), matc.getProperty('permissions'))
-        self.assertEqual(True, matc.getProperty('visible'))
+    def test_actions__object_buttons__make_shopping_site__meta_type(self):
+        actions = getToolByName(self.portal, 'portal_actions')
+        action = getattr(actions, 'object_buttons').make_shopping_site
+        self.assertEqual(action.meta_type, 'CMF Action')
 
-    def test_editProduct(self):
-        matc = self.actions.object.editProduct
-        self.assertEqual('Edit Product', matc.getProperty('title'))
-        self.assertEqual('string:${object_url}/@@edit-product', matc.getProperty('url_expr'))
-        self.assertEqual('python: object.restrictedTraverse("addable-to-cart")()', matc.getProperty('available_expr'))
-        self.assertEqual(('Modify portal content',), matc.getProperty('permissions'))
-        self.assertEqual(True, matc.getProperty('visible'))
+    def test_actions__object_buttons__make_shopping_site__title(self):
+        actions = getToolByName(self.portal, 'portal_actions')
+        action = getattr(actions, 'object_buttons').make_shopping_site
+        self.assertEqual(action.title, 'Make Shopping Site')
+
+    def test_actions__object_buttons__make_shopping_site__description(self):
+        actions = getToolByName(self.portal, 'portal_actions')
+        action = getattr(actions, 'object_buttons').make_shopping_site
+        self.assertEqual(action.description, 'Make this container shopping site.')
+
+    def test_actions__object_buttons__make_shopping_site__url_expr(self):
+        actions = getToolByName(self.portal, 'portal_actions')
+        action = getattr(actions, 'object_buttons').make_shopping_site
+        self.assertEqual(
+            action.url_expr, 'string:${globals_view/getCurrentObjectUrl}/@@make-shopping-site')
+
+    def test_actions__object_buttons__make_shopping_site__available_expr(self):
+        actions = getToolByName(self.portal, 'portal_actions')
+        action = getattr(actions, 'object_buttons').make_shopping_site
+        self.assertEqual(
+            action.available_expr, 'python: object.restrictedTraverse("not-shopping-site")()')
+
+    def test_actions__object_buttons__make_shopping_site__permissions(self):
+        actions = getToolByName(self.portal, 'portal_actions')
+        action = getattr(actions, 'object_buttons').make_shopping_site
+        self.assertEqual(action.permissions, ('Manage portal',))
+
+    def test_actions__object_buttons__make_shopping_site__visible(self):
+        actions = getToolByName(self.portal, 'portal_actions')
+        action = getattr(actions, 'object_buttons').make_shopping_site
+        self.assertTrue(action.visible)
+
+    def test_actions__object_buttons__unmake_shopping_site__i18n_domain(self):
+        actions = getToolByName(self.portal, 'portal_actions')
+        action = getattr(actions, 'object_buttons').unmake_shopping_site
+        self.assertEqual(action.i18n_domain, 'collective.cart.core')
+
+    def test_actions__object_buttons__unmake_shopping_site__meta_type(self):
+        actions = getToolByName(self.portal, 'portal_actions')
+        action = getattr(actions, 'object_buttons').unmake_shopping_site
+        self.assertEqual(action.meta_type, 'CMF Action')
+
+    def test_actions__object_buttons__unmake_shopping_site__title(self):
+        actions = getToolByName(self.portal, 'portal_actions')
+        action = getattr(actions, 'object_buttons').unmake_shopping_site
+        self.assertEqual(action.title, 'Unmake Shopping Site')
+
+    def test_actions__object_buttons__unmake_shopping_site__description(self):
+        actions = getToolByName(self.portal, 'portal_actions')
+        action = getattr(actions, 'object_buttons').unmake_shopping_site
+        self.assertEqual(action.description, 'Unmake this container shopping site.')
+
+    def test_actions__object_buttons__unmake_shopping_site__url_expr(self):
+        actions = getToolByName(self.portal, 'portal_actions')
+        action = getattr(actions, 'object_buttons').unmake_shopping_site
+        self.assertEqual(
+            action.url_expr, 'string:${globals_view/getCurrentObjectUrl}/@@unmake-shopping-site')
+
+    def test_actions__object_buttons__unmake_shopping_site__available_expr(self):
+        actions = getToolByName(self.portal, 'portal_actions')
+        action = getattr(actions, 'object_buttons').unmake_shopping_site
+        self.assertEqual(
+            action.available_expr, 'python: object.restrictedTraverse("is-shopping-site")()')
+
+    def test_actions__object_buttons__unmake_shopping_site__permissions(self):
+        actions = getToolByName(self.portal, 'portal_actions')
+        action = getattr(actions, 'object_buttons').unmake_shopping_site
+        self.assertEqual(action.permissions, ('Manage portal',))
+
+    def test_actions__object_buttons__unmake_shopping_site__visible(self):
+        actions = getToolByName(self.portal, 'portal_actions')
+        action = getattr(actions, 'object_buttons').unmake_shopping_site
+        self.assertTrue(action.visible)
 
     def test_portlet(self):
         left_column = getUtility(IPortletManager, name=u"plone.leftcolumn")

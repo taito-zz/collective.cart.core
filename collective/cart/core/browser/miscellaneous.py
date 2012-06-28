@@ -25,13 +25,13 @@ class Miscellaneous(BrowserView):
         context = aq_inner(self.context)
         return IPotentiallyAddableToCart.providedBy(context) and IAddableToCart.providedBy(context)
 
-    def make_addable_to_cart(self):
-        context = aq_inner(self.context)
-        if IPotentiallyAddableToCart.providedBy(context):
-            alsoProvides(context, IAddableToCart)
-            url = '%s/@@edit-product' % context.absolute_url()
-            IAnnotations(context)['collective.cart.core'] = ProductAnnotations()
-            return self.request.response.redirect(url)
+    # def make_addable_to_cart(self):
+    #     context = aq_inner(self.context)
+    #     if IPotentiallyAddableToCart.providedBy(context):
+    #         alsoProvides(context, IAddableToCart)
+    #         url = '%s/@@edit-product' % context.absolute_url()
+    #         IAnnotations(context)['collective.cart.core'] = ProductAnnotations()
+    #         return self.request.response.redirect(url)
 
     def make_not_addable_to_cart(self):
         context = aq_inner(self.context)
